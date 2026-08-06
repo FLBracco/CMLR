@@ -12,7 +12,8 @@
     "migration:generate": "pnpm typeorm migration:generate -d src/config/db/data-source.ts",
     "migration:run": "pnpm typeorm migration:run -d src/config/db/data-source.ts",
     "migration:revert": "pnpm typeorm migration:revert -d src/config/db/data-source.ts",
-    "migration:show": "pnpm typeorm migration:show -d src/config/db/data-source.ts"
+    "migration:show": "pnpm typeorm migration:show -d src/config/db/data-source.ts",
+    "seed": "tsx src/database/seed.ts"
   },
   "keywords": [],
   "author": "",

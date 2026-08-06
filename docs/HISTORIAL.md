@@ -32,3 +32,23 @@
 
 ### Commit
 - Mensaje elegido: `feat: fase 0 - fundaciones del backend`
+
+### Fase 1 — Base de datos (completada)
+- 4 entities TypeORM según modelo físico 06: `ProfessionalSpeciality`, `Professional`, `Patient`, `Consultation` (convención snake_case en DB, camelCase en TS).
+- Relaciones e índices: email único, specialty_id, dni, professional_id, patient_id, consultation_date.
+- Migración inicial `InitialSchema` generada y ejecutada (tablas verificadas con `\dt`).
+- Seed de especialidades (`pnpm seed`): psychologist / psychiatrist insertados.
+- DTO de Especialidad (`ISpecialityDto`) para el listado del registro.
+
+### Notas técnicas Fase 1
+- TypeORM 1.1.0 exporta `MigrationInterface`/`QueryRunner` solo como tipos → las migraciones usan `import type`.
+- El script `migration:generate` requiere el path como argumento (se corrió directamente por CLI).
+- Se habilitaron `experimentalDecorators` + `emitDecoratorMetadata` en `tsconfig.json`.
+- Patrón strict: properties de entities con `!` (definite assignment).
+
+### Verificación Fase 1
+- `pnpm build` OK.
+- Skills: `tc-tracker` → `TC-002-08-06-26-fase1-database` (`implemented`); `code-reviewer` → 97.4/100 (A); `senior-security` → 0 hallazgos.
+
+### Commit
+- Mensaje elegido: `feat: fase 1 - base de datos (entities, migracion y seed)`

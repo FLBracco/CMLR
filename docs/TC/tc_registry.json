@@ -1,8 +1,8 @@
 {
   "project_name": "CMLR",
   "created": "2026-08-06T22:51:15+00:00",
-  "updated": "2026-08-06T22:51:38+00:00",
-  "next_tc_number": 2,
+  "updated": "2026-08-06T23:01:11+00:00",
+  "next_tc_number": 3,
   "records": [
     {
       "tc_id": "TC-001-08-06-26-fase0-fundaciones",
@@ -13,20 +13,30 @@
       "created": "2026-08-06T22:51:20+00:00",
       "updated": "2026-08-06T22:51:38+00:00",
       "path": "records/TC-001-08-06-26-fase0-fundaciones/tc_record.json"
+    },
+    {
+      "tc_id": "TC-002-08-06-26-fase1-database",
+      "title": "Fase 1 - Base de datos: entities, migracion y seed",
+      "status": "implemented",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-06T23:00:51+00:00",
+      "updated": "2026-08-06T23:01:11+00:00",
+      "path": "records/TC-002-08-06-26-fase1-database/tc_record.json"
     }
   ],
   "statistics": {
-    "total": 1,
+    "total": 2,
     "by_status": {
       "planned": 0,
       "in_progress": 0,
       "blocked": 0,
-      "implemented": 1,
+      "implemented": 2,
       "tested": 0,
       "deployed": 0
     },
     "by_scope": {
-      "feature": 0,
+      "feature": 1,
       "bugfix": 0,
       "refactor": 0,
       "infrastructure": 1,
@@ -36,7 +46,7 @@
     },
     "by_priority": {
       "critical": 0,
-      "high": 1,
+      "high": 2,
       "medium": 0,
       "low": 0
     }
