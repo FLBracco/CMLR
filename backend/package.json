@@ -4,17 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "...",
-    "build": "...",
-    "start": "...",
-
-    "typeorm": "...",
-
-    "migration:generate": "...",
-
-    "migration:run": "...",
-
-    "migration:revert": "..."
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "typeorm": "tsx ./node_modules/typeorm/cli.js",
+    "migration:create": "pnpm typeorm migration:create",
+    "migration:generate": "pnpm typeorm migration:generate -d src/config/db/data-source.ts",
+    "migration:run": "pnpm typeorm migration:run -d src/config/db/data-source.ts",
+    "migration:revert": "pnpm typeorm migration:revert -d src/config/db/data-source.ts",
+    "migration:show": "pnpm typeorm migration:show -d src/config/db/data-source.ts"
   },
   "keywords": [],
   "author": "",

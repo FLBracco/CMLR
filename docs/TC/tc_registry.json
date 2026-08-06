@@ -1,0 +1,44 @@
+{
+  "project_name": "CMLR",
+  "created": "2026-08-06T22:51:15+00:00",
+  "updated": "2026-08-06T22:51:38+00:00",
+  "next_tc_number": 2,
+  "records": [
+    {
+      "tc_id": "TC-001-08-06-26-fase0-fundaciones",
+      "title": "Fase 0 - Fundaciones: env, errores, estructura",
+      "status": "implemented",
+      "scope": "infrastructure",
+      "priority": "high",
+      "created": "2026-08-06T22:51:20+00:00",
+      "updated": "2026-08-06T22:51:38+00:00",
+      "path": "records/TC-001-08-06-26-fase0-fundaciones/tc_record.json"
+    }
+  ],
+  "statistics": {
+    "total": 1,
+    "by_status": {
+      "planned": 0,
+      "in_progress": 0,
+      "blocked": 0,
+      "implemented": 1,
+      "tested": 0,
+      "deployed": 0
+    },
+    "by_scope": {
+      "feature": 0,
+      "bugfix": 0,
+      "refactor": 0,
+      "infrastructure": 1,
+      "documentation": 0,
+      "hotfix": 0,
+      "enhancement": 0
+    },
+    "by_priority": {
+      "critical": 0,
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    }
+  }
+}

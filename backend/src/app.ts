@@ -1,10 +1,14 @@
-import express, {urlencoded} from 'express';
+import express from "express";
+import { errorHandler } from "./shared/middlewares/error-handler.js";
 
-const app = express();
-app.use(urlencoded({extended: false}));
+export const app = express();
 
-app.get('/api/hello', (req, res) => {
-    res.status(200).send('API funcionando correctamente');   
-})
+app.use(express.json());
 
-export default app;
+app.get("/api/hello", (_req, res) => {
+  res.json({
+    message: "Hello CMLR API 🚀",
+  });
+});
+
+app.use(errorHandler);

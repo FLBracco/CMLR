@@ -1,8 +1,24 @@
-import app from './app.js';
-import './config/env.js'
+import { AppDataSource } from "./config/db/data-source.js";
+import { app } from "./app.js";
+import { Environment } from "./config/env/environment.js";
 
-const PORT = process.env.PORT;
+const startServer = async (): Promise<void> => {
+  try {
+    await AppDataSource.initialize();
 
-app.listen(PORT, ()=>{
-    console.log(`Servidor corriendo en http://localhost:${PORT}`); 
-});
+    console.log("✅ Database connected.");
+
+    app.listen(Environment.app.port, () => {
+      console.log(
+        `🚀 Server running at http://localhost:${Environment.app.port}`
+      );
+    });
+  } catch (error) {
+    console.error("❌ Error connecting to the database.");
+    console.error(error);
+
+    process.exit(1);
+  }
+};
+
+startServer();
