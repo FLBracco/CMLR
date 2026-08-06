@@ -78,3 +78,25 @@
 
 ### Commit
 - Mensaje elegido: `feat: fase 2 - autenticacion (register, login, JWT)`
+
+### Fase 3 — Pacientes (completada)
+- DTOs con class-validator: `CreatePatientDto`, `UpdatePatientDto`, `PatientResponseDto`.
+- `PatientRepository`: create, findByDni, findByIdScoped, search (nombre/apellido/DNI con `LOWER` + LIKE).
+- `PatientService`: reglas de negocio — scoping por profesional, DNI único por profesional (409), 404 si no existe.
+- `PatientController` + rutas protegidas con `authenticate` (Bearer):
+  - `POST /api/patients` → 201
+  - `GET /api/patients?search=` → listado
+  - `GET /api/patients/:id` → ficha
+  - `PATCH /api/patients/:id` → editar
+
+### Notas técnicas Fase 3
+- **Columna `date` de TypeORM**: se devuelve como string (`"1990-05-15"`), no `Date` → `toDto` lo maneja con `instanceof` (evita TypeError → 500).
+- Tipado estricto: `req.params.id` casteado a `string`; `exactOptionalPropertyTypes` exige omitir `search` cuando es `undefined`.
+
+### Verificación Fase 3
+- `pnpm build` OK.
+- Endpoints probados en vivo: create 201, search, get, patch; DNI duplicado → 409; acceso cruzado entre profesionales → 404.
+- Skills: `tc-tracker` → `TC-004-08-06-26-fase3-pacientes` (`implemented`); `code-reviewer` → 98.0/100 (A); `senior-security` → 0 hallazgos.
+
+### Commit
+- Mensaje elegido: `feat: fase 3 - CRUD de pacientes`

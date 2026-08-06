@@ -1,8 +1,8 @@
 {
   "project_name": "CMLR",
   "created": "2026-08-06T22:51:15+00:00",
-  "updated": "2026-08-06T23:14:29+00:00",
-  "next_tc_number": 4,
+  "updated": "2026-08-06T23:23:12+00:00",
+  "next_tc_number": 5,
   "records": [
     {
       "tc_id": "TC-001-08-06-26-fase0-fundaciones",
@@ -33,20 +33,30 @@
       "created": "2026-08-06T23:14:10+00:00",
       "updated": "2026-08-06T23:14:29+00:00",
       "path": "records/TC-003-08-06-26-fase2-auth/tc_record.json"
+    },
+    {
+      "tc_id": "TC-004-08-06-26-fase3-pacientes",
+      "title": "Fase 3 - CRUD de pacientes",
+      "status": "implemented",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-06T23:22:48+00:00",
+      "updated": "2026-08-06T23:23:12+00:00",
+      "path": "records/TC-004-08-06-26-fase3-pacientes/tc_record.json"
     }
   ],
   "statistics": {
-    "total": 3,
+    "total": 4,
     "by_status": {
       "planned": 0,
       "in_progress": 0,
       "blocked": 0,
-      "implemented": 3,
+      "implemented": 4,
       "tested": 0,
       "deployed": 0
     },
     "by_scope": {
-      "feature": 2,
+      "feature": 3,
       "bugfix": 0,
       "refactor": 0,
       "infrastructure": 1,
@@ -56,7 +66,7 @@
     },
     "by_priority": {
       "critical": 0,
-      "high": 3,
+      "high": 4,
       "medium": 0,
       "low": 0
     }

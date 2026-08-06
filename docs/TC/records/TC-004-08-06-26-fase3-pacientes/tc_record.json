@@ -1,0 +1,232 @@
+{
+  "tc_id": "TC-004-08-06-26-fase3-pacientes",
+  "parent_tc": null,
+  "title": "Fase 3 - CRUD de pacientes",
+  "status": "implemented",
+  "priority": "high",
+  "created": "2026-08-06T23:22:48+00:00",
+  "updated": "2026-08-06T23:23:12+00:00",
+  "created_by": "Claude",
+  "project": "CMLR",
+  "description": {
+    "summary": "DTOs con class-validator, PatientRepository/Service/Controller, rutas protegidas, busqueda por nombre/DNI, scoping por profesional, DNI unico por profesional",
+    "motivation": "Registro, busqueda y ficha de pacientes del MVP",
+    "scope": "feature",
+    "detailed_design": null,
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    {
+      "path": "backend/src/modules/patients/dto/create-patient.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/patients/dto/update-patient.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/patients/dto/patient-response.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/patients/repositories/patient.repository.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/patients/services/patient.service.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/patients/controllers/patient.controller.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/patients/routes/patient.routes.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/app.ts",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-08-06T23:22:48+00:00",
+      "author": "Claude",
+      "summary": "TC record created",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "set",
+          "new_value": "planned",
+          "reason": "initial creation"
+        }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-08-06T23:23:06+00:00",
+      "author": "Claude",
+      "summary": "status: planned -> in_progress",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "in_progress",
+          "reason": "Inicio verificacion"
+        }
+      ]
+    },
+    {
+      "revision_id": "R3",
+      "timestamp": "2026-08-06T23:23:12+00:00",
+      "author": "Claude",
+      "summary": "status: in_progress -> implemented; +file backend/src/modules/patients/dto/create-patient.dto.ts (created); +file backend/src/modules/patients/dto/update-patient.dto.ts (created); +file backend/src/modules/patients/dto/patient-response.dto.ts (created); +file backend/src/modules/patients/repositories/patient.repository.ts (created); +file backend/src/modules/patients/services/patient.service.ts (created); +file backend/src/modules/patients/controllers/patient.controller.ts (created); +file backend/src/modules/patients/routes/patient.routes.ts (created); +file backend/src/app.ts (modified)",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "in_progress",
+          "new_value": "implemented",
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/patients/dto/create-patient.dto.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/patients/dto/update-patient.dto.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/patients/dto/patient-response.dto.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/patients/repositories/patient.repository.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/patients/services/patient.service.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/patients/controllers/patient.controller.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/patients/routes/patient.routes.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/app.ts",
+            "action": "modified"
+          },
+          "reason": "Endpoints verificados en vivo: POST 201, GET search, GET ficha, PATCH, DNI duplicado 409, scoping 404. Build OK, code-review 98/100, secret scan 0"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "none"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-1786058568-2748",
+      "platform": "claude_code",
+      "model": "unknown",
+      "started": "2026-08-06T23:22:48+00:00",
+      "last_active": "2026-08-06T23:23:12+00:00"
+    },
+    "handoff": {
+      "progress_summary": "",
+      "next_steps": [],
+      "blockers": [],
+      "key_context": [],
+      "files_in_progress": [],
+      "decisions_made": []
+    },
+    "session_history": []
+  },
+  "tags": [],
+  "related_tcs": [],
+  "notes": "",
+  "metadata": {
+    "project": "CMLR",
+    "created_by": "Claude",
+    "last_modified_by": "Claude",
+    "last_modified": "2026-08-06T23:23:12+00:00",
+    "estimated_effort": null
+  }
+}
