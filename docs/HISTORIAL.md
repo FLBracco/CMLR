@@ -31,4 +31,4 @@
 - Skills: `tc-tracker` → `TC-001-08-06-26-fase0-fundaciones` (`implemented`); `senior-security` secret scanner → 0 hallazgos; `code-reviewer` → 97/100 (A).
 
 ### Commit
-- Mensaje elegido: **(se completa al finalizar la sesión)**
+- Mensaje elegido: `feat: fase 0 - fundaciones del backend`
