@@ -52,3 +52,29 @@
 
 ### Commit
 - Mensaje elegido: `feat: fase 1 - base de datos (entities, migracion y seed)`
+
+### Fase 2 — Autenticación (completada)
+- DTOs con class-validator (`RegisterProfessionalDto`, `LoginDto`) + middleware `validate-dto`.
+- bcrypt (hash + compare) para `password_hash`.
+- JWT: `token.service.ts` (emisión/firma) + middleware `authenticate` (Bearer).
+- Endpoints:
+  - `GET /api/specialities` (catálogo público).
+  - `POST /api/auth/register` → 201 (email único → 409, validación → 400).
+  - `POST /api/auth/login` → 200.
+  - `POST /api/auth/logout` → 204 (con token), 401 (sin token).
+- Estructura del módulo `auth` completa: dto / services / controllers / routes.
+- Repositories de `professionals` (findByEmail, create) y `professional_specialities`.
+
+### Notas técnicas Fase 2
+- **Dependencia circular ESM**: `emitDecoratorMetadata` producía `ReferenceError` entre entities → se desactivó (las columnas usan tipo explícito, así que TypeORM no lo necesita).
+- **Globs de entities en `data-source.ts`**: al correr `node dist`, el glob cargaba `.ts` fuente → se reemplazó por registro explícito de entities/migraciones (funciona igual en dev y prod).
+- `expiresIn` de JWT: tipado estricto obligó a cast con `Exclude<SignOptions["expiresIn"], undefined>`.
+- Se habilitó build de `bcrypt` en `pnpm-workspace.yaml` (`allowBuilds`).
+
+### Verificación Fase 2
+- `pnpm build` OK, servidor arranca y conecta a la DB.
+- Endpoints probados en vivo (register/login/logout/specialities, 400/401/409).
+- Skills: `tc-tracker` → `TC-003-08-06-26-fase2-auth` (`implemented`); `code-reviewer` → 98.2/100 (A); `senior-security` → 0 hallazgos.
+
+### Commit
+- Mensaje elegido: `feat: fase 2 - autenticacion (register, login, JWT)`

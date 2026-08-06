@@ -1,8 +1,8 @@
 {
   "project_name": "CMLR",
   "created": "2026-08-06T22:51:15+00:00",
-  "updated": "2026-08-06T23:01:11+00:00",
-  "next_tc_number": 3,
+  "updated": "2026-08-06T23:14:29+00:00",
+  "next_tc_number": 4,
   "records": [
     {
       "tc_id": "TC-001-08-06-26-fase0-fundaciones",
@@ -23,20 +23,30 @@
       "created": "2026-08-06T23:00:51+00:00",
       "updated": "2026-08-06T23:01:11+00:00",
       "path": "records/TC-002-08-06-26-fase1-database/tc_record.json"
+    },
+    {
+      "tc_id": "TC-003-08-06-26-fase2-auth",
+      "title": "Fase 2 - Autenticacion JWT",
+      "status": "implemented",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-06T23:14:10+00:00",
+      "updated": "2026-08-06T23:14:29+00:00",
+      "path": "records/TC-003-08-06-26-fase2-auth/tc_record.json"
     }
   ],
   "statistics": {
-    "total": 2,
+    "total": 3,
     "by_status": {
       "planned": 0,
       "in_progress": 0,
       "blocked": 0,
-      "implemented": 2,
+      "implemented": 3,
       "tested": 0,
       "deployed": 0
     },
     "by_scope": {
-      "feature": 1,
+      "feature": 2,
       "bugfix": 0,
       "refactor": 0,
       "infrastructure": 1,
@@ -46,7 +56,7 @@
     },
     "by_priority": {
       "critical": 0,
-      "high": 2,
+      "high": 3,
       "medium": 0,
       "low": 0
     }

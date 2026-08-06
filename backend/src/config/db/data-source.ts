@@ -1,6 +1,11 @@
 import "reflect-metadata"; // Habilita metadata para decoradores
 import { DataSource } from "typeorm"; // Clase principal de TypeORM
 import { Environment } from "../env/environment.js"; // Configuración centralizada
+import { ProfessionalSpeciality } from "../../modules/professionals/entities/professional-speciality.entity.js";
+import { Professional } from "../../modules/professionals/entities/professional.entity.js";
+import { Patient } from "../../modules/patients/entities/patient.entity.js";
+import { Consultation } from "../../modules/consultations/entities/consultation.entity.js";
+import { InitialSchema1786057121606 } from "../../migrations/1786057121606-InitialSchema.js";
 
 export const AppDataSource = new DataSource({
   // Motor de base de datos
@@ -19,11 +24,11 @@ export const AppDataSource = new DataSource({
   // Mostrar SQL en desarrollo
   logging: true,
 
-  // Entidades registradas automáticamente
-  entities: ["src/modules/**/*.entity.{ts,js}"],
+  // Entidades registradas explícitamente
+  entities: [ProfessionalSpeciality, Professional, Patient, Consultation],
 
-  // Migraciones
-  migrations: ["src/migrations/*.{ts,js}"],
+  // Migraciones registradas explícitamente
+  migrations: [InitialSchema1786057121606],
 
   // PostgreSQL local en Docker
   ssl: false,

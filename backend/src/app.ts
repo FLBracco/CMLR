@@ -1,5 +1,7 @@
 import express from "express";
 import { errorHandler } from "./shared/middlewares/error-handler.js";
+import authRoutes from "./modules/auth/routes/auth.routes.js";
+import specialityRoutes from "./modules/professionals/routes/speciality.routes.js";
 
 export const app = express();
 
@@ -10,5 +12,8 @@ app.get("/api/hello", (_req, res) => {
     message: "Hello CMLR API 🚀",
   });
 });
+
+app.use("/api/auth", authRoutes);
+app.use("/api/specialities", specialityRoutes);
 
 app.use(errorHandler);

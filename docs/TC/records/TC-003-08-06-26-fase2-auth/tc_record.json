@@ -1,0 +1,376 @@
+{
+  "tc_id": "TC-003-08-06-26-fase2-auth",
+  "parent_tc": null,
+  "title": "Fase 2 - Autenticacion JWT",
+  "status": "implemented",
+  "priority": "high",
+  "created": "2026-08-06T23:14:10+00:00",
+  "updated": "2026-08-06T23:14:29+00:00",
+  "created_by": "Claude",
+  "project": "CMLR",
+  "description": {
+    "summary": "DTOs con class-validator, bcrypt, JWT, middleware authenticate, endpoints register/login/logout y GET specialities",
+    "motivation": "Registro e inicio de sesion de profesionales del MVP",
+    "scope": "feature",
+    "detailed_design": null,
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    {
+      "path": "backend/src/modules/auth/dto/register.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/auth/dto/login.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/auth/dto/auth-response.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/auth/services/token.service.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/auth/services/auth.service.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/auth/controllers/auth.controller.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/auth/routes/auth.routes.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/professionals/repositories/professional.repository.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/professionals/repositories/professional-speciality.repository.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/professionals/controllers/professional-speciality.controller.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/professionals/routes/speciality.routes.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/shared/middlewares/validate-dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/shared/middlewares/authenticate.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/config/db/data-source.ts",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/app.ts",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/tsconfig.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/package.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-08-06T23:14:10+00:00",
+      "author": "Claude",
+      "summary": "TC record created",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "set",
+          "new_value": "planned",
+          "reason": "initial creation"
+        }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-08-06T23:14:22+00:00",
+      "author": "Claude",
+      "summary": "status: planned -> in_progress",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "in_progress",
+          "reason": "Verificacion de endpoints"
+        }
+      ]
+    },
+    {
+      "revision_id": "R3",
+      "timestamp": "2026-08-06T23:14:29+00:00",
+      "author": "Claude",
+      "summary": "status: in_progress -> implemented; +file backend/src/modules/auth/dto/register.dto.ts (created); +file backend/src/modules/auth/dto/login.dto.ts (created); +file backend/src/modules/auth/dto/auth-response.dto.ts (created); +file backend/src/modules/auth/services/token.service.ts (created); +file backend/src/modules/auth/services/auth.service.ts (created); +file backend/src/modules/auth/controllers/auth.controller.ts (created); +file backend/src/modules/auth/routes/auth.routes.ts (created); +file backend/src/modules/professionals/repositories/professional.repository.ts (created); +file backend/src/modules/professionals/repositories/professional-speciality.repository.ts (created); +file backend/src/modules/professionals/controllers/professional-speciality.controller.ts (created); +file backend/src/modules/professionals/routes/speciality.routes.ts (created); +file backend/src/shared/middlewares/validate-dto.ts (created); +file backend/src/shared/middlewares/authenticate.ts (created); +file backend/src/config/db/data-source.ts (modified); +file backend/src/app.ts (modified); +file backend/tsconfig.json (modified); +file backend/package.json (modified)",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "in_progress",
+          "new_value": "implemented",
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/auth/dto/register.dto.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/auth/dto/login.dto.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/auth/dto/auth-response.dto.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/auth/services/token.service.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/auth/services/auth.service.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/auth/controllers/auth.controller.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/auth/routes/auth.routes.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/professionals/repositories/professional.repository.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/professionals/repositories/professional-speciality.repository.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/professionals/controllers/professional-speciality.controller.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/professionals/routes/speciality.routes.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/shared/middlewares/validate-dto.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/shared/middlewares/authenticate.ts",
+            "action": "created"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/config/db/data-source.ts",
+            "action": "modified"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/app.ts",
+            "action": "modified"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/tsconfig.json",
+            "action": "modified"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/package.json",
+            "action": "modified"
+          },
+          "reason": "Endpoints verificados: register 201, login 200, logout 204/401, duplicado 409, validacion 400. Build OK, code-review 98.2/100, secret scan 0"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "none"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-1786058050-16168",
+      "platform": "claude_code",
+      "model": "unknown",
+      "started": "2026-08-06T23:14:10+00:00",
+      "last_active": "2026-08-06T23:14:29+00:00"
+    },
+    "handoff": {
+      "progress_summary": "",
+      "next_steps": [],
+      "blockers": [],
+      "key_context": [],
+      "files_in_progress": [],
+      "decisions_made": []
+    },
+    "session_history": []
+  },
+  "tags": [],
+  "related_tcs": [],
+  "notes": "",
+  "metadata": {
+    "project": "CMLR",
+    "created_by": "Claude",
+    "last_modified_by": "Claude",
+    "last_modified": "2026-08-06T23:14:29+00:00",
+    "estimated_effort": null
+  }
+}

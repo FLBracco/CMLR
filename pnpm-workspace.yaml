@@ -2,4 +2,5 @@ packages:
   - "backend"
   - "frontend"
 allowBuilds:
+  bcrypt: true
   esbuild: true

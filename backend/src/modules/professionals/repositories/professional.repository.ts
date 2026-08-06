@@ -1,0 +1,34 @@
+import { AppDataSource } from "../../../config/db/data-source.js";
+import { Professional } from "../../professionals/entities/professional.entity.js";
+import type { ProfessionalSpeciality } from "../../professionals/entities/professional-speciality.entity.js";
+
+export interface ICreateProfessionalData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  passwordHash: string;
+  speciality: ProfessionalSpeciality;
+}
+
+export class ProfessionalRepository {
+  private readonly repository = AppDataSource.getRepository(Professional);
+
+  async findByEmail(email: string): Promise<Professional | null> {
+    return this.repository.findOne({
+      where: { email },
+      relations: { speciality: true },
+    });
+  }
+
+  async create(data: ICreateProfessionalData): Promise<Professional> {
+    const professional = this.repository.create({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      passwordHash: data.passwordHash,
+      speciality: data.speciality,
+    });
+
+    return this.repository.save(professional);
+  }
+}
