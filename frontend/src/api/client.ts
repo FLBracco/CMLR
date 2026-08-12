@@ -25,6 +25,16 @@ export const clearStoredToken = (): void => {
   localStorage.removeItem(TOKEN_STORAGE_KEY);
 };
 
+type UnauthorizedListener = () => void;
+
+let unauthorizedListener: UnauthorizedListener | null = null;
+
+export const setUnauthorizedListener = (
+  listener: UnauthorizedListener | null
+): void => {
+  unauthorizedListener = listener;
+};
+
 interface IApiErrorBody {
   error: {
     message: string;
@@ -55,6 +65,11 @@ export const apiRequest = async <T>(
 
   if (!response.ok) {
     const errorBody = body as IApiErrorBody | null;
+
+    if (response.status === 401 && token) {
+      unauthorizedListener?.();
+    }
+
     throw new ApiError(
       response.status,
       errorBody?.error?.message ?? "Ocurrió un error inesperado.",

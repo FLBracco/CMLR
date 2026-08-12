@@ -1,8 +1,8 @@
 {
   "project_name": "CMLR",
   "created": "2026-08-06T22:51:15+00:00",
-  "updated": "2026-08-12T13:40:00+00:00",
-  "next_tc_number": 7,
+  "updated": "2026-08-12T14:45:00+00:00",
+  "next_tc_number": 8,
   "records": [
     {
       "tc_id": "TC-001-08-06-26-fase0-fundaciones",
@@ -63,21 +63,31 @@
       "created": "2026-08-12T13:10:00+00:00",
       "updated": "2026-08-12T13:40:00+00:00",
       "path": "records/TC-006-08-12-26-fase6-pantallas/tc_record.json"
+    },
+    {
+      "tc_id": "TC-007-08-12-26-fase7-pulido",
+      "title": "Fase 7 - Pulido y entrega: bug de email case-sensitive, logout automatico, revision de seguridad y codigo",
+      "status": "tested",
+      "scope": "bugfix",
+      "priority": "high",
+      "created": "2026-08-12T14:00:00+00:00",
+      "updated": "2026-08-12T14:45:00+00:00",
+      "path": "records/TC-007-08-12-26-fase7-pulido/tc_record.json"
     }
   ],
   "statistics": {
-    "total": 6,
+    "total": 7,
     "by_status": {
       "planned": 0,
       "in_progress": 0,
       "blocked": 0,
       "implemented": 4,
-      "tested": 2,
+      "tested": 3,
       "deployed": 0
     },
     "by_scope": {
       "feature": 5,
-      "bugfix": 0,
+      "bugfix": 1,
       "refactor": 0,
       "infrastructure": 1,
       "documentation": 0,
@@ -86,7 +96,7 @@
     },
     "by_priority": {
       "critical": 0,
-      "high": 6,
+      "high": 7,
       "medium": 0,
       "low": 0
     }

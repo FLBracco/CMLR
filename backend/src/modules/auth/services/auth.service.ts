@@ -10,6 +10,8 @@ import type { Professional } from "../../professionals/entities/professional.ent
 
 const SALT_ROUNDS = 10;
 
+const normalizeEmail = (email: string): string => email.trim().toLowerCase();
+
 export class AuthService {
   constructor(
     private readonly professionalRepository = new ProfessionalRepository(),
@@ -17,7 +19,9 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterProfessionalDto): Promise<IAuthResponseDto> {
-    const existing = await this.professionalRepository.findByEmail(dto.email);
+    const existing = await this.professionalRepository.findByEmail(
+      normalizeEmail(dto.email)
+    );
 
     if (existing) {
       throw AppError.conflict("Ya existe una cuenta con ese email.");
@@ -36,7 +40,7 @@ export class AuthService {
     const professional = await this.professionalRepository.create({
       firstName: dto.firstName,
       lastName: dto.lastName,
-      email: dto.email.toLowerCase(),
+      email: normalizeEmail(dto.email),
       passwordHash,
       speciality,
     });
@@ -46,7 +50,7 @@ export class AuthService {
 
   async login(dto: LoginDto): Promise<IAuthResponseDto> {
     const professional = await this.professionalRepository.findByEmail(
-      dto.email
+      normalizeEmail(dto.email)
     );
 
     if (!professional) {

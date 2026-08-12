@@ -140,3 +140,32 @@
 
 ### Commit
 - Mensaje elegido: `feat: fase 6 - pantallas de pacientes y consultas (dashboard, ficha, formularios)`
+
+### Fase 7 — Pulido y entrega (completada)
+
+#### Bug encontrado y corregido
+- `AuthService.login` y el chequeo de duplicados de `AuthService.register` buscaban el email tal cual lo tipeaba el usuario, sin normalizar, mientras que el alta siempre lo guardaba en minúsculas. Un profesional que se registraba con mayúsculas en el email (ej. `Ana@Mail.com`) no podía volver a iniciar sesión escribiendo el mismo email con la misma casing, porque la búsqueda en la base (case-sensitive por collation default de Postgres) no coincidía con el valor guardado en minúsculas. Se agregó `normalizeEmail` (trim + lowercase) y se aplicó en los tres puntos de búsqueda/alta.
+
+#### Manejo de errores en UI
+- `AuthContext` ahora se suscribe a un listener de "no autorizado" expuesto por el cliente API (`setUnauthorizedListener`): cualquier respuesta 401 con un token activo dispara la limpieza de sesión (`localStorage` + estado en memoria), lo que hace que `ProtectedRoute` redirija automáticamente a `/login` en vez de dejar al usuario varado con un mensaje de error sin salida. No afecta a intentos de login con credenciales inválidas (no hay token todavía en ese caso).
+- Se revisaron los estados de carga/error ya existentes (Dashboard, ficha de paciente, formularios) y se consideraron suficientes: loaders de texto simple, deshabilitado de botones durante el submit, mensajes de error con fallback genérico ante fallas de red.
+
+#### Revisión de seguridad (manual, sin skill `senior-security` disponible en este entorno)
+- JWT: secreto vía `.env` (no commiteado), verificado con `jsonwebtoken`, expiración configurable (`JWT_EXPIRES_IN`).
+- bcrypt: `SALT_ROUNDS = 10` para el hash de contraseñas; nunca se expone `password_hash` en las respuestas (`buildAuthResponse` hace allow-list explícito de campos).
+- CORS restringido a `CORS_ORIGIN` (no wildcard).
+- Sin `.env` trackeado en git (`git ls-files` no devuelve ningún `.env`); sin secretos hardcodeados en el código nuevo del frontend (`dangerouslySetInnerHTML`, `eval`, API keys: 0 hallazgos).
+- `error-handler` no filtra stack traces al cliente; errores no controlados devuelven mensaje genérico y quedan logueados server-side.
+
+#### Revisión de código (skill `code-review`, effort medium)
+- Confirmó el bug de case-sensitivity de email (ya corregido en esta misma sesión antes de correr la revisión).
+- Señaló duplicación de `.toLowerCase()` en tres puntos de `auth.service.ts` como riesgo de mantenimiento — se extrajo el helper `normalizeEmail`.
+- La advertencia sobre emails legacy guardados con mayúsculas no aplica en este código: el alta siempre normalizó el email antes de guardar (desde la Fase 2), así que no hay filas existentes con casing mixto en la base.
+
+### Verificación Fase 7
+- `pnpm --filter backend build` y `pnpm --filter frontend build` OK.
+- Prueba manual end-to-end en Chrome: registro con email en mayúsculas → login exitoso con la misma casing (bug corregido verificado); simulación de token corrupto en `localStorage` → recarga del dashboard dispara 401 → logout automático y redirección a `/login` con `localStorage` limpio.
+- `tc-tracker` → `TC-007-08-12-26-fase7-pulido` (`tested`).
+
+### Commit
+- Mensaje elegido: `fix: fase 7 - normaliza email en auth, logout automatico ante 401 y pulido final`

@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -11,6 +12,7 @@ import {
   clearStoredToken,
   getStoredToken,
   setStoredToken,
+  setUnauthorizedListener,
 } from "../api/client";
 import type {
   ILoginPayload,
@@ -70,6 +72,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.removeItem(PROFESSIONAL_STORAGE_KEY);
       setProfessional(null);
     }
+  }, []);
+
+  useEffect(() => {
+    setUnauthorizedListener(() => {
+      clearStoredToken();
+      localStorage.removeItem(PROFESSIONAL_STORAGE_KEY);
+      setProfessional(null);
+    });
+
+    return () => setUnauthorizedListener(null);
   }, []);
 
   const value = useMemo<IAuthContext>(
