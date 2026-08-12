@@ -1,0 +1,493 @@
+{
+  "tc_id": "TC-005-08-12-26-frontend-base",
+  "parent_tc": null,
+  "title": "Fase 5 - Frontend base (scaffold React + Vite + Tailwind, router, cliente API, rutas protegidas)",
+  "status": "tested",
+  "priority": "high",
+  "created": "2026-08-12T12:31:32+00:00",
+  "updated": "2026-08-12T12:54:58+00:00",
+  "created_by": "Claude",
+  "project": "CMLR",
+  "description": {
+    "summary": "Scaffold del frontend con React + Vite + Tailwind, router con paginas stub (login, registro, dashboard, ficha paciente), cliente API con JWT y proteccion de rutas privadas.",
+    "motivation": "Arrancar la Fase 5 del MVP: base del frontend para poder construir las pantallas reales en la Fase 6.",
+    "scope": "feature",
+    "detailed_design": null,
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    {
+      "path": "frontend/vite.config.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/index.css",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/main.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/api/auth.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/auth/AuthContext.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/auth/ProtectedRoute.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/pages/LoginPage.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/pages/RegisterPage.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/pages/DashboardPage.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/pages/PatientDetailPage.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/pages/NotFoundPage.tsx",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/src/types/auth.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "frontend/.env.example",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/app.ts",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/config/env/environment.ts",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/package.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/.env.example",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-08-12T12:31:32+00:00",
+      "author": "Claude",
+      "summary": "TC record created",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "set",
+          "new_value": "planned",
+          "reason": "initial creation"
+        }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-08-12T12:31:46+00:00",
+      "author": "Claude",
+      "summary": "status: planned -> in_progress",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "in_progress",
+          "reason": "Inicio del scaffold del frontend"
+        }
+      ]
+    },
+    {
+      "revision_id": "R3",
+      "timestamp": "2026-08-12T12:53:55+00:00",
+      "author": "Claude",
+      "summary": "+file frontend/vite.config.ts (created); +file frontend/src/index.css (created); +file frontend/src/App.tsx (created); +file frontend/src/main.tsx (created); +file frontend/src/api/client.ts (created); +file frontend/src/api/auth.ts (created); +file frontend/src/auth/AuthContext.tsx (created); +file frontend/src/auth/ProtectedRoute.tsx (created); +file frontend/src/pages/LoginPage.tsx (created); +file frontend/src/pages/RegisterPage.tsx (created); +file frontend/src/pages/DashboardPage.tsx (created); +file frontend/src/pages/PatientDetailPage.tsx (created); +file frontend/src/pages/NotFoundPage.tsx (created); +file frontend/src/types/auth.ts (created); +file frontend/.env.example (created); +file backend/src/app.ts (modified); +file backend/src/config/env/environment.ts (modified); +file backend/package.json (modified); +file backend/.env.example (modified); note appended",
+      "field_changes": [
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/vite.config.ts",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/index.css",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/App.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/main.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/api/client.ts",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/api/auth.ts",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/auth/AuthContext.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/auth/ProtectedRoute.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/pages/LoginPage.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/pages/RegisterPage.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/pages/DashboardPage.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/pages/PatientDetailPage.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/pages/NotFoundPage.tsx",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/src/types/auth.ts",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "frontend/.env.example",
+            "action": "created"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/app.ts",
+            "action": "modified"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/config/env/environment.ts",
+            "action": "modified"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/package.json",
+            "action": "modified"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/.env.example",
+            "action": "modified"
+          },
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        },
+        {
+          "field": "notes",
+          "action": "added",
+          "new_value": "code_quality_checker marca LoginPage/RegisterPage con score bajo (D/C) por falsos positivos: numeros dentro de clases de Tailwind (text-slate-700, etc.) interpretados como 'magic numbers', y el conteo de lineas de handleSubmit incluye erroneamente el JSX de retorno. Revisado manualmente, no amerita cambios.",
+          "reason": "Registro de archivos y hallazgos tras implementar y probar el scaffold del frontend"
+        }
+      ]
+    },
+    {
+      "revision_id": "R4",
+      "timestamp": "2026-08-12T12:54:10+00:00",
+      "author": "Claude",
+      "summary": "status: in_progress -> implemented; +test T1: Registro + login end-to-end en navegador; handoff: updated progress_summary; handoff: +next_step 'Fase 6: pantallas reales (listado/busqueda de pacientes, formulario crear/editar paciente, ficha con historial de consultas, formulario de consulta)'; handoff: +context; handoff: +context",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "in_progress",
+          "new_value": "implemented",
+          "reason": "Scaffold, router, cliente API y rutas protegidas probados manualmente en navegador con backend real; build de frontend y backend OK; secret scanner sin hallazgos"
+        },
+        {
+          "field": "test_cases",
+          "action": "added",
+          "new_value": "T1",
+          "reason": "Scaffold, router, cliente API y rutas protegidas probados manualmente en navegador con backend real; build de frontend y backend OK; secret scanner sin hallazgos"
+        },
+        {
+          "field": "session_context.handoff.progress_summary",
+          "action": "changed",
+          "old_value": "",
+          "new_value": "Fase 5 completa: scaffold Vite+React+Tailwind, router con paginas stub, AuthContext + cliente API con JWT, ProtectedRoute, login/registro funcionales contra el backend real. Se corrigio un bug de CORS faltante en el backend.",
+          "reason": "Scaffold, router, cliente API y rutas protegidas probados manualmente en navegador con backend real; build de frontend y backend OK; secret scanner sin hallazgos"
+        },
+        {
+          "field": "session_context.handoff.next_steps",
+          "action": "added",
+          "new_value": "Fase 6: pantallas reales (listado/busqueda de pacientes, formulario crear/editar paciente, ficha con historial de consultas, formulario de consulta)",
+          "reason": "Scaffold, router, cliente API y rutas protegidas probados manualmente en navegador con backend real; build de frontend y backend OK; secret scanner sin hallazgos"
+        },
+        {
+          "field": "session_context.handoff.key_context",
+          "action": "added",
+          "new_value": "CORS_ORIGIN nueva variable de entorno en backend (.env y .env.example), default http://localhost:5173",
+          "reason": "Scaffold, router, cliente API y rutas protegidas probados manualmente en navegador con backend real; build de frontend y backend OK; secret scanner sin hallazgos"
+        },
+        {
+          "field": "session_context.handoff.key_context",
+          "action": "added",
+          "new_value": "Token y datos del profesional se persisten en localStorage (cmlr.token, cmlr.professional)",
+          "reason": "Scaffold, router, cliente API y rutas protegidas probados manualmente en navegador con backend real; build de frontend y backend OK; secret scanner sin hallazgos"
+        }
+      ]
+    },
+    {
+      "revision_id": "R5",
+      "timestamp": "2026-08-12T12:54:58+00:00",
+      "author": "Claude",
+      "summary": "status: implemented -> tested",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "implemented",
+          "new_value": "tested",
+          "reason": "Prueba manual end-to-end ejecutada en navegador con Chrome (claude-in-chrome): registro, persistencia de sesion, logout y login OK"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [
+    {
+      "test_id": "T1",
+      "title": "Registro + login end-to-end en navegador",
+      "procedure": [
+        "Levantar backend (pnpm --filter backend dev) y frontend (pnpm --filter frontend dev)",
+        "Navegar a /dashboard sin sesion -> debe redirigir a /login",
+        "Registrar profesional nuevo desde /registro con especialidad del catalogo",
+        "Verificar redireccion a /dashboard con nombre del profesional",
+        "Recargar /dashboard -> sesion debe persistir (localStorage)",
+        "Cerrar sesion -> debe redirigir a /login",
+        "Iniciar sesion con las mismas credenciales -> debe entrar a /dashboard"
+      ],
+      "expected_result": "Rutas protegidas redirigen sin sesion, registro/login funcionan contra la API real, sesion persiste y logout limpia el estado",
+      "actual_result": null,
+      "status": "pending",
+      "evidence": [],
+      "tested_by": null,
+      "tested_date": null
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "none"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-1786537892-10256",
+      "platform": "claude_code",
+      "model": "unknown",
+      "started": "2026-08-12T12:31:32+00:00",
+      "last_active": "2026-08-12T12:54:58+00:00"
+    },
+    "handoff": {
+      "progress_summary": "Fase 5 completa: scaffold Vite+React+Tailwind, router con paginas stub, AuthContext + cliente API con JWT, ProtectedRoute, login/registro funcionales contra el backend real. Se corrigio un bug de CORS faltante en el backend.",
+      "next_steps": [
+        "Fase 6: pantallas reales (listado/busqueda de pacientes, formulario crear/editar paciente, ficha con historial de consultas, formulario de consulta)"
+      ],
+      "blockers": [],
+      "key_context": [
+        "CORS_ORIGIN nueva variable de entorno en backend (.env y .env.example), default http://localhost:5173",
+        "Token y datos del profesional se persisten en localStorage (cmlr.token, cmlr.professional)"
+      ],
+      "files_in_progress": [],
+      "decisions_made": []
+    },
+    "session_history": []
+  },
+  "tags": [],
+  "related_tcs": [],
+  "notes": "[2026-08-12T12:53:55+00:00] code_quality_checker marca LoginPage/RegisterPage con score bajo (D/C) por falsos positivos: numeros dentro de clases de Tailwind (text-slate-700, etc.) interpretados como 'magic numbers', y el conteo de lineas de handleSubmit incluye erroneamente el JSX de retorno. Revisado manualmente, no amerita cambios.",
+  "metadata": {
+    "project": "CMLR",
+    "created_by": "Claude",
+    "last_modified_by": "Claude",
+    "last_modified": "2026-08-12T12:54:58+00:00",
+    "estimated_effort": null
+  }
+}

@@ -1,4 +1,6 @@
 import express from "express";
+import cors from "cors";
+import { Environment } from "./config/env/environment.js";
 import { errorHandler } from "./shared/middlewares/error-handler.js";
 import authRoutes from "./modules/auth/routes/auth.routes.js";
 import specialityRoutes from "./modules/professionals/routes/speciality.routes.js";
@@ -8,6 +10,7 @@ import consultationRoutes from "./modules/consultations/routes/consultation.rout
 
 export const app = express();
 
+app.use(cors({ origin: Environment.app.corsOrigin }));
 app.use(express.json());
 
 app.get("/api/hello", (_req, res) => {

@@ -100,3 +100,24 @@
 
 ### Commit
 - Mensaje elegido: `feat: fase 3 - CRUD de pacientes`
+
+## Miércoles 12/08/2026
+
+### Fase 5 — Frontend: base (completada)
+- Scaffold con Vite (`react-ts`) en `frontend/`, Tailwind CSS v4 vía `@tailwindcss/vite`.
+- Router (`react-router-dom`): `/login`, `/registro`, `/dashboard`, `/pacientes/:patientId`, catch-all 404. `/` redirige a `/dashboard`.
+- `AuthContext` (`src/auth/AuthContext.tsx`): login/register/logout contra la API real, persiste token y datos del profesional en `localStorage`.
+- Cliente API (`src/api/client.ts`): wrapper de `fetch` con `Authorization: Bearer`, mapea `{ error: { message } }` del backend a `ApiError`.
+- `ProtectedRoute`: redirige a `/login` (con `state.from`) si no hay sesión.
+- Páginas: Login y Registro funcionales (registro carga el catálogo de especialidades); Dashboard y Ficha de paciente quedan como stub para la Fase 6.
+
+### Bug encontrado y corregido
+- El backend no tenía middleware CORS: el frontend no podía llamar a la API desde el navegador (bloqueado por el navegador, sin headers `Access-Control-Allow-Origin`). Se agregó el paquete `cors`, `Environment.app.corsOrigin` (env `CORS_ORIGIN`, default `http://localhost:5173`) y `app.use(cors(...))` en `backend/src/app.ts`.
+
+### Verificación Fase 5
+- `pnpm --filter backend build` y `pnpm --filter frontend build` OK.
+- Prueba manual end-to-end en Chrome (backend + frontend reales): ruta protegida sin sesión → redirige a `/login`; registro con especialidad → redirige a `/dashboard` con nombre del profesional; sesión persiste al recargar; logout → redirige a `/login`; login con las mismas credenciales → OK.
+- Skills: `tc-tracker` → `TC-005-08-12-26-frontend-base` (`tested`); `senior-security` secret scanner → 0 hallazgos (frontend y backend); `code-reviewer` → promedio 94/100 (A) en `frontend/src`. `LoginPage`/`RegisterPage` marcadas D/C por falsos positivos del checker (números de clases Tailwind interpretados como "magic numbers" y conteo de líneas de `handleSubmit` que incluye el JSX de retorno) — revisado manualmente, no amerita cambios.
+
+### Commit
+- Mensaje elegido: `feat: fase 5 - frontend base (scaffold, router, cliente API, rutas protegidas)`
