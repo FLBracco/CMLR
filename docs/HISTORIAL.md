@@ -121,3 +121,22 @@
 
 ### Commit
 - Mensaje elegido: `feat: fase 5 - frontend base (scaffold, router, cliente API, rutas protegidas)`
+
+### Fase 6 — Frontend: pantallas (completada)
+- Tipos y cliente API para pacientes (`src/types/patient.ts`, `src/api/patients.ts`) y consultas (`src/types/consultation.ts`, `src/api/consultations.ts`), calcados de los DTOs reales del backend.
+- `AppHeader` compartido (nombre del profesional + cerrar sesión) extraído del Dashboard, reutilizado también en la ficha de paciente.
+- `PatientForm` y `ConsultationForm`: formularios reutilizables entre alta y edición, montados inline (toggle de estado) sin agregar rutas ni modales nuevas.
+- `DashboardPage`: listado de pacientes, búsqueda por nombre/apellido/DNI, alta de paciente.
+- `PatientDetailPage`: datos del paciente con edición inline, historial de consultas (más reciente primero), alta de consulta y edición inline por consulta.
+
+### Verificación Fase 6
+- `pnpm --filter frontend build` OK.
+- Prueba manual end-to-end en Chrome (backend + frontend reales): alta de paciente → aparece en el listado; edición de paciente → cambios persistidos; alta de consulta → aparece en el historial; edición de consulta → cambios persistidos; búsqueda por apellido → resultado correcto; logout → redirige a `/login`.
+- Revisión manual de seguridad: sin `dangerouslySetInnerHTML`, JSX auto-escapa el contenido de pacientes/consultas, sin secretos en el código nuevo.
+- `tc-tracker` → `TC-006-08-12-26-fase6-pantallas` (`tested`).
+
+### Nota pendiente
+- Falta el TC record retroactivo de la Fase 4 (CRUD de consultas del backend, commit `865e9b2`) — no se generó en su momento.
+
+### Commit
+- Mensaje elegido: `feat: fase 6 - pantallas de pacientes y consultas (dashboard, ficha, formularios)`

@@ -1,8 +1,8 @@
 {
   "project_name": "CMLR",
   "created": "2026-08-06T22:51:15+00:00",
-  "updated": "2026-08-12T12:54:58+00:00",
-  "next_tc_number": 6,
+  "updated": "2026-08-12T13:40:00+00:00",
+  "next_tc_number": 7,
   "records": [
     {
       "tc_id": "TC-001-08-06-26-fase0-fundaciones",
@@ -53,20 +53,30 @@
       "created": "2026-08-12T12:31:32+00:00",
       "updated": "2026-08-12T12:54:58+00:00",
       "path": "records/TC-005-08-12-26-frontend-base/tc_record.json"
+    },
+    {
+      "tc_id": "TC-006-08-12-26-fase6-pantallas",
+      "title": "Fase 6 - Frontend: pantallas (pacientes y consultas)",
+      "status": "tested",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-12T13:10:00+00:00",
+      "updated": "2026-08-12T13:40:00+00:00",
+      "path": "records/TC-006-08-12-26-fase6-pantallas/tc_record.json"
     }
   ],
   "statistics": {
-    "total": 5,
+    "total": 6,
     "by_status": {
       "planned": 0,
       "in_progress": 0,
       "blocked": 0,
       "implemented": 4,
-      "tested": 1,
+      "tested": 2,
       "deployed": 0
     },
     "by_scope": {
-      "feature": 4,
+      "feature": 5,
       "bugfix": 0,
       "refactor": 0,
       "infrastructure": 1,
@@ -76,7 +86,7 @@
     },
     "by_priority": {
       "critical": 0,
-      "high": 5,
+      "high": 6,
       "medium": 0,
       "low": 0
     }

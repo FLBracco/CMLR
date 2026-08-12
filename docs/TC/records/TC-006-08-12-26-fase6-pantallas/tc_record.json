@@ -1,0 +1,122 @@
+{
+  "tc_id": "TC-006-08-12-26-fase6-pantallas",
+  "parent_tc": null,
+  "title": "Fase 6 - Frontend: pantallas (pacientes y consultas)",
+  "status": "tested",
+  "priority": "high",
+  "created": "2026-08-12T13:10:00+00:00",
+  "updated": "2026-08-12T13:40:00+00:00",
+  "created_by": "Claude",
+  "project": "CMLR",
+  "description": {
+    "summary": "Pantallas reales del frontend: dashboard con listado/busqueda/alta de pacientes, ficha de paciente con edicion y con historial de consultas (alta y edicion inline). Cierre de sesion ya cubierto por AppHeader compartido.",
+    "motivation": "Completar la Fase 6 del MVP sobre la base del scaffold de la Fase 5, conectando las pantallas a los endpoints reales de /api/patients y /api/patients/:id/consultations.",
+    "scope": "feature",
+    "detailed_design": "Formularios (PatientForm, ConsultationForm) reutilizables entre alta y edicion, montados inline (sin rutas ni modales nuevas) mediante toggles de estado dentro de DashboardPage y PatientDetailPage. AppHeader extraido para compartir el logout entre ambas paginas.",
+    "breaking_changes": [],
+    "dependencies": ["TC-005-08-12-26-frontend-base", "TC-004-08-06-26-fase3-pacientes"]
+  },
+  "files_affected": [
+    { "path": "frontend/src/types/patient.ts", "action": "created", "description": null, "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/types/consultation.ts", "action": "created", "description": null, "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/api/patients.ts", "action": "created", "description": null, "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/api/consultations.ts", "action": "created", "description": null, "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/components/AppHeader.tsx", "action": "created", "description": null, "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/components/PatientForm.tsx", "action": "created", "description": null, "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/components/ConsultationForm.tsx", "action": "created", "description": null, "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/pages/DashboardPage.tsx", "action": "modified", "description": "De stub a listado + busqueda + alta de pacientes", "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/pages/PatientDetailPage.tsx", "action": "modified", "description": "De stub a ficha completa con edicion de paciente e historial de consultas (alta/edicion inline)", "lines_added": null, "lines_removed": null }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-08-12T13:10:00+00:00",
+      "author": "Claude",
+      "summary": "TC record created",
+      "field_changes": [
+        { "field": "status", "action": "set", "new_value": "planned", "reason": "initial creation" }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-08-12T13:40:00+00:00",
+      "author": "Claude",
+      "summary": "status: planned -> tested",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "tested",
+          "reason": "Implementado y probado manualmente end-to-end en navegador (claude-in-chrome) contra backend real: build de frontend OK, sin hallazgos de secretos ni XSS (JSX auto-escapado, sin dangerouslySetInnerHTML, sin secretos en codigo)"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [
+    {
+      "test_id": "T1",
+      "title": "Flujo completo pacientes + consultas en navegador",
+      "procedure": [
+        "Registrar profesional nuevo y entrar a /dashboard (listado vacio)",
+        "Crear paciente desde 'Nuevo paciente' -> aparece en el listado",
+        "Entrar a la ficha del paciente -> datos correctos",
+        "Editar paciente (fecha de nacimiento) -> se guarda y refleja el cambio",
+        "Crear consulta desde 'Nueva consulta' -> aparece en el historial",
+        "Editar la consulta creada -> cambios persistidos",
+        "Buscar el paciente por apellido desde el dashboard -> aparece en resultados",
+        "Cerrar sesion -> redirige a /login"
+      ],
+      "expected_result": "CRUD de pacientes y consultas funciona end-to-end contra la API real, con pre-fill correcto en edicion y persistencia de cambios",
+      "actual_result": "OK en todos los pasos",
+      "status": "passed",
+      "evidence": [],
+      "tested_by": "Claude",
+      "tested_date": "2026-08-12"
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "manual"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-fase6",
+      "platform": "claude_code",
+      "model": "claude-sonnet-5",
+      "started": "2026-08-12T13:10:00+00:00",
+      "last_active": "2026-08-12T13:40:00+00:00"
+    },
+    "handoff": {
+      "progress_summary": "Fase 6 completa: dashboard con listado/busqueda/alta de pacientes, ficha de paciente con edicion, historial de consultas con alta y edicion inline. Formularios reutilizables entre alta/edicion, sin rutas ni modales nuevas.",
+      "next_steps": [
+        "Fase 7: manejo de errores/loading mas fino, revision de seguridad y codigo, TC final, build de produccion",
+        "Pendiente: generar TC retroactivo para la Fase 4 (CRUD de consultas del backend), que no quedo registrada en su momento"
+      ],
+      "blockers": [],
+      "key_context": [
+        "Consultas no editan la fecha via UI mas alla del campo estandar; no hay endpoint DELETE (regla de negocio: no se eliminan)",
+        "Historial de consultas se muestra mas reciente primero en la UI (reverse del orden ASC que devuelve el backend)"
+      ],
+      "files_in_progress": [],
+      "decisions_made": [
+        "Se prefirio edicion inline (toggle de formulario en la misma pagina) en vez de rutas o modales nuevas, para mantener la complejidad acorde al MVP"
+      ]
+    },
+    "session_history": []
+  },
+  "tags": ["frontend", "pacientes", "consultas"],
+  "related_tcs": ["TC-005-08-12-26-frontend-base", "TC-004-08-06-26-fase3-pacientes"],
+  "notes": "",
+  "metadata": {
+    "project": "CMLR",
+    "created_by": "Claude",
+    "last_modified_by": "Claude",
+    "last_modified": "2026-08-12T13:40:00+00:00",
+    "estimated_effort": null
+  }
+}
