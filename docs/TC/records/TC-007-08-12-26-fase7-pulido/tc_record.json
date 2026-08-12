@@ -1,0 +1,128 @@
+{
+  "tc_id": "TC-007-08-12-26-fase7-pulido",
+  "parent_tc": null,
+  "title": "Fase 7 - Pulido y entrega: bug de email case-sensitive, logout automatico, revision de seguridad y codigo",
+  "status": "tested",
+  "priority": "high",
+  "created": "2026-08-12T14:00:00+00:00",
+  "updated": "2026-08-12T14:45:00+00:00",
+  "created_by": "Claude",
+  "project": "CMLR",
+  "description": {
+    "summary": "Correccion de un bug de login (email case-sensitive), logout automatico en el frontend ante respuestas 401 con sesion activa, revision manual de seguridad (JWT/bcrypt/CORS/secrets) y revision de codigo con la skill code-review.",
+    "motivation": "Cerrar el MVP: pulir manejo de errores, corregir bugs encontrados y dejar constancia de las revisiones de seguridad y calidad antes de la entrega.",
+    "scope": "bugfix",
+    "detailed_design": "normalizeEmail(trim+lowercase) aplicado en register (chequeo de duplicado y alta) y login de AuthService. setUnauthorizedListener en el cliente API, suscripto desde AuthContext, limpia sesion y deja que ProtectedRoute redirija a /login ante cualquier 401 con token activo.",
+    "breaking_changes": [],
+    "dependencies": ["TC-006-08-12-26-fase6-pantallas", "TC-003-08-06-26-fase2-auth"]
+  },
+  "files_affected": [
+    { "path": "backend/src/modules/auth/services/auth.service.ts", "action": "modified", "description": "normalizeEmail helper + uso en register/login", "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/api/client.ts", "action": "modified", "description": "setUnauthorizedListener + disparo en 401 con token", "lines_added": null, "lines_removed": null },
+    { "path": "frontend/src/auth/AuthContext.tsx", "action": "modified", "description": "Suscripcion al listener de no autorizado, limpia sesion", "lines_added": null, "lines_removed": null }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-08-12T14:00:00+00:00",
+      "author": "Claude",
+      "summary": "TC record created",
+      "field_changes": [
+        { "field": "status", "action": "set", "new_value": "planned", "reason": "initial creation" }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-08-12T14:45:00+00:00",
+      "author": "Claude",
+      "summary": "status: planned -> tested",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "tested",
+          "reason": "Bug de email verificado y corregido en navegador; logout automatico verificado corrompiendo el token en localStorage; builds de backend y frontend OK; revision de seguridad manual sin hallazgos; revision de codigo (skill code-review, effort medium) con 2 hallazgos: 1 aplicado (extraccion de normalizeEmail), 1 descartado por no aplicar a los datos reales de esta app (el alta siempre normalizo el email desde la Fase 2, no hay filas legacy con casing mixto)"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [
+    {
+      "test_id": "T1",
+      "title": "Login con email en mayusculas tras el fix",
+      "procedure": [
+        "Registrar profesional con email mixto (ej. Fase7.Case@Example.com)",
+        "Cerrar sesion",
+        "Iniciar sesion con el mismo email, misma casing exacta",
+        "Verificar que entra a /dashboard"
+      ],
+      "expected_result": "Login exitoso independientemente de la casing usada al registrarse o al loguearse",
+      "actual_result": "OK",
+      "status": "passed",
+      "evidence": [],
+      "tested_by": "Claude",
+      "tested_date": "2026-08-12"
+    },
+    {
+      "test_id": "T2",
+      "title": "Logout automatico ante token invalido/expirado",
+      "procedure": [
+        "Con sesion activa en /dashboard, corromper localStorage.cmlr.token via consola",
+        "Recargar /dashboard (dispara fetch de pacientes con el token invalido)",
+        "Verificar redireccion automatica a /login",
+        "Verificar que localStorage.cmlr.token y cmlr.professional quedan en null"
+      ],
+      "expected_result": "El 401 dispara limpieza de sesion y redireccion a /login sin dejar al usuario varado",
+      "actual_result": "OK",
+      "status": "passed",
+      "evidence": [],
+      "tested_by": "Claude",
+      "tested_date": "2026-08-12"
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "manual"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-fase7",
+      "platform": "claude_code",
+      "model": "claude-sonnet-5",
+      "started": "2026-08-12T14:00:00+00:00",
+      "last_active": "2026-08-12T14:45:00+00:00"
+    },
+    "handoff": {
+      "progress_summary": "MVP completo: Fases 0-7 implementadas y probadas manualmente. Bug de login por email case-sensitive corregido. Logout automatico ante sesion invalida. Revision de seguridad y codigo sin hallazgos criticos pendientes.",
+      "next_steps": [
+        "Pendiente (no bloqueante): generar TC retroactivo para la Fase 4 (CRUD de consultas del backend, commit 865e9b2), que no quedo registrada en su momento",
+        "A futuro: considerar refresh token si se extiende mas alla del MVP (hoy el JWT expira a las 2h sin renovacion)"
+      ],
+      "blockers": [],
+      "key_context": [
+        "normalizeEmail (trim + lowercase) centraliza la normalizacion de email en AuthService; cualquier cambio futuro a la logica de comparacion de emails debe pasar por ahi",
+        "setUnauthorizedListener en frontend/src/api/client.ts es un singleton de modulo (no un contexto de React); solo AuthContext debe registrarlo"
+      ],
+      "files_in_progress": [],
+      "decisions_made": [
+        "El listener de 401 solo se dispara si habia un token en la request (evita interferir con el mensaje de credenciales invalidas en el login)"
+      ]
+    },
+    "session_history": []
+  },
+  "tags": ["backend", "frontend", "auth", "seguridad", "bugfix"],
+  "related_tcs": ["TC-006-08-12-26-fase6-pantallas", "TC-003-08-06-26-fase2-auth"],
+  "notes": "",
+  "metadata": {
+    "project": "CMLR",
+    "created_by": "Claude",
+    "last_modified_by": "Claude",
+    "last_modified": "2026-08-12T14:45:00+00:00",
+    "estimated_effort": null
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "project_name": "CMLR",
+  "created": "2026-08-06T22:51:15+00:00",
+  "updated": "2026-08-12T14:45:00+00:00",
+  "next_tc_number": 8,
+  "records": [
+    {
+      "tc_id": "TC-001-08-06-26-fase0-fundaciones",
+      "title": "Fase 0 - Fundaciones: env, errores, estructura",
+      "status": "implemented",
+      "scope": "infrastructure",
+      "priority": "high",
+      "created": "2026-08-06T22:51:20+00:00",
+      "updated": "2026-08-06T22:51:38+00:00",
+      "path": "records/TC-001-08-06-26-fase0-fundaciones/tc_record.json"
+    },
+    {
+      "tc_id": "TC-002-08-06-26-fase1-database",
+      "title": "Fase 1 - Base de datos: entities, migracion y seed",
+      "status": "implemented",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-06T23:00:51+00:00",
+      "updated": "2026-08-06T23:01:11+00:00",
+      "path": "records/TC-002-08-06-26-fase1-database/tc_record.json"
+    },
+    {
+      "tc_id": "TC-003-08-06-26-fase2-auth",
+      "title": "Fase 2 - Autenticacion JWT",
+      "status": "implemented",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-06T23:14:10+00:00",
+      "updated": "2026-08-06T23:14:29+00:00",
+      "path": "records/TC-003-08-06-26-fase2-auth/tc_record.json"
+    },
+    {
+      "tc_id": "TC-004-08-06-26-fase3-pacientes",
+      "title": "Fase 3 - CRUD de pacientes",
+      "status": "implemented",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-06T23:22:48+00:00",
+      "updated": "2026-08-06T23:23:12+00:00",
+      "path": "records/TC-004-08-06-26-fase3-pacientes/tc_record.json"
+    },
+    {
+      "tc_id": "TC-005-08-12-26-frontend-base",
+      "title": "Fase 5 - Frontend base (scaffold React + Vite + Tailwind, router, cliente API, rutas protegidas)",
+      "status": "tested",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-12T12:31:32+00:00",
+      "updated": "2026-08-12T12:54:58+00:00",
+      "path": "records/TC-005-08-12-26-frontend-base/tc_record.json"
+    },
+    {
+      "tc_id": "TC-006-08-12-26-fase6-pantallas",
+      "title": "Fase 6 - Frontend: pantallas (pacientes y consultas)",
+      "status": "tested",
+      "scope": "feature",
+      "priority": "high",
+      "created": "2026-08-12T13:10:00+00:00",
+      "updated": "2026-08-12T13:40:00+00:00",
+      "path": "records/TC-006-08-12-26-fase6-pantallas/tc_record.json"
+    },
+    {
+      "tc_id": "TC-007-08-12-26-fase7-pulido",
+      "title": "Fase 7 - Pulido y entrega: bug de email case-sensitive, logout automatico, revision de seguridad y codigo",
+      "status": "tested",
+      "scope": "bugfix",
+      "priority": "high",
+      "created": "2026-08-12T14:00:00+00:00",
+      "updated": "2026-08-12T14:45:00+00:00",
+      "path": "records/TC-007-08-12-26-fase7-pulido/tc_record.json"
+    }
+  ],
+  "statistics": {
+    "total": 7,
+    "by_status": {
+      "planned": 0,
+      "in_progress": 0,
+      "blocked": 0,
+      "implemented": 4,
+      "tested": 3,
+      "deployed": 0
+    },
+    "by_scope": {
+      "feature": 5,
+      "bugfix": 1,
+      "refactor": 0,
+      "infrastructure": 1,
+      "documentation": 0,
+      "hotfix": 0,
+      "enhancement": 0
+    },
+    "by_priority": {
+      "critical": 0,
+      "high": 7,
+      "medium": 0,
+      "low": 0
+    }
+  }
+}

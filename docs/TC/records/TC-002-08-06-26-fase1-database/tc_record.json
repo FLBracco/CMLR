@@ -1,0 +1,232 @@
+{
+  "tc_id": "TC-002-08-06-26-fase1-database",
+  "parent_tc": null,
+  "title": "Fase 1 - Base de datos: entities, migracion y seed",
+  "status": "implemented",
+  "priority": "high",
+  "created": "2026-08-06T23:00:51+00:00",
+  "updated": "2026-08-06T23:01:11+00:00",
+  "created_by": "Claude",
+  "project": "CMLR",
+  "description": {
+    "summary": "Entities TypeORM (ProfessionalSpeciality, Professional, Patient, Consultation), migracion inicial de 4 tablas, seed de especialidades",
+    "motivation": "Esquema de datos del MVP segun modelo fisico 06",
+    "scope": "feature",
+    "detailed_design": null,
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    {
+      "path": "backend/src/modules/professionals/entities/professional-speciality.entity.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/professionals/entities/professional.entity.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/patients/entities/patient.entity.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/consultations/entities/consultation.entity.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/migrations/1786057121606-InitialSchema.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/database/seed.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/professionals/dto/speciality.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/tsconfig.json",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-08-06T23:00:51+00:00",
+      "author": "Claude",
+      "summary": "TC record created",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "set",
+          "new_value": "planned",
+          "reason": "initial creation"
+        }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-08-06T23:00:58+00:00",
+      "author": "Claude",
+      "summary": "status: planned -> in_progress",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "in_progress",
+          "reason": "Iniciando verificacion"
+        }
+      ]
+    },
+    {
+      "revision_id": "R3",
+      "timestamp": "2026-08-06T23:01:11+00:00",
+      "author": "Claude",
+      "summary": "status: in_progress -> implemented; +file backend/src/modules/professionals/entities/professional-speciality.entity.ts (created); +file backend/src/modules/professionals/entities/professional.entity.ts (created); +file backend/src/modules/patients/entities/patient.entity.ts (created); +file backend/src/modules/consultations/entities/consultation.entity.ts (created); +file backend/src/migrations/1786057121606-InitialSchema.ts (created); +file backend/src/database/seed.ts (created); +file backend/src/modules/professionals/dto/speciality.dto.ts (created); +file backend/tsconfig.json (modified)",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "in_progress",
+          "new_value": "implemented",
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/professionals/entities/professional-speciality.entity.ts",
+            "action": "created"
+          },
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/professionals/entities/professional.entity.ts",
+            "action": "created"
+          },
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/patients/entities/patient.entity.ts",
+            "action": "created"
+          },
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/entities/consultation.entity.ts",
+            "action": "created"
+          },
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/migrations/1786057121606-InitialSchema.ts",
+            "action": "created"
+          },
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/database/seed.ts",
+            "action": "created"
+          },
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/professionals/dto/speciality.dto.ts",
+            "action": "created"
+          },
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/tsconfig.json",
+            "action": "modified"
+          },
+          "reason": "Entities, migracion ejecutada y seed verificado. Build OK, code-review 97.4/100, secret scan 0 hallazgos"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "none"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-1786057251-9524",
+      "platform": "claude_code",
+      "model": "unknown",
+      "started": "2026-08-06T23:00:51+00:00",
+      "last_active": "2026-08-06T23:01:11+00:00"
+    },
+    "handoff": {
+      "progress_summary": "",
+      "next_steps": [],
+      "blockers": [],
+      "key_context": [],
+      "files_in_progress": [],
+      "decisions_made": []
+    },
+    "session_history": []
+  },
+  "tags": [],
+  "related_tcs": [],
+  "notes": "",
+  "metadata": {
+    "project": "CMLR",
+    "created_by": "Claude",
+    "last_modified_by": "Claude",
+    "last_modified": "2026-08-06T23:01:11+00:00",
+    "estimated_effort": null
+  }
+}
