@@ -5,6 +5,8 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { PatientDetailPage } from "./pages/PatientDetailPage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { ComingSoonPage } from "./pages/ComingSoonPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 function App() {
@@ -28,6 +30,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <PatientDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/perfil"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/calendario"
+            element={
+              <ProtectedRoute>
+                <ComingSoonPage title="Calendario" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/suscripcion"
+            element={
+              <ProtectedRoute>
+                <ComingSoonPage title="Suscripción" />
               </ProtectedRoute>
             }
           />

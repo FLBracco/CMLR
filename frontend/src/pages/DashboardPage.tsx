@@ -1,17 +1,29 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
-import { AppHeader } from "../components/AppHeader";
+import { Link, useSearchParams } from "react-router-dom";
+import { AppShell } from "../components/AppShell";
 import { PatientForm } from "../components/PatientForm";
 import { createPatient, listPatients } from "../api/patients";
+import { getConsultationStats } from "../api/consultations";
 import { ApiError } from "../api/client";
 import type { IPatient, IPatientPayload } from "../types/patient";
+import type { IConsultationStats } from "../types/consultation";
+
+const StatCard = ({ label, value }: { label: string; value: number | null }) => (
+  <div className="rounded-lg border border-border-subtle bg-surface p-6">
+    <p className="text-sm text-text-muted">{label}</p>
+    <p className="mt-2 text-4xl font-bold text-text">{value ?? "—"}</p>
+  </div>
+);
 
 export const DashboardPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [patients, setPatients] = useState<IPatient[]>([]);
+  const [totalPatients, setTotalPatients] = useState<number | null>(null);
+  const [stats, setStats] = useState<IConsultationStats | null>(null);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(() => searchParams.get("new") === "1");
 
   const fetchPatients = useCallback(async (term?: string) => {
     setIsLoading(true);
@@ -19,6 +31,7 @@ export const DashboardPage = () => {
     try {
       const result = await listPatients(term || undefined);
       setPatients(result);
+      if (!term) setTotalPatients(result.length);
     } catch (err) {
       setError(
         err instanceof ApiError ? err.message : "No se pudo cargar el listado de pacientes."
@@ -32,6 +45,20 @@ export const DashboardPage = () => {
     fetchPatients();
   }, [fetchPatients]);
 
+  useEffect(() => {
+    getConsultationStats()
+      .then(setStats)
+      .catch(() => setStats(null));
+  }, []);
+
+  useEffect(() => {
+    if (searchParams.get("new") === "1") {
+      setIsCreating(true);
+      setSearchParams({}, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleSearchSubmit = (event: FormEvent) => {
     event.preventDefault();
     fetchPatients(search);
@@ -44,18 +71,26 @@ export const DashboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-
-      <main className="mx-auto max-w-4xl p-6">
+    <AppShell>
+      <div className="mx-auto max-w-4xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-2xl font-semibold text-text">Pacientes</h2>
           <button
             onClick={() => setIsCreating((current) => !current)}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+            className={
+              isCreating
+                ? "rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-surface-hover"
+                : "rounded-lg bg-primary transition-colors px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-hover hover:text-primary-hover-foreground active:bg-primary-active active:text-primary-hover-foreground"
+            }
           >
             {isCreating ? "Cerrar formulario" : "Nuevo paciente"}
           </button>
+        </div>
+
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCard label="Pacientes totales" value={totalPatients} />
+          <StatCard label="Consultas este mes" value={stats?.consultationsThisMonth ?? null} />
+          <StatCard label="Consultas esta semana" value={stats?.consultationsThisWeek ?? null} />
         </div>
 
         {isCreating && (
@@ -114,7 +149,7 @@ export const DashboardPage = () => {
             ))}
           </ul>
         )}
-      </main>
-    </div>
+      </div>
+    </AppShell>
   );
 };

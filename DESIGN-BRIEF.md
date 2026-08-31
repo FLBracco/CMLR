@@ -25,8 +25,10 @@ _Generado por /design-grill el 2026-08-31. Actualizar este archivo cuando cambie
 - **Temperature:** Neutra como base, con un acento saturado/vivo (inspirado en la calidez de Jane.app)
 - **Primary color direction:** Un solo color de acento + neutros (no paleta completa)
 - **Saturation:** Base neutra apagada + acento vivo puntual
-- **Specific starting point** (punto de partida sugerido, a confirmar con `/tokens`):
-  - primary/accent: `#E8734A` (terracota cálido, saturado)
+- **Specific starting point** (confirmado, ver `frontend/src/index.css`):
+  - primary/accent, reposo: fill `#C7D2FE` (índigo pastel) + texto `#312E81`. Elegido por el usuario mirando una paleta comparativa en vivo (8 familias × pastel/sólido) después de que terracota, ámbar y rosa no convencieran.
+  - primary/accent, hover: fill `#4F46E5` (índigo sólido) + texto blanco, con transición suave — el botón se "rellena" sólido al pasar el mouse, en vez de quedar pastel todo el tiempo.
+  - border-focus (foco de inputs): `#EC4899` (rosa vivo), sigue siendo un tono más saturado que el fill de los botones porque un borde no tiene la restricción de contraste de texto-sobre-fondo
   - background: `#FAFAFA` (gray-50)
   - text: `#18181B` (gray-900)
   - borders: `#E4E4E7` (gray-200), livianos 1px
@@ -44,6 +46,22 @@ _Generado por /design-grill el 2026-08-31. Actualizar este archivo cuando cambie
 - **Borders:** Livianos, 1px sutil
 - **Overall:** Redondeado y con un acento cálido puntual, pero plano/neutro/tipografía geométrica en la base — mantiene el registro sobrio sin sentirse frío.
 
+### Roles de botón (color por función, no decorativo)
+| Rol | Color | Dónde |
+|---|---|---|
+| Crear / navegar / acción principal | Índigo — pastel en reposo, sólido en `:hover` | "Nuevo paciente", "Nueva consulta", ítem activo del sidebar, avatar, "Ingresar", "Crear cuenta" |
+| Confirmar / guardar dentro de un formulario | Azul, sólido siempre (no pastel) — `#2563EB`, más oscuro en hover/active | "Guardar", "Guardar cambios" (siempre que hay un botón de Cancelar al lado, o es el único submit de un form de edición) |
+| Cancelar / cerrar | Neutro (borde, sin fill) | "Cancelar", "Cerrar", "Editar paciente"/"Cerrar", y el toggle "Nuevo paciente"↔"Cerrar formulario" (cambia de índigo a neutro según el estado) |
+| Cerrar sesión | Rojo suave — fondo/borde pálidos (`red-50`/`red-200`), ícono y texto en `--color-destructive` (`red-600`, el mínimo que da 4.5:1 legible) | Botón "Cerrar sesión" del sidebar. No es destructivo (no borra nada), pero tampoco es un cancelar cualquiera — se lo distingue con un rojo apagado, no el rojo fuerte de una acción irreversible |
+
+**Por qué:** el botón que alterna "Nuevo paciente"/"Nueva consulta" ↔ "Cerrar formulario" se quedaba pintado de índigo aunque en el estado abierto ya significaba "cancelar", no "crear" — el color dejó de comunicar el rol real de la acción. Se corrigió para que el color siga el significado, no el componente.
+
+## Layout / Navigation
+- **Estructura:** sidebar de navegación persistente en desktop (colapsa a drawer con hamburguesa en mobile), en vez de un header horizontal simple.
+- **Ítems reales:** Pacientes (lista + búsqueda), Perfil (editar datos propios).
+- **Ítems "Próximamente"** (visibles pero deshabilitados, sin feature real detrás todavía): Calendario, Suscripción — son proyectos aparte (turnos, facturación), no ajustes de diseño.
+- **Acción rápida:** "Nuevo paciente" fijo en el sidebar (disponible desde cualquier pantalla, no solo desde el dashboard).
+
 ## Animation
 - **Level:** Mínima — casi estático. Solo feedback esencial (botón activo, error de formulario), sin animaciones de entrada/salida.
 - **Key interaction to make feel great:** No definida aún — a confirmar cuando se use `/animate`.
@@ -60,15 +78,19 @@ _Generado por /design-grill el 2026-08-31. Actualizar este archivo cuando cambie
 | Acento saturado sobre base neutra | Neutros + un solo acento vivo | Balance entre "sobrio/discreto" (Q3-Q4) y la calidez deseada (Jane.app) |
 | Animación mínima | Casi estático | Registro clínico serio, sin distracciones; prioridad en carga rápida de datos |
 | Dark mode | Más adelante, no ahora | Prioridad actual es el modo claro; se deja la puerta abierta vía tokens |
+| Color de acento (superseded 3x) | ~~Terracota~~ → ~~Ámbar~~ → ~~Rosa claro~~ → Índigo/violeta | Terracota, ámbar y rosa no convencieron; se armó una paleta comparativa en vivo y el usuario eligió índigo/violeta mirándola directamente en vez de por descripción de texto |
+| Estilo de botón primario | Pastel en reposo (`#C7D2FE`/`#312E81`) → sólido al pasar el mouse (`#4F46E5`/blanco), con transición suave | El usuario quería mantener el pastel pero que se "rellene" sólido en hover, no un pastel más oscuro |
+| Layout de navegación | Header simple → sidebar (persistente en desktop, drawer en mobile) | El usuario quería más estructura de navegación (Perfil, Calendario, Suscripción) a medida que el producto crece |
 
 ## Ruled Out
 _Direcciones explícitamente rechazadas durante esta sesión. No volver a proponerlas sin reabrir la decisión._
 
 | Direction | Why it was rejected |
 |-----------|-------------------|
-| Paleta completa de colores | Se prefirió un solo acento + neutros — más sofisticado y enfocado para una app de gestión clínica |
+| ~~Paleta completa de colores~~ (reabierto) | Se prefirió inicialmente un solo acento + neutros. Reabierto más adelante: se sumó un segundo acento (azul, solo para botones de confirmar/guardar) — sigue sin ser una "paleta completa", es un rol semántico adicional (crear=índigo, confirmar=azul, neutro=cancelar), no color decorativo |
 | Animación expresiva | Conflictúa con "sobrio/discreto"; se eligió el nivel mínimo |
 | Esquinas sin redondeo (sharp) o solo 4px default | Se descartó a favor de 8-12px para traer la calidez de la referencia Jane.app |
+| Rojo para "Cancelar" | El usuario lo propuso; se explicó que la convención es reservar rojo para acciones destructivas/irreversibles (eliminar), no para cancelar/cerrar un formulario que solo descarta cambios sin guardar — usarlo ahí mezclaría la señal con `--color-destructive` (ya usado en mensajes de error) y generaría dudas donde no las debería haber. Cancelar queda neutro; el rojo se reserva para el día que exista una acción tipo "Eliminar paciente" |
 
 ## Open Questions
 - Escalado a multiusuario (recepción cargando turnos): sin definir todavía cómo afecta roles/permisos en la UI — retomar cuando se planifique esa fase.

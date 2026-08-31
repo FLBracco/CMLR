@@ -20,6 +20,21 @@ export class ProfessionalRepository {
     });
   }
 
+  async findById(id: string): Promise<Professional | null> {
+    return this.repository.findOne({
+      where: { id },
+      relations: { speciality: true },
+    });
+  }
+
+  async update(
+    professional: Professional,
+    data: Partial<Pick<Professional, "firstName" | "lastName" | "speciality">>
+  ): Promise<Professional> {
+    this.repository.merge(professional, data);
+    return this.repository.save(professional);
+  }
+
   async create(data: ICreateProfessionalData): Promise<Professional> {
     const professional = this.repository.create({
       firstName: data.firstName,

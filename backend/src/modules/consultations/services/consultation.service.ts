@@ -7,6 +7,7 @@ import type { UpdateConsultationDto } from "../dto/update-consultation.dto.js";
 import type {
   IConsultationDto,
   IConsultationListDto,
+  IConsultationStatsDto,
 } from "../dto/consultation-response.dto.js";
 
 export class ConsultationService {
@@ -71,6 +72,27 @@ export class ConsultationService {
     });
 
     return this.toDto(updated);
+  }
+
+  async getStats(professionalId: string): Promise<IConsultationStatsDto> {
+    const now = new Date();
+    const startOfWeek = this.getStartOfWeek(now);
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const [consultationsThisWeek, consultationsThisMonth] = await Promise.all([
+      this.consultationRepository.countByProfessionalSince(professionalId, startOfWeek),
+      this.consultationRepository.countByProfessionalSince(professionalId, startOfMonth),
+    ]);
+
+    return { consultationsThisWeek, consultationsThisMonth };
+  }
+
+  private getStartOfWeek(date: Date): Date {
+    const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const day = result.getDay();
+    const diffToMonday = day === 0 ? -6 : 1 - day;
+    result.setDate(result.getDate() + diffToMonday);
+    return result;
   }
 
   private async assertPatientOwnership(

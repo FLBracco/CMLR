@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { AppHeader } from "../components/AppHeader";
+import { AppShell } from "../components/AppShell";
 import { PatientForm } from "../components/PatientForm";
 import { ConsultationForm } from "../components/ConsultationForm";
 import { getPatient, updatePatient } from "../api/patients";
@@ -82,10 +82,8 @@ export const PatientDetailPage = () => {
     );
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-
-      <main className="mx-auto max-w-3xl p-6">
+    <AppShell>
+      <div className="mx-auto max-w-3xl">
         <Link to="/dashboard" className="text-sm text-text-tertiary underline">
           ← Volver al dashboard
         </Link>
@@ -95,7 +93,7 @@ export const PatientDetailPage = () => {
 
         {patient && (
           <>
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border-subtle bg-surface p-4">
               <h2 className="text-2xl font-semibold text-text">
                 {patient.firstName} {patient.lastName}
               </h2>
@@ -140,7 +138,11 @@ export const PatientDetailPage = () => {
               <h3 className="text-lg font-semibold text-text">Historial de consultas</h3>
               <button
                 onClick={() => setIsCreatingConsultation((current) => !current)}
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+                className={
+                  isCreatingConsultation
+                    ? "rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-surface-hover"
+                    : "rounded-lg bg-primary transition-colors px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-hover hover:text-primary-hover-foreground active:bg-primary-active active:text-primary-hover-foreground"
+                }
               >
                 {isCreatingConsultation ? "Cerrar formulario" : "Nueva consulta"}
               </button>
@@ -211,7 +213,7 @@ export const PatientDetailPage = () => {
             </div>
           </>
         )}
-      </main>
-    </div>
+      </div>
+    </AppShell>
   );
 };

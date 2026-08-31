@@ -3,18 +3,37 @@
 
 /* Design tokens — see DESIGN-BRIEF.md. Primitives first, semantic aliases after. */
 @theme {
-  /* Primitives — accent (not in Tailwind's default palette) */
-  --color-terracotta-500: #e8734a;
-  --color-terracotta-600: #d35f37;
-  --color-terracotta-700: #b84b2a;
-  --color-terracotta-800: #9c3d20;
-  --color-terracotta-900: #82331a;
+  /* Primitives — accent (not in Tailwind's default palette). Named "accent",
+     not by hue, so a future color change doesn't leave stale variable names. */
+  --color-accent-200: #c7d2fe;
+  --color-accent-500: #6366f1;
+  --color-accent-600: #4f46e5;
+  --color-accent-700: #4338ca;
+  --color-accent-900: #312e81;
+
+  /* Primitives — confirm (blue, solid at rest — for "Guardar"-type buttons,
+     separate from the indigo accent used for primary/create actions). */
+  --color-confirm-600: #2563eb;
+  --color-confirm-700: #1d4ed8;
+  --color-confirm-800: #1e40af;
 
   /* Semantic — color */
-  /* primary uses -700 (not -500) so white button text clears WCAG AA (4.5:1) — -500 alone is only ~3:1 */
-  --color-primary: var(--color-terracotta-700);
-  --color-primary-hover: var(--color-terracotta-800);
-  --color-primary-active: var(--color-terracotta-900);
+  /* At rest: pastel (light fill + dark text, ~7.7:1). On hover: fills in solid
+     (dark fill + white text, ~6.3:1) — both text colors are tokenized since the
+     fill switches from light to dark, one text color can't cover both. */
+  --color-primary: var(--color-accent-200);
+  --color-primary-foreground: var(--color-accent-900);
+  --color-primary-hover: var(--color-accent-600);
+  --color-primary-hover-foreground: var(--color-white);
+  --color-primary-active: var(--color-accent-700);
+  /* Solid at rest (not pastel like primary) — dark blue fill + white text,
+     ~5.1:1. Reserved for the button that actually saves/confirms a form
+     (paired with a neutral Cancelar, never used for a plain "cancel"). */
+  --color-confirm: var(--color-confirm-600);
+  --color-confirm-foreground: var(--color-white);
+  --color-confirm-hover: var(--color-confirm-700);
+  --color-confirm-hover-foreground: var(--color-white);
+  --color-confirm-active: var(--color-confirm-800);
   --color-destructive: var(--color-red-600);
   --color-background: var(--color-slate-50);
   --color-surface: var(--color-white);
@@ -26,7 +45,7 @@
   --color-border: var(--color-slate-300);
   --color-border-subtle: var(--color-slate-200);
   /* border-focus stays on the vivid -500 — a border doesn't carry the white-text contrast constraint */
-  --color-border-focus: var(--color-terracotta-500);
+  --color-border-focus: var(--color-accent-500);
 
   /* Semantic — typography */
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;

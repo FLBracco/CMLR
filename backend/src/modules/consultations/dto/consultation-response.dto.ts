@@ -12,3 +12,8 @@ export interface IConsultationDto {
 export interface IConsultationListDto {
   consultations: IConsultationDto[];
 }
+
+export interface IConsultationStatsDto {
+  consultationsThisWeek: number;
+  consultationsThisMonth: number;
+}

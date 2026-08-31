@@ -30,6 +30,12 @@ export class ConsultationController {
     res.status(200).json(result);
   }
 
+  async getStats(req: IAuthenticatedRequest, res: Response): Promise<void> {
+    const professionalId = this.getProfessionalId(req);
+    const result = await this.consultationService.getStats(professionalId);
+    res.status(200).json(result);
+  }
+
   async update(req: IAuthenticatedRequest, res: Response): Promise<void> {
     const professionalId = this.getProfessionalId(req);
     const result = await this.consultationService.update(

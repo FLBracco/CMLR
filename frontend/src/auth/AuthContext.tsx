@@ -28,6 +28,7 @@ interface IAuthContext {
   login: (payload: ILoginPayload) => Promise<void>;
   register: (payload: IRegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
+  updateProfessional: (professional: IProfessional) => void;
 }
 
 const AuthContext = createContext<IAuthContext | null>(null);
@@ -64,6 +65,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     [persistSession]
   );
 
+  const updateProfessional = useCallback((prof: IProfessional) => {
+    localStorage.setItem(PROFESSIONAL_STORAGE_KEY, JSON.stringify(prof));
+    setProfessional(prof);
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await authApi.logout();
@@ -91,8 +97,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       login,
       register,
       logout,
+      updateProfessional,
     }),
-    [professional, login, register, logout]
+    [professional, login, register, logout, updateProfessional]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

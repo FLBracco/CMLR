@@ -136,7 +136,7 @@ export const PatientForm = ({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
+          className="rounded-lg bg-confirm transition-colors px-4 py-2 text-sm font-medium text-confirm-foreground hover:bg-confirm-hover hover:text-confirm-hover-foreground active:bg-confirm-active active:text-confirm-hover-foreground disabled:opacity-50"
         >
           {isSubmitting ? "Guardando..." : "Guardar"}
         </button>

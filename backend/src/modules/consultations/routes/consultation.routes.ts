@@ -9,6 +9,8 @@ const controller = new ConsultationController();
 
 router.use(authenticate);
 
+router.get("/stats", (req, res) => controller.getStats(req, res));
+
 router.patch("/:id", validateDto(UpdateConsultationDto), (req, res) =>
   controller.update(req, res)
 );

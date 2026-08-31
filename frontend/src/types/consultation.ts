@@ -9,6 +9,11 @@ export interface IConsultation {
   updatedAt: string;
 }
 
+export interface IConsultationStats {
+  consultationsThisWeek: number;
+  consultationsThisMonth: number;
+}
+
 export interface IConsultationPayload {
   consultationDate: string;
   observations: string;

@@ -19,6 +19,18 @@ export class ConsultationRepository {
     });
   }
 
+  async countByProfessionalSince(
+    professionalId: string,
+    since: Date
+  ): Promise<number> {
+    return this.repository
+      .createQueryBuilder("consultation")
+      .innerJoin("consultation.patient", "patient")
+      .where("patient.professionalId = :professionalId", { professionalId })
+      .andWhere("consultation.consultationDate >= :since", { since })
+      .getCount();
+  }
+
   async create(data: DeepPartial<Consultation>): Promise<Consultation> {
     const consultation = this.repository.create(data);
     return this.repository.save(consultation);

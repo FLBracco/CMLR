@@ -4,6 +4,7 @@ import { Environment } from "./config/env/environment.js";
 import { errorHandler } from "./shared/middlewares/error-handler.js";
 import authRoutes from "./modules/auth/routes/auth.routes.js";
 import specialityRoutes from "./modules/professionals/routes/speciality.routes.js";
+import professionalRoutes from "./modules/professionals/routes/professional.routes.js";
 import patientRoutes from "./modules/patients/routes/patient.routes.js";
 import patientConsultationRoutes from "./modules/consultations/routes/patient-consultation.routes.js";
 import consultationRoutes from "./modules/consultations/routes/consultation.routes.js";
@@ -21,6 +22,7 @@ app.get("/api/hello", (_req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/specialities", specialityRoutes);
+app.use("/api/professionals", professionalRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/patients/:patientId/consultations", patientConsultationRoutes);
 app.use("/api/consultations", consultationRoutes);

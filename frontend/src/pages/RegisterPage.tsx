@@ -131,7 +131,7 @@ export const RegisterPage = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-primary py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
+            className="w-full rounded-lg bg-primary transition-colors py-2 text-sm font-medium text-primary-foreground hover:bg-primary-hover hover:text-primary-hover-foreground active:bg-primary-active active:text-primary-hover-foreground disabled:opacity-50"
           >
             {isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
           </button>

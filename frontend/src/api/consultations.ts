@@ -1,5 +1,9 @@
 import { apiRequest } from "./client";
-import type { IConsultation, IConsultationPayload } from "../types/consultation";
+import type {
+  IConsultation,
+  IConsultationPayload,
+  IConsultationStats,
+} from "../types/consultation";
 
 export const listConsultations = async (
   patientId: string
@@ -18,6 +22,9 @@ export const createConsultation = (
     method: "POST",
     body: JSON.stringify(payload),
   });
+
+export const getConsultationStats = (): Promise<IConsultationStats> =>
+  apiRequest<IConsultationStats>("/consultations/stats");
 
 export const updateConsultation = (
   id: string,
