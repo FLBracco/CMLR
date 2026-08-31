@@ -45,10 +45,10 @@ export const PatientForm = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid gap-4 rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2"
+      className="grid gap-4 rounded-lg border border-border-subtle bg-surface p-6 sm:grid-cols-2"
     >
       <div>
-        <label htmlFor="firstName" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="firstName" className="mb-1 block text-sm font-medium text-text-secondary">
           Nombre
         </label>
         <input
@@ -57,12 +57,12 @@ export const PatientForm = ({
           minLength={2}
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="lastName" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="lastName" className="mb-1 block text-sm font-medium text-text-secondary">
           Apellido
         </label>
         <input
@@ -71,12 +71,12 @@ export const PatientForm = ({
           minLength={2}
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="dni" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="dni" className="mb-1 block text-sm font-medium text-text-secondary">
           DNI
         </label>
         <input
@@ -86,12 +86,12 @@ export const PatientForm = ({
           title="Solo números y puntos"
           value={dni}
           onChange={(e) => setDni(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="birthDate" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="birthDate" className="mb-1 block text-sm font-medium text-text-secondary">
           Fecha de nacimiento
         </label>
         <input
@@ -100,12 +100,12 @@ export const PatientForm = ({
           required
           value={birthDate}
           onChange={(e) => setBirthDate(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="phone" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="phone" className="mb-1 block text-sm font-medium text-text-secondary">
           Teléfono
         </label>
         <input
@@ -113,12 +113,12 @@ export const PatientForm = ({
           required
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="email" className="mb-1 block text-sm font-medium text-text-secondary">
           Email (opcional)
         </label>
         <input
@@ -126,24 +126,24 @@ export const PatientForm = ({
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
-      {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
+      {error && <p className="text-sm text-destructive sm:col-span-2">{error}</p>}
 
       <div className="flex gap-3 sm:col-span-2">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
         >
           {isSubmitting ? "Guardando..." : "Guardar"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+          className="rounded-lg border border-border px-4 py-2 text-sm text-text-secondary hover:bg-surface-hover"
         >
           Cancelar
         </button>

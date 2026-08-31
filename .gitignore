@@ -1,5 +1,39 @@
+# =============================================================
+# .gitignore raíz - Clínica Online (CMLR)
+#
+# Esto cubre lo que aplica a todo el repo. "backend/" y "frontend/"
+# tienen su propio .gitignore para lo específico de cada uno
+# (dist, node_modules, .env, etc.) - no hace falta repetirlo acá.
+# =============================================================
+
+# --- Variables de entorno / secretos ---
+# Nunca se versionan: contienen credenciales y config sensible.
 .env
+
+# --- Dependencias ---
+# Se instalan con pnpm, no se versionan.
 node_modules
-.opencode
+
+# --- Notas y organización personal ---
+# No es código del proyecto, es uso local de quien desarrolla.
+# El vault de Obsidian se llamó "obsidian/" hasta que se renombró a "clinicar/";
+# se ignoran los dos nombres por las dudas (uno de los dos no existe en disco).
 TODO.md
-obsidian
+obsidian/
+clinicar/
+
+# --- Skills y agentes de IA ---
+# Todo lo relacionado con asistentes/agentes de IA es uso local, no se comparte
+# con el equipo ni se commitea.
+
+# Config local del CLI de otro asistente.
+.opencode
+
+# Config local de Claude Code (permisos, skills, reglas).
+.claude/
+
+# Instrucciones de contexto para Claude Code / otros agentes en esta máquina.
+# No se versionan, pero Claude las sigue leyendo siempre como contexto del
+# proyecto al recibir un pedido (el .gitignore no afecta eso).
+CLAUDE.md
+AGENTS.md

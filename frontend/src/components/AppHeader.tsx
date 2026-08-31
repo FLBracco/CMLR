@@ -11,15 +11,15 @@ export const AppHeader = () => {
   };
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
-      <h1 className="text-lg font-semibold text-slate-800">CMLR</h1>
+    <header className="flex flex-wrap items-center justify-between gap-y-2 border-b border-border-subtle bg-surface px-6 py-4">
+      <h1 className="text-lg font-semibold text-text">CMLR</h1>
       <div className="flex items-center gap-4">
-        <span className="text-sm text-slate-600">
+        <span className="hidden text-sm text-text-tertiary sm:inline">
           {professional?.firstName} {professional?.lastName}
         </span>
         <button
           onClick={handleLogout}
-          className="rounded border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100"
+          className="rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:bg-surface-hover"
         >
           Cerrar sesión
         </button>

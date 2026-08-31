@@ -76,27 +76,32 @@ export const PatientDetailPage = () => {
 
   const orderedConsultations = [...consultations].reverse();
 
+  const formatDate = (isoDate: string) =>
+    new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "long", year: "numeric" }).format(
+      new Date(`${isoDate}T00:00:00`)
+    );
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       <AppHeader />
 
       <main className="mx-auto max-w-3xl p-6">
-        <Link to="/dashboard" className="text-sm text-slate-600 underline">
+        <Link to="/dashboard" className="text-sm text-text-tertiary underline">
           ← Volver al dashboard
         </Link>
 
-        {isLoading && <p className="mt-4 text-sm text-slate-500">Cargando...</p>}
-        {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+        {isLoading && <p className="mt-4 text-sm text-text-muted">Cargando...</p>}
+        {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
 
         {patient && (
           <>
             <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-xl font-semibold text-slate-800">
+              <h2 className="text-2xl font-semibold text-text">
                 {patient.firstName} {patient.lastName}
               </h2>
               <button
                 onClick={() => setIsEditingPatient((current) => !current)}
-                className="rounded border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100"
+                className="rounded-lg border border-border px-3 py-2 text-sm text-text-secondary hover:bg-surface-hover"
               >
                 {isEditingPatient ? "Cerrar" : "Editar paciente"}
               </button>
@@ -111,31 +116,31 @@ export const PatientDetailPage = () => {
                 />
               </div>
             ) : (
-              <dl className="mt-4 grid grid-cols-2 gap-3 rounded-lg border border-slate-200 bg-white p-4 text-sm">
+              <dl className="mt-4 grid grid-cols-2 gap-3 rounded-lg border border-border-subtle bg-surface p-4 text-sm">
                 <div>
-                  <dt className="text-slate-500">DNI</dt>
-                  <dd className="text-slate-800">{patient.dni}</dd>
+                  <dt className="text-text-muted">DNI</dt>
+                  <dd className="text-text">{patient.dni}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Fecha de nacimiento</dt>
-                  <dd className="text-slate-800">{patient.birthDate}</dd>
+                  <dt className="text-text-muted">Fecha de nacimiento</dt>
+                  <dd className="text-text">{formatDate(patient.birthDate)}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Teléfono</dt>
-                  <dd className="text-slate-800">{patient.phone}</dd>
+                  <dt className="text-text-muted">Teléfono</dt>
+                  <dd className="text-text">{patient.phone}</dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Email</dt>
-                  <dd className="text-slate-800">{patient.email ?? "—"}</dd>
+                  <dt className="text-text-muted">Email</dt>
+                  <dd className="text-text">{patient.email ?? "—"}</dd>
                 </div>
               </dl>
             )}
 
             <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-lg font-semibold text-slate-800">Historial de consultas</h3>
+              <h3 className="text-lg font-semibold text-text">Historial de consultas</h3>
               <button
                 onClick={() => setIsCreatingConsultation((current) => !current)}
-                className="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+                className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
               >
                 {isCreatingConsultation ? "Cerrar formulario" : "Nueva consulta"}
               </button>
@@ -152,7 +157,14 @@ export const PatientDetailPage = () => {
 
             <div className="mt-4 space-y-3">
               {orderedConsultations.length === 0 ? (
-                <p className="text-sm text-slate-500">Todavía no hay consultas registradas.</p>
+                <div className="rounded-lg border border-dashed border-border p-6 text-center">
+                  <p className="text-sm font-medium text-text-secondary">
+                    Todavía no hay consultas registradas.
+                  </p>
+                  <p className="mt-1 text-sm text-text-muted">
+                    Usá el botón "Nueva consulta" para cargar la primera.
+                  </p>
+                </div>
               ) : (
                 orderedConsultations.map((consultation) =>
                   editingConsultationId === consultation.id ? (
@@ -165,30 +177,30 @@ export const PatientDetailPage = () => {
                   ) : (
                     <div
                       key={consultation.id}
-                      className="rounded-lg border border-slate-200 bg-white p-4"
+                      className="rounded-lg border border-border-subtle bg-surface p-4"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-slate-800">
-                          {consultation.consultationDate}
+                        <span className="text-sm font-medium text-text">
+                          {formatDate(consultation.consultationDate)}
                         </span>
                         <button
                           onClick={() => setEditingConsultationId(consultation.id)}
-                          className="rounded border border-slate-300 px-3 py-1 text-xs text-slate-700 hover:bg-slate-100"
+                          className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-secondary hover:bg-surface-hover"
                         >
                           Editar
                         </button>
                       </div>
-                      <p className="mt-2 text-sm text-slate-600">
+                      <p className="mt-2 text-sm text-text">
                         <span className="font-medium">Observaciones: </span>
                         {consultation.observations}
                       </p>
                       {consultation.diagnosis && (
-                        <p className="mt-1 text-sm text-slate-600">
+                        <p className="mt-1 text-sm text-text">
                           <span className="font-medium">Diagnóstico: </span>
                           {consultation.diagnosis}
                         </p>
                       )}
-                      <p className="mt-1 text-sm text-slate-600">
+                      <p className="mt-1 text-sm text-text">
                         <span className="font-medium">Plan de seguimiento: </span>
                         {consultation.followUpPlan}
                       </p>

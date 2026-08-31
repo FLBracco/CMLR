@@ -49,10 +49,10 @@ export const ConsultationForm = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid gap-4 rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
+      className="grid gap-4 rounded-lg border border-border-subtle bg-surface p-6"
     >
       <div>
-        <label htmlFor="consultationDate" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="consultationDate" className="mb-1 block text-sm font-medium text-text-secondary">
           Fecha de la consulta
         </label>
         <input
@@ -61,12 +61,12 @@ export const ConsultationForm = ({
           required
           value={consultationDate}
           onChange={(e) => setConsultationDate(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none sm:max-w-xs"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none sm:max-w-xs"
         />
       </div>
 
       <div>
-        <label htmlFor="observations" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="observations" className="mb-1 block text-sm font-medium text-text-secondary">
           Observaciones
         </label>
         <textarea
@@ -75,12 +75,12 @@ export const ConsultationForm = ({
           rows={3}
           value={observations}
           onChange={(e) => setObservations(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="diagnosis" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="diagnosis" className="mb-1 block text-sm font-medium text-text-secondary">
           Diagnóstico (opcional)
         </label>
         <textarea
@@ -88,12 +88,12 @@ export const ConsultationForm = ({
           rows={2}
           value={diagnosis}
           onChange={(e) => setDiagnosis(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
       <div>
-        <label htmlFor="followUpPlan" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="followUpPlan" className="mb-1 block text-sm font-medium text-text-secondary">
           Plan de seguimiento
         </label>
         <textarea
@@ -102,24 +102,24 @@ export const ConsultationForm = ({
           rows={2}
           value={followUpPlan}
           onChange={(e) => setFollowUpPlan(e.target.value)}
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
         />
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <div className="flex gap-3">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
         >
           {isSubmitting ? "Guardando..." : "Guardar"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+          className="rounded-lg border border-border px-4 py-2 text-sm text-text-secondary hover:bg-surface-hover"
         >
           Cancelar
         </button>
