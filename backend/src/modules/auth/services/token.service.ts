@@ -3,9 +3,14 @@ import type { SignOptions } from "jsonwebtoken";
 import { Environment } from "../../../config/env/environment.js";
 import { AppError } from "../../../shared/errors/AppError.js";
 
+export const AUTH_ROLES = ["professional", "superadmin"] as const;
+
+export type AuthRole = (typeof AUTH_ROLES)[number];
+
 export interface ITokenPayload {
   sub: string;
   email: string;
+  role: AuthRole;
 }
 
 export const signToken = (payload: ITokenPayload): string => {
@@ -25,9 +30,10 @@ export const verifyToken = (token: string): ITokenPayload => {
       typeof decoded === "object" &&
       decoded !== null &&
       typeof decoded.sub === "string" &&
-      typeof decoded.email === "string"
+      typeof decoded.email === "string" &&
+      AUTH_ROLES.includes(decoded.role)
     ) {
-      return { sub: decoded.sub, email: decoded.email };
+      return { sub: decoded.sub, email: decoded.email, role: decoded.role };
     }
 
     throw new AppError(401, "Token inválido.");

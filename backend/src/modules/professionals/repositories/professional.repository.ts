@@ -42,6 +42,7 @@ export class ProfessionalRepository {
       email: data.email,
       passwordHash: data.passwordHash,
       speciality: data.speciality,
+      subscriptionStatus: "PENDING",
     });
 
     return this.repository.save(professional);

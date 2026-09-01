@@ -2,14 +2,14 @@ import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/AppError.js";
 import { verifyToken } from "../../modules/auth/services/token.service.js";
 
-export interface IAuthenticatedRequest extends Request {
-  auth?: {
-    professionalId: string;
+export interface IAdminAuthenticatedRequest extends Request {
+  adminAuth?: {
+    adminId: string;
     email: string;
   };
 }
 
-export const authenticate = (
+export const authenticateAdmin = (
   req: Request,
   _res: Response,
   next: NextFunction
@@ -26,13 +26,13 @@ export const authenticate = (
   try {
     const payload = verifyToken(token);
 
-    if (payload.role !== "professional") {
+    if (payload.role !== "superadmin") {
       next(AppError.unauthorized("Token inválido o expirado."));
       return;
     }
 
-    (req as IAuthenticatedRequest).auth = {
-      professionalId: payload.sub,
+    (req as IAdminAuthenticatedRequest).adminAuth = {
+      adminId: payload.sub,
       email: payload.email,
     };
     next();

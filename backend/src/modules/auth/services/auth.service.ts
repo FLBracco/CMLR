@@ -73,6 +73,7 @@ export class AuthService {
     const token = signToken({
       sub: professional.id,
       email: professional.email,
+      role: "professional",
     });
 
     return {
@@ -83,6 +84,7 @@ export class AuthService {
         lastName: professional.lastName,
         email: professional.email,
         speciality: professional.speciality?.code ?? "",
+        subscriptionStatus: professional.subscriptionStatus,
       },
     };
   }
