@@ -22,6 +22,10 @@ TODO.md
 obsidian/
 clinicar/
 
+# Log de sesiones de trabajo (día a día). Se sigue escribiendo localmente
+# como registro, pero el usuario prefiere no commitearlo (2026-09-01).
+docs/HISTORIAL.md
+
 # --- Skills y agentes de IA ---
 # Todo lo relacionado con asistentes/agentes de IA es uso local, no se comparte
 # con el equipo ni se commitea.

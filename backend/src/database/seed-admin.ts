@@ -5,8 +5,11 @@ import { Admin } from "../modules/admin/entities/admin.entity.js";
 
 const SALT_ROUNDS = 10;
 
+const normalizeEmail = (email: string): string => email.trim().toLowerCase();
+
 const seedAdmin = async (): Promise<void> => {
-  const { email, password } = Environment.superAdmin;
+  const email = normalizeEmail(Environment.superAdmin.email);
+  const { password } = Environment.superAdmin;
 
   if (!email || !password) {
     throw new Error(

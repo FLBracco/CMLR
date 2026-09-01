@@ -58,8 +58,8 @@ _Generado por /design-grill el 2026-08-31. Actualizar este archivo cuando cambie
 
 ## Layout / Navigation
 - **Estructura:** sidebar de navegación persistente en desktop (colapsa a drawer con hamburguesa en mobile), en vez de un header horizontal simple.
-- **Ítems reales:** Pacientes (lista + búsqueda), Perfil (editar datos propios).
-- **Ítems "Próximamente"** (visibles pero deshabilitados, sin feature real detrás todavía): Calendario, Suscripción — son proyectos aparte (turnos, facturación), no ajustes de diseño.
+- **Ítems reales:** Pacientes (lista + búsqueda), Perfil (editar datos propios), Suscripción (estado de la cuenta: pendiente/activa/desactivada, con badge en el sidebar cuando no está activa).
+- **Ítems "Próximamente"** (visibles pero deshabilitados, sin feature real detrás todavía): Calendario — proyecto aparte (turnos), no ajuste de diseño.
 - **Acción rápida:** "Nuevo paciente" fijo en el sidebar (disponible desde cualquier pantalla, no solo desde el dashboard).
 
 ## Animation
@@ -81,6 +81,7 @@ _Generado por /design-grill el 2026-08-31. Actualizar este archivo cuando cambie
 | Color de acento (superseded 3x) | ~~Terracota~~ → ~~Ámbar~~ → ~~Rosa claro~~ → Índigo/violeta | Terracota, ámbar y rosa no convencieron; se armó una paleta comparativa en vivo y el usuario eligió índigo/violeta mirándola directamente en vez de por descripción de texto |
 | Estilo de botón primario | Pastel en reposo (`#C7D2FE`/`#312E81`) → sólido al pasar el mouse (`#4F46E5`/blanco), con transición suave | El usuario quería mantener el pastel pero que se "rellene" sólido en hover, no un pastel más oscuro |
 | Layout de navegación | Header simple → sidebar (persistente en desktop, drawer en mobile) | El usuario quería más estructura de navegación (Perfil, Calendario, Suscripción) a medida que el producto crece |
+| Colores de estado de suscripción (Pendiente/Activa/Desactivada) | Verde/ámbar/rojo directos de Tailwind (`amber-*`, `green-*`, `red-*`), sin token semántico propio | Feature de SuperAdmin/suscripciones (backend) necesitaba un badge de estado ya; no había tiempo/alcance para formalizar un rol semántico "estado" en el sistema de tokens — queda como pendiente en Open Questions |
 
 ## Ruled Out
 _Direcciones explícitamente rechazadas durante esta sesión. No volver a proponerlas sin reabrir la decisión._
@@ -96,3 +97,4 @@ _Direcciones explícitamente rechazadas durante esta sesión. No volver a propon
 - Escalado a multiusuario (recepción cargando turnos): sin definir todavía cómo afecta roles/permisos en la UI — retomar cuando se planifique esa fase.
 - Tipografía específica (qué fuente sans geométrica exacta) y valores finales de tokens: a definir en `/tokens`.
 - Interacción clave a pulir con `/animate`: sin definir, dado que el nivel de animación es mínimo por ahora.
+- Rol semántico de "estado" (pendiente/activo/desactivado) sin token propio: hoy el badge de suscripción y el panel de SuperAdmin usan verde/ámbar/rojo directos de Tailwind. Formalizar como tokens (`--color-status-*`) cuando se audite el sistema de diseño completo.
