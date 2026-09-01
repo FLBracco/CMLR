@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import * as authApi from "../api/auth";
+import * as adminApi from "../api/admin";
 import {
   clearStoredToken,
   getStoredToken,
@@ -20,6 +21,7 @@ import type {
   IProfessional,
   IRegisterPayload,
 } from "../types/auth";
+import type { IAdmin, IAdminLoginPayload } from "../types/admin";
 
 const SESSION_STORAGE_KEY = "cmlr.session";
 
@@ -27,16 +29,19 @@ const SESSION_STORAGE_KEY = "cmlr.session";
 // conviven en la misma pestaña (si hace falta, ventana de incógnito aparte).
 type Session =
   | { role: "professional"; professional: IProfessional }
-  | { role: "superadmin" };
+  | { role: "superadmin"; admin: IAdmin };
 
 interface IAuthContext {
   session: Session | null;
   professional: IProfessional | null;
+  admin: IAdmin | null;
   role: AuthRole | null;
   isAuthenticated: boolean;
   login: (payload: ILoginPayload) => Promise<void>;
   register: (payload: IRegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
+  adminLogin: (payload: IAdminLoginPayload) => Promise<void>;
+  adminLogout: () => Promise<void>;
   updateProfessional: (professional: IProfessional) => void;
 }
 
@@ -100,6 +105,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [clearSession]);
 
+  const adminLogin = useCallback(
+    async (payload: IAdminLoginPayload) => {
+      const result = await adminApi.adminLogin(payload);
+      persistSession(result.token, {
+        role: "superadmin",
+        admin: result.admin,
+      });
+    },
+    [persistSession]
+  );
+
+  const adminLogout = useCallback(async () => {
+    try {
+      await adminApi.adminLogout();
+    } finally {
+      clearSession();
+    }
+  }, [clearSession]);
+
   useEffect(() => {
     setUnauthorizedListener(() => clearSession());
     return () => setUnauthorizedListener(null);
@@ -107,19 +131,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const professional =
     session?.role === "professional" ? session.professional : null;
+  const admin = session?.role === "superadmin" ? session.admin : null;
 
   const value = useMemo<IAuthContext>(
     () => ({
       session,
       professional,
+      admin,
       role: session?.role ?? null,
       isAuthenticated: session !== null,
       login,
       register,
       logout,
+      adminLogin,
+      adminLogout,
       updateProfessional,
     }),
-    [session, professional, login, register, logout, updateProfessional]
+    [
+      session,
+      professional,
+      admin,
+      login,
+      register,
+      logout,
+      adminLogin,
+      adminLogout,
+      updateProfessional,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

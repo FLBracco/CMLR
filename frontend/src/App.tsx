@@ -8,6 +8,8 @@ import { PatientDetailPage } from "./pages/PatientDetailPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { ComingSoonPage } from "./pages/ComingSoonPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
+import { AdminProfessionalsPage } from "./pages/admin/AdminProfessionalsPage";
 
 function App() {
   return (
@@ -54,6 +56,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <ComingSoonPage title="Suscripción" />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route
+            path="/admin/profesionales"
+            element={
+              <ProtectedRoute role="superadmin">
+                <AdminProfessionalsPage />
               </ProtectedRoute>
             }
           />
