@@ -1,6 +1,7 @@
 import { AppDataSource } from "../../../config/db/data-source.js";
 import { Professional } from "../../professionals/entities/professional.entity.js";
 import type { ProfessionalSpeciality } from "../../professionals/entities/professional-speciality.entity.js";
+import type { SubscriptionStatus } from "../../professionals/entities/subscription-status.js";
 
 export interface ICreateProfessionalData {
   firstName: string;
@@ -25,6 +26,22 @@ export class ProfessionalRepository {
       where: { id },
       relations: { speciality: true },
     });
+  }
+
+  async findAll(): Promise<Professional[]> {
+    return this.repository.find({
+      relations: { speciality: true },
+      order: { createdAt: "DESC" },
+    });
+  }
+
+  async updateSubscriptionStatus(
+    professional: Professional,
+    status: SubscriptionStatus
+  ): Promise<Professional> {
+    professional.subscriptionStatus = status;
+    professional.subscriptionUpdatedAt = new Date();
+    return this.repository.save(professional);
   }
 
   async update(

@@ -8,6 +8,8 @@ import professionalRoutes from "./modules/professionals/routes/professional.rout
 import patientRoutes from "./modules/patients/routes/patient.routes.js";
 import patientConsultationRoutes from "./modules/consultations/routes/patient-consultation.routes.js";
 import consultationRoutes from "./modules/consultations/routes/consultation.routes.js";
+import adminAuthRoutes from "./modules/admin/routes/admin-auth.routes.js";
+import adminRoutes from "./modules/admin/routes/admin.routes.js";
 
 export const app = express();
 
@@ -26,5 +28,7 @@ app.use("/api/professionals", professionalRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/patients/:patientId/consultations", patientConsultationRoutes);
 app.use("/api/consultations", consultationRoutes);
+app.use("/api/admin/auth", adminAuthRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use(errorHandler);
