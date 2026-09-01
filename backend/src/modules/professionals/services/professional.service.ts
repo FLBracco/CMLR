@@ -56,6 +56,7 @@ export class ProfessionalService {
       lastName: professional.lastName,
       email: professional.email,
       speciality: professional.speciality?.code ?? "",
+      subscriptionStatus: professional.subscriptionStatus,
     };
   }
 }
