@@ -5,7 +5,9 @@ import { ProfessionalSpeciality } from "../../modules/professionals/entities/pro
 import { Professional } from "../../modules/professionals/entities/professional.entity.js";
 import { Patient } from "../../modules/patients/entities/patient.entity.js";
 import { Consultation } from "../../modules/consultations/entities/consultation.entity.js";
+import { Admin } from "../../modules/admin/entities/admin.entity.js";
 import { InitialSchema1786057121606 } from "../../migrations/1786057121606-InitialSchema.js";
+import { AddSubscriptionsAndAdmins1788274429176 } from "../../migrations/1788274429176-AddSubscriptionsAndAdmins.js";
 
 export const AppDataSource = new DataSource({
   // Motor de base de datos
@@ -25,10 +27,10 @@ export const AppDataSource = new DataSource({
   logging: true,
 
   // Entidades registradas explícitamente
-  entities: [ProfessionalSpeciality, Professional, Patient, Consultation],
+  entities: [ProfessionalSpeciality, Professional, Patient, Consultation, Admin],
 
   // Migraciones registradas explícitamente
-  migrations: [InitialSchema1786057121606],
+  migrations: [InitialSchema1786057121606, AddSubscriptionsAndAdmins1788274429176],
 
   // PostgreSQL local en Docker
   ssl: false,

@@ -18,4 +18,9 @@ export const Environment = {
     secret: process.env.JWT_SECRET ?? "",
     expiresIn: process.env.JWT_EXPIRES_IN ?? "2h",
   },
+
+  superAdmin: {
+    email: process.env.SUPERADMIN_EMAIL ?? "",
+    password: process.env.SUPERADMIN_PASSWORD ?? "",
+  },
 } as const;

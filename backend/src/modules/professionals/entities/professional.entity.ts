@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { ProfessionalSpeciality } from "./professional-speciality.entity.js";
 import { Patient } from "../../patients/entities/patient.entity.js";
+import type { SubscriptionStatus } from "./subscription-status.js";
 
 @Entity("professionals")
 export class Professional {
@@ -50,6 +51,21 @@ export class Professional {
   )
   @JoinColumn({ name: "specialty_id" })
   speciality!: ProfessionalSpeciality;
+
+  @Column({
+    type: "varchar",
+    length: 20,
+    name: "subscription_status",
+    default: "PENDING",
+  })
+  subscriptionStatus!: SubscriptionStatus;
+
+  @Column({
+    type: "timestamptz",
+    name: "subscription_updated_at",
+    nullable: true,
+  })
+  subscriptionUpdatedAt!: Date | null;
 
   @CreateDateColumn({
     type: "timestamptz",

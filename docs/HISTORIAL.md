@@ -169,3 +169,33 @@
 
 ### Commit
 - Mensaje elegido: `fix: fase 7 - normaliza email en auth, logout automatico ante 401 y pulido final`
+
+---
+
+## Martes 01/09/2026
+
+### Contexto de la sesión
+- Se retoma el trabajo post-MVP. Board de Trello "CMLR" creado con las tareas pendientes; se elige empezar por la tarjeta #19 "SuperAdmin — Gestión de suscripciones de profesionales" (revierte la decisión de HISTORIAL 06/08 de diferir el superadmin).
+- Se armó un plan de implementación completo (agente `Plan`, modelo Opus según `.claude/rules/model-routing.md`) en 9 fases, con decisiones de arquitectura, modelo de datos, backend, frontend y riesgos.
+
+### Decisiones de diseño (Fase 0 del plan, confirmadas con el usuario)
+- **Modelo de datos**: `subscription_status` como columna (`varchar(20)` + `CHECK`) en `professionals`, no tabla `subscriptions` aparte — evita un JOIN en el guard que corre en cada request a pacientes/consultas; se puede migrar a tabla propia cuando llegue la tarjeta de Facturación (fuera de alcance acá).
+- **SuperAdmin**: tabla `admins` separada (no un `role` en `professionals`) — `specialty_id` es `NOT NULL` en `Professional` y el admin no encaja en el dominio de profesionales/pacientes.
+- **JWT**: el payload suma `role` (`professional` | `superadmin`), pero el `subscriptionStatus` **no** viaja en el token — se lee fresco de la base en cada request protegido, para que activar/desactivar a un profesional tenga efecto inmediato y no hasta 2h después (duración del token).
+- **DISABLED**: bloqueo total (igual que PENDING) en esta v1, con el guard parametrizado para poder pasar a solo-lectura sin refactor si se decide más adelante.
+- **Transiciones de estado**: solo `PENDING↔ACTIVE` y `ACTIVE↔DISABLED`; se prohíbe `ACTIVE→PENDING` (sin semántica de negocio clara).
+- **Rate limiting**: se suma `express-rate-limit` a ambos logins (profesional y SuperAdmin) en la Fase 8 del plan — hoy ninguno tiene protección contra fuerza bruta.
+- **Login**: siempre permitido en cualquier estado de suscripción; el bloqueo ocurre después, al acceder a pacientes/consultas (evita que un profesional en PENDING no pueda distinguir "contraseña mal" de "cuenta sin activar").
+
+### Fase 1 — Modelo de datos y migración (completada)
+- `subscription-status.ts`: `SUBSCRIPTION_STATUSES` (`PENDING`/`ACTIVE`/`DISABLED`) + tipo derivado.
+- `Professional` suma `subscriptionStatus` (default `PENDING`) y `subscriptionUpdatedAt` (nullable).
+- Nueva entity `Admin` (`backend/src/modules/admin/entities/admin.entity.ts`), misma convención que `Professional` (uuid, email unique, password_hash, timestamps).
+- Migración `AddSubscriptionsAndAdmins1788274429176`: crea `admins`, agrega columnas a `professionals`, backfill (`UPDATE ... SET subscription_status = 'ACTIVE'` para los 8 profesionales existentes) y `CHECK` constraint — el orden importa: el backfill corre antes del `CHECK` para no depender de que el default matchee la constraint.
+- Verificado: `migration:run` → backfill correcto (8/8 en ACTIVE) → `migration:revert` (down simétrico) → `migration:run` de nuevo. `pnpm build` limpio.
+- Nuevo `Environment.superAdmin` (`SUPERADMIN_EMAIL`/`SUPERADMIN_PASSWORD`), reflejado en `.env` y `.env.example`.
+- `seed-admin.ts` (idempotente, mismo patrón que `seed.ts`) + script `seed:admin` — probado dos veces (crea, luego detecta existente y no pisa la contraseña).
+
+### Pendiente (próximas sesiones)
+- Fase 2: `role` en el JWT (`token.service.ts`, `authenticate.ts` + nuevo `authenticateAdmin`), `buildAuthResponse` con `subscriptionStatus`.
+- Fases 3-8 según el plan: guard de suscripción, módulo admin backend, frontend (sesión con rol, panel del SuperAdmin, UX de bloqueo), seguridad y cierre.
