@@ -17,8 +17,11 @@ export class AppError extends Error {
     return new AppError(401, message);
   }
 
-  public static forbidden(message = "Acceso denegado."): AppError {
-    return new AppError(403, message);
+  public static forbidden(
+    message = "Acceso denegado.",
+    details?: unknown
+  ): AppError {
+    return new AppError(403, message, details);
   }
 
   public static notFound(message = "Recurso no encontrado."): AppError {
