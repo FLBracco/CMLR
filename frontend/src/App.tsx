@@ -1,11 +1,13 @@
 import { Navigate, Route, BrowserRouter, Routes } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
+import { SubscriptionGate } from "./auth/SubscriptionGate";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { PatientDetailPage } from "./pages/PatientDetailPage";
 import { ProfilePage } from "./pages/ProfilePage";
+import { SubscriptionPage } from "./pages/SubscriptionPage";
 import { ComingSoonPage } from "./pages/ComingSoonPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
@@ -23,7 +25,9 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <SubscriptionGate>
+                  <DashboardPage />
+                </SubscriptionGate>
               </ProtectedRoute>
             }
           />
@@ -31,7 +35,9 @@ function App() {
             path="/pacientes/:patientId"
             element={
               <ProtectedRoute>
-                <PatientDetailPage />
+                <SubscriptionGate>
+                  <PatientDetailPage />
+                </SubscriptionGate>
               </ProtectedRoute>
             }
           />
@@ -55,7 +61,7 @@ function App() {
             path="/suscripcion"
             element={
               <ProtectedRoute>
-                <ComingSoonPage title="Suscripción" />
+                <SubscriptionPage />
               </ProtectedRoute>
             }
           />

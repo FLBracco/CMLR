@@ -1,6 +1,7 @@
 import { useState, type ReactNode, type SVGProps } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import type { SubscriptionStatus } from "../types/auth";
 
 const Icon = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -101,8 +102,15 @@ const NAV_ITEMS: INavItem[] = [
   { label: "Pacientes", to: "/dashboard", icon: PatientsIcon },
   { label: "Perfil", to: "/perfil", icon: ProfileIcon },
   { label: "Calendario", to: "/calendario", icon: CalendarIcon, disabled: true },
-  { label: "Suscripción", to: "/suscripcion", icon: SubscriptionIcon, disabled: true },
+  { label: "Suscripción", to: "/suscripcion", icon: SubscriptionIcon },
 ];
+
+const SUBSCRIPTION_NAV_BADGES: Partial<
+  Record<SubscriptionStatus, { label: string; className: string }>
+> = {
+  PENDING: { label: "Pendiente", className: "bg-amber-50 text-amber-700" },
+  DISABLED: { label: "Desactivada", className: "bg-red-50 text-destructive" },
+};
 
 export const AppShell = ({ children }: { children: ReactNode }) => {
   const { professional, logout } = useAuth();
@@ -117,6 +125,11 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
 
   const isActive = (to: string) =>
     location.pathname === to || (to === "/dashboard" && location.pathname.startsWith("/pacientes"));
+
+  const subscriptionBadge =
+    professional && professional.subscriptionStatus !== "ACTIVE"
+      ? SUBSCRIPTION_NAV_BADGES[professional.subscriptionStatus]
+      : undefined;
 
   const sidebarContent = (
     <div className="flex h-full flex-col">
@@ -155,14 +168,23 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
               key={item.to}
               to={item.to}
               onClick={() => setIsDrawerOpen(false)}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
+              className={`flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
                 isActive(item.to)
                   ? "bg-primary transition-colors text-primary-foreground"
                   : "text-text-secondary hover:bg-surface-hover"
               }`}
             >
-              <item.icon />
-              {item.label}
+              <span className="flex items-center gap-3">
+                <item.icon />
+                {item.label}
+              </span>
+              {item.to === "/suscripcion" && subscriptionBadge && (
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${subscriptionBadge.className}`}
+                >
+                  {subscriptionBadge.label}
+                </span>
+              )}
             </Link>
           )
         )}
