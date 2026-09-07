@@ -12,6 +12,8 @@ export class UpdateAppointmentStatusDto {
   // aporta valor (completado/ausente no necesitan explicación).
   @ValidateIf((dto: UpdateAppointmentStatusDto) => dto.status === "CANCELLED")
   @IsString({ message: "El motivo de cancelación es obligatorio." })
-  @MaxLength(500)
+  @MaxLength(500, {
+    message: "El motivo de cancelación no puede superar los 500 caracteres.",
+  })
   cancellationReason?: string;
 }
