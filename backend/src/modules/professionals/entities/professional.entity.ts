@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { ProfessionalSpeciality } from "./professional-speciality.entity.js";
 import { Patient } from "../../patients/entities/patient.entity.js";
+import { Appointment } from "../../appointments/entities/appointment.entity.js";
 import type { SubscriptionStatus } from "./subscription-status.js";
 
 @Entity("professionals")
@@ -81,4 +82,7 @@ export class Professional {
 
   @OneToMany(() => Patient, (patient) => patient.professional)
   patients!: Patient[];
+
+  @OneToMany(() => Appointment, (appointment) => appointment.professional)
+  appointments!: Appointment[];
 }

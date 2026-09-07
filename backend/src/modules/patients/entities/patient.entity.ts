@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { Professional } from "../../professionals/entities/professional.entity.js";
 import { Consultation } from "../../consultations/entities/consultation.entity.js";
+import { Appointment } from "../../appointments/entities/appointment.entity.js";
 
 @Entity("patients")
 export class Patient {
@@ -86,4 +87,7 @@ export class Patient {
 
   @OneToMany(() => Consultation, (consultation) => consultation.patient)
   consultations!: Consultation[];
+
+  @OneToMany(() => Appointment, (appointment) => appointment.patient)
+  appointments!: Appointment[];
 }
