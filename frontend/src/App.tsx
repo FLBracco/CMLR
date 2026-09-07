@@ -8,7 +8,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { PatientDetailPage } from "./pages/PatientDetailPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { SubscriptionPage } from "./pages/SubscriptionPage";
-import { ComingSoonPage } from "./pages/ComingSoonPage";
+import { CalendarPage } from "./pages/CalendarPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
 import { AdminProfessionalsPage } from "./pages/admin/AdminProfessionalsPage";
@@ -53,7 +53,9 @@ function App() {
             path="/calendario"
             element={
               <ProtectedRoute>
-                <ComingSoonPage title="Calendario" />
+                <SubscriptionGate>
+                  <CalendarPage />
+                </SubscriptionGate>
               </ProtectedRoute>
             }
           />

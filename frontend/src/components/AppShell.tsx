@@ -101,7 +101,7 @@ const getInitials = (firstName?: string, lastName?: string) =>
 const NAV_ITEMS: INavItem[] = [
   { label: "Pacientes", to: "/dashboard", icon: PatientsIcon },
   { label: "Perfil", to: "/perfil", icon: ProfileIcon },
-  { label: "Calendario", to: "/calendario", icon: CalendarIcon, disabled: true },
+  { label: "Calendario", to: "/calendario", icon: CalendarIcon },
   { label: "Suscripción", to: "/suscripcion", icon: SubscriptionIcon },
 ];
 
