@@ -42,5 +42,6 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false
-  }
+  },
+  "exclude": ["src/**/*.test.ts"]
 }
