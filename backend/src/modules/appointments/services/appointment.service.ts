@@ -8,6 +8,7 @@ import type { UpdateAppointmentStatusDto } from "../dto/update-appointment-statu
 import type {
   IAppointmentDto,
   IAppointmentListDto,
+  IAppointmentStatsDto,
 } from "../dto/appointment-response.dto.js";
 import type { AppointmentStatus } from "../entities/appointment-status.js";
 
@@ -159,6 +160,59 @@ export class AppointmentService {
 
   async getById(professionalId: string, id: string): Promise<IAppointmentDto> {
     return this.toDto(await this.getScopedAppointment(professionalId, id));
+  }
+
+  async listByPatient(
+    professionalId: string,
+    patientId: string,
+    upcomingOnly = false
+  ): Promise<IAppointmentListDto> {
+    await this.assertPatientOwnership(professionalId, patientId);
+
+    const appointments = await this.appointmentRepository.findByPatient(
+      patientId,
+      professionalId,
+      { upcomingOnly }
+    );
+
+    return {
+      appointments: appointments.map((appointment) => this.toDto(appointment)),
+    };
+  }
+
+  // referenceDate es inyectable (en vez de usar `new Date()` adentro) para
+  // que sea testeable con una fecha fija y para dejar la puerta abierta a que
+  // el cliente mande su propio "hoy" si el desfasaje de TZ con el server
+  // llega a importar (ver riesgo de aritmética de fechas de la Fase 2).
+  async getStats(
+    professionalId: string,
+    referenceDate: Date = new Date()
+  ): Promise<IAppointmentStatsDto> {
+    const startOfDay = new Date(
+      referenceDate.getFullYear(),
+      referenceDate.getMonth(),
+      referenceDate.getDate()
+    );
+    const endOfDay = this.addMinutes(startOfDay, 24 * 60);
+    const startOfWeek = this.getStartOfWeek(referenceDate);
+    const endOfWeek = this.addMinutes(startOfWeek, 7 * 24 * 60);
+
+    const [appointmentsToday, appointmentsThisWeek, pendingConfirmation] =
+      await Promise.all([
+        this.appointmentRepository.countInRange(professionalId, startOfDay, endOfDay),
+        this.appointmentRepository.countInRange(professionalId, startOfWeek, endOfWeek),
+        this.appointmentRepository.countByStatus(professionalId, "PENDING"),
+      ]);
+
+    return { appointmentsToday, appointmentsThisWeek, pendingConfirmation };
+  }
+
+  private getStartOfWeek(date: Date): Date {
+    const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const day = result.getDay();
+    const diffToMonday = day === 0 ? -6 : 1 - day;
+    result.setDate(result.getDate() + diffToMonday);
+    return result;
   }
 
   private assertValidRange(from: Date, to: Date): void {

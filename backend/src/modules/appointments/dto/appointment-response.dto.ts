@@ -25,3 +25,9 @@ export interface IAppointmentDto {
 export interface IAppointmentListDto {
   appointments: IAppointmentDto[];
 }
+
+export interface IAppointmentStatsDto {
+  appointmentsToday: number;
+  appointmentsThisWeek: number;
+  pendingConfirmation: number;
+}

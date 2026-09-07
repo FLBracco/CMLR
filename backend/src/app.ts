@@ -11,6 +11,7 @@ import consultationRoutes from "./modules/consultations/routes/consultation.rout
 import adminAuthRoutes from "./modules/admin/routes/admin-auth.routes.js";
 import adminRoutes from "./modules/admin/routes/admin.routes.js";
 import appointmentRoutes from "./modules/appointments/routes/appointment.routes.js";
+import patientAppointmentRoutes from "./modules/appointments/routes/patient-appointment.routes.js";
 
 export const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/specialities", specialityRoutes);
 app.use("/api/professionals", professionalRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/patients/:patientId/consultations", patientConsultationRoutes);
+app.use("/api/patients/:patientId/appointments", patientAppointmentRoutes);
 app.use("/api/consultations", consultationRoutes);
 app.use("/api/admin/auth", adminAuthRoutes);
 app.use("/api/admin", adminRoutes);

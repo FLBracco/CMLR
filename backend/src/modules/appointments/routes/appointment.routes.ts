@@ -19,8 +19,10 @@ router.post("/", validateDto(CreateAppointmentDto), (req, res) =>
 
 router.get("/", (req, res) => controller.list(req, res));
 
-// NOTA: cuando se agregue GET /stats (Fase 4), declararlo ANTES de GET /:id
-// o Express lo matchea como si "stats" fuera un :id.
+// Declarado ANTES de GET /:id: si fuera después, Express lo matchea como si
+// "stats" fuera un :id.
+router.get("/stats", (req, res) => controller.getStats(req, res));
+
 router.get("/:id", (req, res) => controller.getById(req, res));
 
 router.patch("/:id", validateDto(UpdateAppointmentDto), (req, res) =>

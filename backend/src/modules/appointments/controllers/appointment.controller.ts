@@ -67,6 +67,51 @@ export class AppointmentController {
     res.status(200).json(result);
   }
 
+  async listByPatient(req: IAuthenticatedRequest, res: Response): Promise<void> {
+    const professionalId = this.getProfessionalId(req);
+    const upcomingOnly = req.query.upcoming === "true";
+
+    const result = await this.appointmentService.listByPatient(
+      professionalId,
+      req.params.patientId as string,
+      upcomingOnly
+    );
+    res.status(200).json(result);
+  }
+
+  async getStats(req: IAuthenticatedRequest, res: Response): Promise<void> {
+    const professionalId = this.getProfessionalId(req);
+    const dateRaw = typeof req.query.date === "string" ? req.query.date : undefined;
+    const referenceDate = dateRaw ? this.parseReferenceDate(dateRaw) : new Date();
+
+    if (Number.isNaN(referenceDate.getTime())) {
+      throw AppError.badRequest("El parámetro 'date' no es una fecha válida.");
+    }
+
+    const result = await this.appointmentService.getStats(
+      professionalId,
+      referenceDate
+    );
+    res.status(200).json(result);
+  }
+
+  // "YYYY-MM-DD" se interpreta como fecha calendario LOCAL (igual que el
+  // default `new Date()`), no como medianoche UTC: `new Date("2026-09-10")`
+  // nativo de JS la toma como UTC, y en un server con TZ negativa (Argentina,
+  // UTC-3) eso cae en "2026-09-09" local — el mismo desfasaje de un día que
+  // la Fase 2 marcó como riesgo. Un datetime completo con offset sigue
+  // parseándose de forma nativa sin este atajo.
+  private parseReferenceDate(dateRaw: string): Date {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateRaw);
+
+    if (match) {
+      const [, year, month, day] = match;
+      return new Date(Number(year), Number(month) - 1, Number(day));
+    }
+
+    return new Date(dateRaw);
+  }
+
   private parseListQuery(query: Request["query"]): IListQuery {
     const fromRaw = typeof query.from === "string" ? query.from : undefined;
     const toRaw = typeof query.to === "string" ? query.to : undefined;

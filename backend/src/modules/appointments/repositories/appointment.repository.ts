@@ -41,12 +41,26 @@ export class AppointmentRepository {
 
   async findByPatient(
     patientId: string,
-    professionalId: string
+    professionalId: string,
+    options: { upcomingOnly?: boolean } = {}
   ): Promise<Appointment[]> {
-    return this.repository.find({
-      where: { patientId, professionalId },
-      order: { startsAt: "DESC" },
-    });
+    const qb = this.repository
+      .createQueryBuilder("appointment")
+      .innerJoinAndSelect("appointment.patient", "patient")
+      .where("appointment.patientId = :patientId", { patientId })
+      .andWhere("appointment.professionalId = :professionalId", { professionalId });
+
+    if (options.upcomingOnly) {
+      return qb
+        .andWhere("appointment.startsAt >= :now", { now: new Date() })
+        .andWhere("appointment.status IN (:...statuses)", {
+          statuses: ACTIVE_STATUSES,
+        })
+        .orderBy("appointment.startsAt", "ASC")
+        .getMany();
+    }
+
+    return qb.orderBy("appointment.startsAt", "DESC").getMany();
   }
 
   async findOverlapping(
@@ -81,6 +95,17 @@ export class AppointmentRepository {
       .where("appointment.professionalId = :professionalId", { professionalId })
       .andWhere("appointment.startsAt >= :from", { from })
       .andWhere("appointment.startsAt < :to", { to })
+      .getCount();
+  }
+
+  async countByStatus(
+    professionalId: string,
+    status: AppointmentStatus
+  ): Promise<number> {
+    return this.repository
+      .createQueryBuilder("appointment")
+      .where("appointment.professionalId = :professionalId", { professionalId })
+      .andWhere("appointment.status = :status", { status })
       .getCount();
   }
 

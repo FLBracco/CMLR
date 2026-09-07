@@ -37,6 +37,7 @@ interface IFakeAppointmentRepository {
   findByPatient: ReturnType<typeof vi.fn>;
   findOverlapping: ReturnType<typeof vi.fn>;
   countInRange: ReturnType<typeof vi.fn>;
+  countByStatus: ReturnType<typeof vi.fn>;
   create: ReturnType<typeof vi.fn>;
   update: ReturnType<typeof vi.fn>;
 }
@@ -47,6 +48,7 @@ const buildFakeAppointmentRepository = (): IFakeAppointmentRepository => ({
   findByPatient: vi.fn(),
   findOverlapping: vi.fn(),
   countInRange: vi.fn(),
+  countByStatus: vi.fn(),
   create: vi.fn(),
   update: vi.fn(),
 });
@@ -298,5 +300,68 @@ describe("AppointmentService.listByRange", () => {
     );
 
     expect(result.appointments).toHaveLength(1);
+  });
+});
+
+describe("AppointmentService.listByPatient", () => {
+  it("rechaza si el paciente no pertenece al profesional", async () => {
+    const appointmentRepository = buildFakeAppointmentRepository();
+    const patientRepository = buildFakePatientRepository();
+    patientRepository.findByIdScoped.mockResolvedValue(null);
+
+    const service = buildService(appointmentRepository, patientRepository);
+
+    await expect(
+      service.listByPatient(PROFESSIONAL_ID, PATIENT_ID)
+    ).rejects.toMatchObject({ statusCode: 404 });
+
+    expect(appointmentRepository.findByPatient).not.toHaveBeenCalled();
+  });
+
+  it("delega upcomingOnly en el repository", async () => {
+    const appointmentRepository = buildFakeAppointmentRepository();
+    appointmentRepository.findByPatient.mockResolvedValue([buildAppointment()]);
+
+    const service = buildService(appointmentRepository);
+
+    await service.listByPatient(PROFESSIONAL_ID, PATIENT_ID, true);
+
+    expect(appointmentRepository.findByPatient).toHaveBeenCalledWith(
+      PATIENT_ID,
+      PROFESSIONAL_ID,
+      { upcomingOnly: true }
+    );
+  });
+});
+
+describe("AppointmentService.getStats", () => {
+  it("calcula los límites de hoy y de la semana (lunes a lunes) a partir de referenceDate", async () => {
+    const appointmentRepository = buildFakeAppointmentRepository();
+    appointmentRepository.countInRange.mockResolvedValue(0);
+    appointmentRepository.countByStatus.mockResolvedValue(2);
+
+    const service = buildService(appointmentRepository);
+
+    // Miércoles 2020-01-08 -> la semana empieza el lunes 2020-01-06.
+    const referenceDate = new Date(2020, 0, 8, 15, 30);
+    const result = await service.getStats(PROFESSIONAL_ID, referenceDate);
+
+    expect(appointmentRepository.countInRange).toHaveBeenNthCalledWith(
+      1,
+      PROFESSIONAL_ID,
+      new Date(2020, 0, 8, 0, 0, 0),
+      new Date(2020, 0, 9, 0, 0, 0)
+    );
+    expect(appointmentRepository.countInRange).toHaveBeenNthCalledWith(
+      2,
+      PROFESSIONAL_ID,
+      new Date(2020, 0, 6, 0, 0, 0),
+      new Date(2020, 0, 13, 0, 0, 0)
+    );
+    expect(appointmentRepository.countByStatus).toHaveBeenCalledWith(
+      PROFESSIONAL_ID,
+      "PENDING"
+    );
+    expect(result.pendingConfirmation).toBe(2);
   });
 });
