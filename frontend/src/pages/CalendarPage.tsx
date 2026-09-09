@@ -1,49 +1,53 @@
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AppShell } from "../components/AppShell";
+import { CalendarToolbar, type CalendarViewMode } from "../components/calendar/CalendarToolbar";
+import { WeekGrid } from "../components/calendar/WeekGrid";
+import { MonthGrid } from "../components/calendar/MonthGrid";
+import { DayAgenda } from "../components/calendar/DayAgenda";
 import { listAppointments } from "../api/appointments";
 import { ApiError } from "../api/client";
-import type { AppointmentStatus, IAppointment } from "../types/appointment";
-
-const UPCOMING_RANGE_DAYS = 30;
-
-const STATUS_LABELS: Record<AppointmentStatus, string> = {
-  PENDING: "Pendiente",
-  CONFIRMED: "Confirmado",
-  COMPLETED: "Completado",
-  CANCELLED: "Cancelado",
-  NO_SHOW: "Ausente",
-};
-
-const STATUS_BADGE_CLASSES: Record<AppointmentStatus, string> = {
-  PENDING: "bg-amber-50 text-amber-700",
-  CONFIRMED: "bg-confirm text-confirm-foreground",
-  COMPLETED: "bg-surface-hover text-text-muted",
-  CANCELLED: "bg-red-50 text-destructive line-through",
-  NO_SHOW: "bg-red-50 text-destructive",
-};
-
-const formatDateTime = (isoDate: string): string =>
-  new Intl.DateTimeFormat("es-AR", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(isoDate));
+import type { IAppointment } from "../types/appointment";
+import {
+  addDays,
+  dayKey,
+  formatDayHeader,
+  formatMonthYear,
+  formatWeekRange,
+  getMonthGridDays,
+  getWeekDays,
+  startOfDay,
+  startOfMonth,
+} from "../lib/calendarDates";
 
 export const CalendarPage = () => {
+  const [view, setView] = useState<CalendarViewMode>("week");
+  const [anchor, setAnchor] = useState(() => startOfDay(new Date()));
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUpcoming = useCallback(async () => {
+  const today = useMemo(() => startOfDay(new Date()), []);
+  const weekDays = useMemo(() => getWeekDays(anchor), [anchor]);
+  const monthDays = useMemo(() => getMonthGridDays(anchor), [anchor]);
+
+  const { rangeFrom, rangeTo } = useMemo(() => {
+    if (view === "day") {
+      return { rangeFrom: startOfDay(anchor), rangeTo: addDays(anchor, 1) };
+    }
+    if (view === "week") {
+      return { rangeFrom: weekDays[0]!, rangeTo: addDays(weekDays[6]!, 1) };
+    }
+    return { rangeFrom: monthDays[0]!, rangeTo: addDays(monthDays[41]!, 1) };
+  }, [view, anchor, weekDays, monthDays]);
+
+  const fetchAppointments = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const from = new Date();
-      const to = new Date(from.getTime() + UPCOMING_RANGE_DAYS * 24 * 60 * 60 * 1000);
-      const result = await listAppointments(from.toISOString(), to.toISOString());
+      const result = await listAppointments(
+        rangeFrom.toISOString(),
+        rangeTo.toISOString()
+      );
       setAppointments(result);
     } catch (err) {
       setError(
@@ -52,65 +56,117 @@ export const CalendarPage = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [rangeFrom, rangeTo]);
 
   useEffect(() => {
-    fetchUpcoming();
-  }, [fetchUpcoming]);
+    fetchAppointments();
+  }, [fetchAppointments]);
+
+  const appointmentsByDayMap = useMemo(() => {
+    const map = new Map<string, IAppointment[]>();
+    for (const appointment of appointments) {
+      const key = dayKey(new Date(appointment.startsAt));
+      const list = map.get(key) ?? [];
+      list.push(appointment);
+      map.set(key, list);
+    }
+    for (const list of map.values()) {
+      list.sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+    }
+    return map;
+  }, [appointments]);
+
+  const weekAppointmentsByDay = useMemo(
+    () => weekDays.map((day) => appointmentsByDayMap.get(dayKey(day)) ?? []),
+    [weekDays, appointmentsByDayMap]
+  );
+
+  const dayAppointments = useMemo(
+    () => appointmentsByDayMap.get(dayKey(anchor)) ?? [],
+    [appointmentsByDayMap, anchor]
+  );
+
+  const weekFlatAppointments = useMemo(
+    () => [...appointments].sort((a, b) => a.startsAt.localeCompare(b.startsAt)),
+    [appointments]
+  );
+
+  const label =
+    view === "day"
+      ? formatDayHeader(anchor)
+      : view === "week"
+        ? formatWeekRange(weekDays)
+        : formatMonthYear(anchor);
+
+  const handleToday = () => setAnchor(startOfDay(new Date()));
+
+  const handlePrev = () => {
+    if (view === "day") setAnchor((current) => addDays(current, -1));
+    else if (view === "week") setAnchor((current) => addDays(current, -7));
+    else setAnchor((current) => new Date(current.getFullYear(), current.getMonth() - 1, 1));
+  };
+
+  const handleNext = () => {
+    if (view === "day") setAnchor((current) => addDays(current, 1));
+    else if (view === "week") setAnchor((current) => addDays(current, 7));
+    else setAnchor((current) => new Date(current.getFullYear(), current.getMonth() + 1, 1));
+  };
 
   return (
     <AppShell>
-      <div className="mx-auto max-w-3xl">
-        <h2 className="text-2xl font-semibold text-text">Calendario</h2>
-        <p className="mt-1 text-sm text-text-muted">
-          Próximos turnos de los siguientes {UPCOMING_RANGE_DAYS} días.
-        </p>
+      <div className="mx-auto max-w-5xl">
+        <h2 className="mb-4 text-2xl font-semibold text-text">Calendario</h2>
 
-        {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
+        <CalendarToolbar
+          view={view}
+          onViewChange={setView}
+          label={label}
+          onToday={handleToday}
+          onPrev={handlePrev}
+          onNext={handleNext}
+        />
 
-        <div className="mt-6">
-          {isLoading ? (
-            <p className="text-sm text-text-muted">Cargando turnos...</p>
-          ) : appointments.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-border p-6 text-center">
-              <p className="text-sm font-medium text-text-secondary">
-                No hay turnos en los próximos {UPCOMING_RANGE_DAYS} días.
-              </p>
-              <p className="mt-1 text-sm text-text-muted">
-                Los turnos que cargues van a aparecer acá.
-              </p>
-            </div>
-          ) : (
-            <ul className="space-y-3">
-              {appointments.map((appointment) => (
-                <li
-                  key={appointment.id}
-                  className="rounded-lg border border-border-subtle bg-surface p-4"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-sm font-medium text-text">
-                      {formatDateTime(appointment.startsAt)}
-                    </span>
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_BADGE_CLASSES[appointment.status]}`}
-                    >
-                      {STATUS_LABELS[appointment.status]}
-                    </span>
-                  </div>
-                  <Link
-                    to={`/pacientes/${appointment.patient.id}`}
-                    className="mt-2 inline-block text-sm text-text-tertiary underline"
-                  >
-                    {appointment.patient.firstName} {appointment.patient.lastName}
-                  </Link>
-                  {appointment.reason && (
-                    <p className="mt-1 text-sm text-text-muted">{appointment.reason}</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
+
+        {isLoading ? (
+          <p className="text-sm text-text-muted">Cargando turnos...</p>
+        ) : (
+          <>
+            {view === "day" && (
+              <DayAgenda
+                appointments={dayAppointments}
+                emptyMessage="No hay turnos para este día."
+              />
+            )}
+
+            {view === "week" && (
+              <>
+                <div className="hidden sm:block">
+                  <WeekGrid days={weekDays} appointmentsByDay={weekAppointmentsByDay} today={today} />
+                </div>
+                <div className="sm:hidden">
+                  <DayAgenda
+                    appointments={weekFlatAppointments}
+                    emptyMessage="No hay turnos esta semana."
+                  />
+                </div>
+              </>
+            )}
+
+            {view === "month" && (
+              <MonthGrid
+                days={monthDays}
+                monthAnchor={startOfMonth(anchor)}
+                appointmentsByDay={appointmentsByDayMap}
+                today={today}
+                onSelectDay={(day) => {
+                  setAnchor(day);
+                  setView("day");
+                }}
+              />
+            )}
+          </>
+        )}
       </div>
     </AppShell>
   );
