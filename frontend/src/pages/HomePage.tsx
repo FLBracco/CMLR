@@ -56,6 +56,45 @@ const ShieldIcon = () => (
   </Icon>
 );
 
+const FolderIcon = () => (
+  <Icon>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-19.5 0v6a2.25 2.25 0 0 0 2.25 2.25h15a2.25 2.25 0 0 0 2.25-2.25v-6m-19.5 0h19.5M6 9.75V6.75a2.25 2.25 0 0 1 2.25-2.25h3.879a1.5 1.5 0 0 1 1.06.44l1.5 1.5a1.5 1.5 0 0 0 1.06.44H18a2.25 2.25 0 0 1 2.25 2.25v3"
+    />
+  </Icon>
+);
+
+const ClockIcon = () => (
+  <Icon>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+  </Icon>
+);
+
+const HourglassIcon = () => (
+  <Icon>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M6.75 3h10.5M6.75 21h10.5M6.75 3c0 5.25 5.25 6.75 5.25 9s-5.25 3.75-5.25 9m10.5-18c0 5.25-5.25 6.75-5.25 9s5.25 3.75 5.25 9"
+    />
+  </Icon>
+);
+
+const CheckIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    stroke="currentColor"
+    className="h-4 w-4 shrink-0 text-accent-600"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+  </svg>
+);
+
 interface IFeature {
   icon: () => ReactNode;
   title: string;
@@ -88,6 +127,33 @@ const FEATURES: IFeature[] = [
   },
 ];
 
+const PAIN_POINTS: IFeature[] = [
+  {
+    icon: FolderIcon,
+    title: "Historias clínicas dispersas",
+    description:
+      "Fichas en papel, archivos de Word sueltos o notas en el celular que después cuesta encontrar.",
+  },
+  {
+    icon: ClockIcon,
+    title: "Turnos en varios lugares a la vez",
+    description:
+      "Una agenda de papel, el calendario del teléfono y mensajes de WhatsApp que no se cruzan entre sí.",
+  },
+  {
+    icon: HourglassIcon,
+    title: "Perder tiempo buscando datos",
+    description:
+      "Revisar carpetas o scrollear el chat para encontrar el DNI o el teléfono de un paciente antes de atenderlo.",
+  },
+];
+
+const TRUST_SIGNALS = [
+  "Configurá tu cuenta en minutos",
+  "Datos no compartidos entre profesionales",
+  "Pensado para el día a día de tu consultorio",
+];
+
 const STEPS = [
   {
     number: "1",
@@ -105,6 +171,11 @@ const STEPS = [
     description: "Programá turnos y llevá el seguimiento de cada uno.",
   },
 ];
+
+// Degradado sutil y estatico (sin animacion) que se repite en cada recuadro de la
+// pagina — se desvanece de arriba a abajo, contenido dentro de esa sola seccion.
+const SECTION_GRADIENT_CLASS =
+  "bg-[linear-gradient(to_bottom,rgba(99,102,241,0.10),transparent_70%)]";
 
 export const HomePage = () => {
   const { professional } = useAuth();
@@ -162,42 +233,78 @@ export const HomePage = () => {
       </header>
 
       {/* Hero */}
-      <section className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-28">
-        <span className="inline-block rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
-          Para psicólogos y psiquiatras
-        </span>
-        <h1 className="mt-6 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-          Tu consultorio, ordenado en <span className="text-accent-600">un solo lugar</span>
-        </h1>
-        <p className="mt-6 text-lg text-text-secondary">
-          ClinicAR centraliza la información de tus pacientes, sus historias clínicas y tu agenda de
-          turnos, para que puedas enfocarte en lo que importa: la consulta.
-        </p>
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link
-            to={professional ? "/dashboard" : "/registro"}
-            className="w-full rounded-lg bg-primary transition-colors px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-hover hover:text-primary-hover-foreground sm:w-auto"
-          >
-            {professional ? "Ir al panel" : "Crear cuenta gratis"}
-          </Link>
-          {!professional && (
-            <button
-              type="button"
-              onClick={() => openLoginModal()}
-              className="w-full cursor-pointer rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-secondary transition-colors hover:bg-surface-hover sm:w-auto"
+      <section className={SECTION_GRADIENT_CLASS}>
+        <div className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-28">
+          <span className="inline-block rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+            Disponible hoy para psicólogos y psiquiatras
+          </span>
+          <h1 className="mt-6 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+            Tu consultorio, ordenado en <span className="text-accent-600">un solo lugar</span>
+          </h1>
+          <p className="mt-6 text-lg text-text-secondary">
+            ClinicAR centraliza la información de tus pacientes, sus historias clínicas y tu agenda
+            de turnos, para que puedas enfocarte en lo que importa: la consulta.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              to={professional ? "/dashboard" : "/registro"}
+              className="w-full rounded-lg bg-primary transition-colors px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-hover hover:text-primary-hover-foreground sm:w-auto"
             >
-              Ya tengo cuenta
-            </button>
-          )}
+              {professional ? "Ir al panel" : "Crear cuenta"}
+            </Link>
+            {!professional && (
+              <button
+                type="button"
+                onClick={() => openLoginModal()}
+                className="w-full cursor-pointer rounded-lg border border-border px-6 py-3 text-sm font-semibold text-text-secondary transition-colors hover:bg-surface-hover sm:w-auto"
+              >
+                Ya tengo cuenta
+              </button>
+            )}
+          </div>
+          <ul className="mt-6 flex flex-col items-center justify-center gap-x-6 gap-y-2 text-sm text-text-muted sm:flex-row">
+            {TRUST_SIGNALS.map((signal) => (
+              <li key={signal} className="flex items-center gap-1.5">
+                <CheckIcon />
+                {signal}
+              </li>
+            ))}
+          </ul>
         </div>
-        <p className="mt-4 text-sm text-text-muted">
-          Pensado para profesionales de la salud mental. Tus datos, organizados y accesibles solo
-          por vos.
-        </p>
+      </section>
+
+      {/* Problema */}
+      <section className={`border-t border-dashed border-border px-6 py-20 ${SECTION_GRADIENT_CLASS}`}>
+        <div className="mx-auto max-w-5xl">
+          <h2 className="text-center text-3xl font-bold text-text">El problema que ya conocés</h2>
+          <p className="mx-auto mt-3 max-w-xl text-center text-text-secondary">
+            Antes de poder organizarte, tenés que lidiar con esto:
+          </p>
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {PAIN_POINTS.map((pain) => (
+              <div
+                key={pain.title}
+                className="rounded-lg border border-border-subtle bg-surface p-6"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-surface-hover text-text-muted">
+                  <pain.icon />
+                </div>
+                <h3 className="mt-4 text-base font-semibold text-text">{pain.title}</h3>
+                <p className="mt-2 text-sm text-text-secondary">{pain.description}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-12 text-center text-base font-medium text-text">
+            ClinicAR junta todo eso en un solo lugar.
+          </p>
+        </div>
       </section>
 
       {/* Funcionalidades */}
-      <section id="funcionalidades" className="border-t border-border-subtle bg-surface">
+      <section
+        id="funcionalidades"
+        className={`border-t border-dashed border-border ${SECTION_GRADIENT_CLASS}`}
+      >
         <div className="mx-auto max-w-6xl px-6 py-20">
           <h2 className="text-center text-3xl font-bold text-text">
             Todo lo que necesitás para tu consultorio
@@ -206,7 +313,7 @@ export const HomePage = () => {
             {FEATURES.map((feature) => (
               <div
                 key={feature.title}
-                className="rounded-lg border border-border-subtle bg-background p-6"
+                className="rounded-lg border border-border-subtle bg-surface p-6"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <feature.icon />
@@ -220,18 +327,23 @@ export const HomePage = () => {
       </section>
 
       {/* Cómo funciona */}
-      <section id="como-funciona" className="mx-auto max-w-5xl px-6 py-20">
-        <h2 className="text-center text-3xl font-bold text-text">Cómo funciona</h2>
-        <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-3">
-          {STEPS.map((step) => (
-            <div key={step.number} className="text-center sm:text-left">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent-600 text-sm font-semibold text-white">
-                {step.number}
-              </span>
-              <h3 className="mt-4 text-base font-semibold text-text">{step.title}</h3>
-              <p className="mt-2 text-sm text-text-secondary">{step.description}</p>
-            </div>
-          ))}
+      <section
+        id="como-funciona"
+        className={`border-t border-dashed border-border ${SECTION_GRADIENT_CLASS}`}
+      >
+        <div className="mx-auto max-w-5xl px-6 py-20">
+          <h2 className="text-center text-3xl font-bold text-text">Cómo funciona</h2>
+          <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-3">
+            {STEPS.map((step) => (
+              <div key={step.number} className="text-center sm:text-left">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent-600 text-sm font-semibold text-white">
+                  {step.number}
+                </span>
+                <h3 className="mt-4 text-base font-semibold text-text">{step.title}</h3>
+                <p className="mt-2 text-sm text-text-secondary">{step.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -240,13 +352,13 @@ export const HomePage = () => {
         <div className="mx-auto max-w-3xl px-6 py-16 text-center">
           <h2 className="text-3xl font-bold text-white">Empezá a ordenar tu consultorio hoy</h2>
           <p className="mt-3 text-accent-200">
-            Creá tu cuenta gratis y cargá a tu primer paciente en minutos.
+            Creá tu cuenta y cargá a tu primer paciente en minutos.
           </p>
           <Link
             to={professional ? "/dashboard" : "/registro"}
             className="mt-8 inline-block rounded-lg bg-white px-6 py-3 text-sm font-semibold text-accent-700 transition-opacity hover:opacity-90"
           >
-            {professional ? "Ir al panel" : "Crear cuenta gratis"}
+            {professional ? "Ir al panel" : "Crear cuenta"}
           </Link>
         </div>
       </section>
