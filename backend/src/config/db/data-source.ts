@@ -7,6 +7,7 @@ import { Patient } from "../../modules/patients/entities/patient.entity.js";
 import { Consultation } from "../../modules/consultations/entities/consultation.entity.js";
 import { Admin } from "../../modules/admin/entities/admin.entity.js";
 import { Appointment } from "../../modules/appointments/entities/appointment.entity.js";
+import { EnableExtensions1786057121000 } from "../../migrations/1786057121000-EnableExtensions.js";
 import { InitialSchema1786057121606 } from "../../migrations/1786057121606-InitialSchema.js";
 import { AddSubscriptionsAndAdmins1788274429176 } from "../../migrations/1788274429176-AddSubscriptionsAndAdmins.js";
 import { AddAppointments1788789521596 } from "../../migrations/1788789521596-AddAppointments.js";
@@ -25,15 +26,26 @@ export const AppDataSource = new DataSource({
   // Seguridad: usamos migraciones, no sincronización automática
   synchronize: false,
 
-  // Mostrar SQL en desarrollo
-  logging: true,
+  // Mostrar SQL en desarrollo; en producción solo errores (ruido en logs del hosting)
+  logging: Environment.app.isProduction ? ["error"] : true,
 
   // Entidades registradas explícitamente
   entities: [ProfessionalSpeciality, Professional, Patient, Consultation, Admin, Appointment],
 
-  // Migraciones registradas explícitamente
-  migrations: [InitialSchema1786057121606, AddSubscriptionsAndAdmins1788274429176, AddAppointments1788789521596],
+  // Migraciones registradas explícitamente (EnableExtensions corre primero: las
+  // entities dependen de uuid_generate_v4() como default de columna)
+  migrations: [
+    EnableExtensions1786057121000,
+    InitialSchema1786057121606,
+    AddSubscriptionsAndAdmins1788274429176,
+    AddAppointments1788789521596,
+  ],
 
-  // PostgreSQL local en Docker
-  ssl: false,
+  // false en Docker local; Neon (y la mayoría de los proveedores managed) exige TLS
+  ssl: Environment.database.ssl ? { rejectUnauthorized: false } : false,
+
+  // El proveedor de hosting puede dormir el proceso mientras la DB hace scale-to-zero
+  // por su cuenta con un timeout más corto: sin esto, TypeORM reintenta una conexión
+  // que el otro lado ya cerró y la primera query después de una pausa larga falla.
+  extra: { max: 5, idleTimeoutMillis: 120000 },
 });

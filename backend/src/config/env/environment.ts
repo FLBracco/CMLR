@@ -4,6 +4,8 @@ export const Environment = {
   app: {
     port: Number(process.env.PORT) || 3000,
     corsOrigin: process.env.CORS_ORIGIN ?? "http://localhost:5173",
+    nodeEnv: process.env.NODE_ENV ?? "development",
+    isProduction: process.env.NODE_ENV === "production",
   },
 
   database: {
@@ -12,6 +14,7 @@ export const Environment = {
     username: process.env.DATABASE_USER ?? "",
     password: process.env.DATABASE_PASSWORD ?? "",
     database: process.env.DATABASE_NAME ?? "",
+    ssl: process.env.DATABASE_SSL === "true",
   },
 
   jwt: {

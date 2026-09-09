@@ -13,14 +13,21 @@
     "migration:run": "pnpm typeorm migration:run -d src/config/db/data-source.ts",
     "migration:revert": "pnpm typeorm migration:revert -d src/config/db/data-source.ts",
     "migration:show": "pnpm typeorm migration:show -d src/config/db/data-source.ts",
+    "migration:run:prod": "node ./node_modules/typeorm/cli.js migration:run -d dist/config/db/data-source.js",
     "seed": "tsx src/database/seed.ts",
     "seed:admin": "tsx src/database/seed-admin.ts",
+    "seed:prod": "node dist/database/seed.js",
+    "seed:admin:prod": "node dist/database/seed-admin.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@11.17.0",
+  "engines": {
+    "node": ">=24"
+  },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",

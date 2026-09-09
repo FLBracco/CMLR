@@ -1,8 +1,8 @@
 {
   "project_name": "CMLR",
   "created": "2026-08-06T22:51:15+00:00",
-  "updated": "2026-08-12T14:45:00+00:00",
-  "next_tc_number": 8,
+  "updated": "2026-09-09T14:16:36+00:00",
+  "next_tc_number": 9,
   "records": [
     {
       "tc_id": "TC-001-08-06-26-fase0-fundaciones",
@@ -73,20 +73,30 @@
       "created": "2026-08-12T14:00:00+00:00",
       "updated": "2026-08-12T14:45:00+00:00",
       "path": "records/TC-007-08-12-26-fase7-pulido/tc_record.json"
+    },
+    {
+      "tc_id": "TC-008-09-09-26-fase4-retroactivo-consultas",
+      "title": "Fase 4 (retroactivo) - CRUD de consultas del backend",
+      "status": "deployed",
+      "scope": "feature",
+      "priority": "medium",
+      "created": "2026-09-09T14:16:14+00:00",
+      "updated": "2026-09-09T14:16:36+00:00",
+      "path": "records/TC-008-09-09-26-fase4-retroactivo-consultas/tc_record.json"
     }
   ],
   "statistics": {
-    "total": 7,
+    "total": 8,
     "by_status": {
       "planned": 0,
       "in_progress": 0,
       "blocked": 0,
       "implemented": 4,
       "tested": 3,
-      "deployed": 0
+      "deployed": 1
     },
     "by_scope": {
-      "feature": 5,
+      "feature": 6,
       "bugfix": 1,
       "refactor": 0,
       "infrastructure": 1,
@@ -97,7 +107,7 @@
     "by_priority": {
       "critical": 0,
       "high": 7,
-      "medium": 0,
+      "medium": 1,
       "low": 0
     }
   }

@@ -5,9 +5,14 @@ import { WeekGrid } from "../components/calendar/WeekGrid";
 import { MonthGrid } from "../components/calendar/MonthGrid";
 import { DayAgenda } from "../components/calendar/DayAgenda";
 import { AppointmentForm } from "../components/calendar/AppointmentForm";
-import { createAppointment, listAppointments, updateAppointment } from "../api/appointments";
+import {
+  createAppointment,
+  listAppointments,
+  updateAppointment,
+  updateAppointmentStatus,
+} from "../api/appointments";
 import { ApiError } from "../api/client";
-import type { IAppointment, IAppointmentPayload } from "../types/appointment";
+import type { AppointmentStatus, IAppointment, IAppointmentPayload } from "../types/appointment";
 import {
   addDays,
   dayKey,
@@ -30,6 +35,15 @@ export const CalendarPage = () => {
   const [editingAppointmentId, setEditingAppointmentId] = useState<string | null>(null);
 
   const today = useMemo(() => startOfDay(new Date()), []);
+
+  // Reloj de referencia para habilitar Completar/Ausente cuando un turno arranca,
+  // sin esperar a que otra cosa dispare un re-render.
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
   const weekDays = useMemo(() => getWeekDays(anchor), [anchor]);
   const monthDays = useMemo(() => getMonthGridDays(anchor), [anchor]);
 
@@ -79,6 +93,15 @@ export const CalendarPage = () => {
     const { patientId: _patientId, ...updatePayload } = payload;
     await updateAppointment(id, updatePayload);
     setEditingAppointmentId(null);
+    await fetchAppointments();
+  };
+
+  const handleUpdateStatus = async (
+    id: string,
+    status: AppointmentStatus,
+    cancellationReason?: string
+  ) => {
+    await updateAppointmentStatus(id, { status, ...(cancellationReason && { cancellationReason }) });
     await fetchAppointments();
   };
 
@@ -178,10 +201,12 @@ export const CalendarPage = () => {
               <DayAgenda
                 appointments={dayAppointments}
                 emptyMessage="No hay turnos para este día."
+                now={now}
                 editingAppointmentId={editingAppointmentId}
                 onStartEdit={handleStartEdit}
                 onSubmitEdit={handleSubmitEdit}
                 onCancelEdit={handleCancelEdit}
+                onUpdateStatus={handleUpdateStatus}
               />
             )}
 
@@ -194,10 +219,12 @@ export const CalendarPage = () => {
                   <DayAgenda
                     appointments={weekFlatAppointments}
                     emptyMessage="No hay turnos esta semana."
+                    now={now}
                     editingAppointmentId={editingAppointmentId}
                     onStartEdit={handleStartEdit}
                     onSubmitEdit={handleSubmitEdit}
                     onCancelEdit={handleCancelEdit}
+                    onUpdateStatus={handleUpdateStatus}
                   />
                 </div>
               </>

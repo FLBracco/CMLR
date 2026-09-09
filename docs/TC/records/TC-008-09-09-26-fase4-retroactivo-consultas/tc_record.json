@@ -1,0 +1,307 @@
+{
+  "tc_id": "TC-008-09-09-26-fase4-retroactivo-consultas",
+  "parent_tc": null,
+  "title": "Fase 4 (retroactivo) - CRUD de consultas del backend",
+  "status": "deployed",
+  "priority": "medium",
+  "created": "2026-09-09T14:16:14+00:00",
+  "updated": "2026-09-09T14:16:36+00:00",
+  "created_by": "Claude",
+  "project": "CMLR",
+  "description": {
+    "summary": "DTOs con class-validator, ConsultationRepository/Service/Controller, rutas anidadas bajo pacientes, scoping por profesional via ownership del paciente",
+    "motivation": "Registro retroactivo: el CRUD de consultas se implemento y commiteo (865e9b2, 2026-08-11) antes de que tc-tracker estuviera instalado en el proyecto, quedo se\u00f1alado como pendiente en docs/HISTORIAL.md (nota del 12/08) y en la tarjeta de Trello #17",
+    "scope": "feature",
+    "detailed_design": null,
+    "breaking_changes": [],
+    "dependencies": []
+  },
+  "files_affected": [
+    {
+      "path": "backend/src/modules/consultations/dto/create-consultation.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/consultations/dto/update-consultation.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/consultations/dto/consultation-response.dto.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/consultations/repositories/consultation.repository.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/consultations/services/consultation.service.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/consultations/controllers/consultation.controller.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/consultations/routes/consultation.routes.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/modules/consultations/routes/patient-consultation.routes.ts",
+      "action": "created",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    },
+    {
+      "path": "backend/src/app.ts",
+      "action": "modified",
+      "description": null,
+      "lines_added": null,
+      "lines_removed": null
+    }
+  ],
+  "revision_history": [
+    {
+      "revision_id": "R1",
+      "timestamp": "2026-09-09T14:16:14+00:00",
+      "author": "Claude",
+      "summary": "TC record created",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "set",
+          "new_value": "planned",
+          "reason": "initial creation"
+        }
+      ]
+    },
+    {
+      "revision_id": "R2",
+      "timestamp": "2026-09-09T14:16:23+00:00",
+      "author": "Claude",
+      "summary": "status: planned -> in_progress",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "planned",
+          "new_value": "in_progress",
+          "reason": "Registro retroactivo: el codigo ya existe y esta commiteado desde 2026-08-11"
+        }
+      ]
+    },
+    {
+      "revision_id": "R3",
+      "timestamp": "2026-09-09T14:16:24+00:00",
+      "author": "Claude",
+      "summary": "status: in_progress -> implemented; +file backend/src/modules/consultations/dto/create-consultation.dto.ts (created); +file backend/src/modules/consultations/dto/update-consultation.dto.ts (created); +file backend/src/modules/consultations/dto/consultation-response.dto.ts (created); +file backend/src/modules/consultations/repositories/consultation.repository.ts (created); +file backend/src/modules/consultations/services/consultation.service.ts (created); +file backend/src/modules/consultations/controllers/consultation.controller.ts (created); +file backend/src/modules/consultations/routes/consultation.routes.ts (created); +file backend/src/modules/consultations/routes/patient-consultation.routes.ts (created); +file backend/src/app.ts (modified)",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "in_progress",
+          "new_value": "implemented",
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/dto/create-consultation.dto.ts",
+            "action": "created"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/dto/update-consultation.dto.ts",
+            "action": "created"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/dto/consultation-response.dto.ts",
+            "action": "created"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/repositories/consultation.repository.ts",
+            "action": "created"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/services/consultation.service.ts",
+            "action": "created"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/controllers/consultation.controller.ts",
+            "action": "created"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/routes/consultation.routes.ts",
+            "action": "created"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/modules/consultations/routes/patient-consultation.routes.ts",
+            "action": "created"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        },
+        {
+          "field": "files_affected",
+          "action": "added",
+          "new_value": {
+            "path": "backend/src/app.ts",
+            "action": "modified"
+          },
+          "reason": "Commit 865e9b2 (2026-08-11): CRUD completo (create/list/update), scoping por profesional via ownership del paciente (assertPatientOwnership), rutas anidadas POST/GET /api/patients/:patientId/consultations y PATCH /api/consultations/:id"
+        }
+      ]
+    },
+    {
+      "revision_id": "R4",
+      "timestamp": "2026-09-09T14:16:36+00:00",
+      "author": "Claude",
+      "summary": "status: implemented -> tested; +test T1: Alta y edicion de consulta end-to-end (via ConsultationForm)",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "implemented",
+          "new_value": "tested",
+          "reason": "Verificado end-to-end desde el frontend en la Fase 6 (TC-006, 2026-08-12): alta de consulta aparece en el historial, edicion de consulta persiste los cambios, scoping por profesional probado via ficha de paciente. Sin tests automatizados (el proyecto no tiene suite unitaria)."
+        },
+        {
+          "field": "test_cases",
+          "action": "added",
+          "new_value": "T1",
+          "reason": "Verificado end-to-end desde el frontend en la Fase 6 (TC-006, 2026-08-12): alta de consulta aparece en el historial, edicion de consulta persiste los cambios, scoping por profesional probado via ficha de paciente. Sin tests automatizados (el proyecto no tiene suite unitaria)."
+        }
+      ]
+    },
+    {
+      "revision_id": "R5",
+      "timestamp": "2026-09-09T14:16:36+00:00",
+      "author": "Claude",
+      "summary": "status: tested -> deployed; note appended",
+      "field_changes": [
+        {
+          "field": "status",
+          "action": "changed",
+          "old_value": "tested",
+          "new_value": "deployed",
+          "reason": "En produccion/rama principal desde el commit 865e9b2 (2026-08-11), en uso continuo por las fases posteriores del MVP"
+        },
+        {
+          "field": "notes",
+          "action": "added",
+          "new_value": "TC creado retroactivamente el 2026-09-09 a pedido del usuario (tarjeta de Trello #17 'TC retroactivo - Fase 4'), completando la nota pendiente de docs/HISTORIAL.md del 12/08/2026.",
+          "reason": "En produccion/rama principal desde el commit 865e9b2 (2026-08-11), en uso continuo por las fases posteriores del MVP"
+        }
+      ]
+    }
+  ],
+  "sub_tcs": [],
+  "test_cases": [
+    {
+      "test_id": "T1",
+      "title": "Alta y edicion de consulta end-to-end (via ConsultationForm)",
+      "procedure": [
+        "POST /api/patients/:patientId/consultations con datos validos",
+        "Verificar que la consulta aparece en el historial del paciente (mas reciente primero)",
+        "PATCH /api/consultations/:id con datos editados",
+        "Verificar que el cambio persiste tras recargar"
+      ],
+      "expected_result": "Consulta creada y editada correctamente, visible solo para el profesional dueno del paciente",
+      "actual_result": null,
+      "status": "pending",
+      "evidence": [],
+      "tested_by": null,
+      "tested_date": null
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approved_by": null,
+    "approved_date": null,
+    "approval_notes": "",
+    "test_coverage_status": "none"
+  },
+  "session_context": {
+    "current_session": {
+      "session_id": "session-1788963374-15836",
+      "platform": "claude_code",
+      "model": "unknown",
+      "started": "2026-09-09T14:16:14+00:00",
+      "last_active": "2026-09-09T14:16:36+00:00"
+    },
+    "handoff": {
+      "progress_summary": "",
+      "next_steps": [],
+      "blockers": [],
+      "key_context": [],
+      "files_in_progress": [],
+      "decisions_made": []
+    },
+    "session_history": []
+  },
+  "tags": [],
+  "related_tcs": [],
+  "notes": "[2026-09-09T14:16:36+00:00] TC creado retroactivamente el 2026-09-09 a pedido del usuario (tarjeta de Trello #17 'TC retroactivo - Fase 4'), completando la nota pendiente de docs/HISTORIAL.md del 12/08/2026.",
+  "metadata": {
+    "project": "CMLR",
+    "created_by": "Claude",
+    "last_modified_by": "Claude",
+    "last_modified": "2026-09-09T14:16:36+00:00",
+    "estimated_effort": null
+  }
+}

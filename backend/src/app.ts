@@ -15,6 +15,14 @@ import patientAppointmentRoutes from "./modules/appointments/routes/patient-appo
 
 export const app = express();
 
+// Detrás de un proxy (Render, Railway, etc.) llega X-Forwarded-For; sin esto,
+// express-rate-limit lanza ERR_ERL_UNEXPECTED_X_FORWARDED_FOR, o peor: si se
+// ignora, todas las IPs colapsan en la del proxy y el rate limit de login pasa
+// a ser global entre todos los usuarios.
+if (Environment.app.isProduction) {
+  app.set("trust proxy", 1);
+}
+
 app.use(cors({ origin: Environment.app.corsOrigin }));
 app.use(express.json());
 
