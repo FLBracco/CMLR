@@ -4,9 +4,10 @@ import { CalendarToolbar, type CalendarViewMode } from "../components/calendar/C
 import { WeekGrid } from "../components/calendar/WeekGrid";
 import { MonthGrid } from "../components/calendar/MonthGrid";
 import { DayAgenda } from "../components/calendar/DayAgenda";
-import { listAppointments } from "../api/appointments";
+import { AppointmentForm } from "../components/calendar/AppointmentForm";
+import { createAppointment, listAppointments, updateAppointment } from "../api/appointments";
 import { ApiError } from "../api/client";
-import type { IAppointment } from "../types/appointment";
+import type { IAppointment, IAppointmentPayload } from "../types/appointment";
 import {
   addDays,
   dayKey,
@@ -25,6 +26,8 @@ export const CalendarPage = () => {
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingAppointmentId, setEditingAppointmentId] = useState<string | null>(null);
 
   const today = useMemo(() => startOfDay(new Date()), []);
   const weekDays = useMemo(() => getWeekDays(anchor), [anchor]);
@@ -61,6 +64,23 @@ export const CalendarPage = () => {
   useEffect(() => {
     fetchAppointments();
   }, [fetchAppointments]);
+
+  const handleCreate = async (payload: IAppointmentPayload) => {
+    await createAppointment(payload);
+    setIsCreating(false);
+    await fetchAppointments();
+  };
+
+  const handleStartEdit = (appointment: IAppointment) => setEditingAppointmentId(appointment.id);
+
+  const handleCancelEdit = () => setEditingAppointmentId(null);
+
+  const handleSubmitEdit = async (id: string, payload: IAppointmentPayload) => {
+    const { patientId: _patientId, ...updatePayload } = payload;
+    await updateAppointment(id, updatePayload);
+    setEditingAppointmentId(null);
+    await fetchAppointments();
+  };
 
   const appointmentsByDayMap = useMemo(() => {
     const map = new Map<string, IAppointment[]>();
@@ -115,7 +135,29 @@ export const CalendarPage = () => {
   return (
     <AppShell>
       <div className="mx-auto max-w-5xl">
-        <h2 className="mb-4 text-2xl font-semibold text-text">Calendario</h2>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-2xl font-semibold text-text">Calendario</h2>
+          <button
+            onClick={() => setIsCreating((current) => !current)}
+            className={
+              isCreating
+                ? "rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-secondary hover:bg-surface-hover"
+                : "rounded-lg bg-primary transition-colors px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-hover hover:text-primary-hover-foreground active:bg-primary-active active:text-primary-hover-foreground"
+            }
+          >
+            {isCreating ? "Cerrar formulario" : "Nuevo turno"}
+          </button>
+        </div>
+
+        {isCreating && (
+          <div className="mb-4">
+            <AppointmentForm
+              defaultDate={anchor}
+              onSubmit={handleCreate}
+              onCancel={() => setIsCreating(false)}
+            />
+          </div>
+        )}
 
         <CalendarToolbar
           view={view}
@@ -136,6 +178,10 @@ export const CalendarPage = () => {
               <DayAgenda
                 appointments={dayAppointments}
                 emptyMessage="No hay turnos para este día."
+                editingAppointmentId={editingAppointmentId}
+                onStartEdit={handleStartEdit}
+                onSubmitEdit={handleSubmitEdit}
+                onCancelEdit={handleCancelEdit}
               />
             )}
 
@@ -148,6 +194,10 @@ export const CalendarPage = () => {
                   <DayAgenda
                     appointments={weekFlatAppointments}
                     emptyMessage="No hay turnos esta semana."
+                    editingAppointmentId={editingAppointmentId}
+                    onStartEdit={handleStartEdit}
+                    onSubmitEdit={handleSubmitEdit}
+                    onCancelEdit={handleCancelEdit}
                   />
                 </div>
               </>

@@ -44,6 +44,10 @@ export const dayKey = (date: Date): string =>
 export const formatTime = (date: Date): string =>
   new Intl.DateTimeFormat("es-AR", { hour: "2-digit", minute: "2-digit" }).format(date);
 
+// Valor 24hs que espera el atributo `value` de <input type="time">.
+export const toTimeInputValue = (date: Date): string =>
+  `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+
 export const formatDayHeader = (date: Date): string =>
   new Intl.DateTimeFormat("es-AR", {
     weekday: "short",
