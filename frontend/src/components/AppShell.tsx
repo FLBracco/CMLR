@@ -1,6 +1,8 @@
 import { useState, type ReactNode, type SVGProps } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { useLoginModal } from "../auth/LoginModalContext";
+import { Wordmark } from "./Wordmark";
 import type { SubscriptionStatus } from "../types/auth";
 
 const Icon = (props: SVGProps<SVGSVGElement>) => (
@@ -116,11 +118,17 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   const { professional, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { closeLoginModal } = useLoginModal();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleLogout = async () => {
+    // Navegar primero: si la sesión se limpia mientras ProtectedRoute todavía
+    // está montado en una ruta protegida, su efecto abre el modal de login
+    // (cree que alguien entró sin sesión). Sacándolo de la ruta protegida
+    // antes de limpiar la sesión, ese efecto nunca llega a dispararse.
+    navigate("/", { replace: true });
     await logout();
-    navigate("/login", { replace: true });
+    closeLoginModal();
   };
 
   const isActive = (to: string) =>
@@ -134,7 +142,13 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   const sidebarContent = (
     <div className="flex h-full flex-col">
       <div className="px-4 py-5">
-        <span className="text-lg font-semibold text-text">CMLR</span>
+        <Link
+          to="/"
+          onClick={() => setIsDrawerOpen(false)}
+          className="text-lg font-semibold text-text hover:text-text-secondary"
+        >
+          <Wordmark />
+        </Link>
       </div>
 
       <div className="px-3">
@@ -222,7 +236,9 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
       </aside>
 
       <div className="flex items-center justify-between border-b border-border-subtle bg-surface px-4 py-3 sm:hidden">
-        <span className="text-lg font-semibold text-text">CMLR</span>
+        <Link to="/" className="text-lg font-semibold text-text hover:text-text-secondary">
+          <Wordmark />
+        </Link>
         <button
           onClick={() => setIsDrawerOpen(true)}
           aria-label="Abrir menú"

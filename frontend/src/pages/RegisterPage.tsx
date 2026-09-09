@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { useLoginModal } from "../auth/LoginModalContext";
 import { getSpecialities } from "../api/auth";
 import { ApiError } from "../api/client";
 import type { ISpecialityDto } from "../types/auth";
@@ -8,6 +9,7 @@ import type { ISpecialityDto } from "../types/auth";
 export const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { openLoginModal } = useLoginModal();
 
   const [specialities, setSpecialities] = useState<ISpecialityDto[]>([]);
   const [firstName, setFirstName] = useState("");
@@ -139,9 +141,13 @@ export const RegisterPage = () => {
 
         <p className="mt-4 text-center text-sm text-text-tertiary">
           ¿Ya tenés cuenta?{" "}
-          <Link to="/login" className="font-medium text-text underline">
+          <button
+            type="button"
+            onClick={() => openLoginModal()}
+            className="cursor-pointer font-medium text-text underline"
+          >
             Iniciá sesión
-          </Link>
+          </button>
         </p>
       </div>
     </div>

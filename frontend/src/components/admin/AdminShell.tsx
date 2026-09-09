@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
+import { Wordmark } from "../Wordmark";
 
 export const AdminShell = ({ children }: { children: ReactNode }) => {
   const { admin, adminLogout } = useAuth();
@@ -15,7 +16,7 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
     <div className="min-h-screen bg-background">
       <header className="flex items-center justify-between border-b border-border-subtle bg-surface px-6 py-4">
         <span className="text-lg font-semibold text-text">
-          CMLR <span className="text-text-muted">· SuperAdmin</span>
+          <Wordmark /> <span className="text-text-muted">· SuperAdmin</span>
         </span>
         <div className="flex items-center gap-4">
           <span className="text-sm text-text-secondary">{admin?.email}</span>
