@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import type { IAppointment } from "../../types/appointment";
 import { STATUS_COLORS } from "./appointmentStatusColors";
-import { formatTime, isSameDay } from "../../lib/calendarDates";
+import { dayKey, formatTime, isSameDay } from "../../lib/calendarDates";
 
 const HOUR_ROW_PX = 56;
 const DEFAULT_START_HOUR = 7;
@@ -15,13 +15,20 @@ interface IWeekGridProps {
   days: Date[];
   /** turnos de cada día, mismo orden/longitud que `days` */
   appointmentsByDay: IAppointment[][];
+  /** Cantidad de consultas registradas por día — solo para el puntito indicador, sin acciones */
+  consultationCountByDay: Map<string, number>;
   today: Date;
 }
 
 const minutesSinceMidnight = (date: Date): number =>
   date.getHours() * 60 + date.getMinutes();
 
-export const WeekGrid = ({ days, appointmentsByDay, today }: IWeekGridProps) => {
+export const WeekGrid = ({
+  days,
+  appointmentsByDay,
+  consultationCountByDay,
+  today,
+}: IWeekGridProps) => {
   const boundaryHours = appointmentsByDay.flat().flatMap((appointment) => {
     const start = new Date(appointment.startsAt);
     const end = new Date(appointment.endsAt);
@@ -50,7 +57,17 @@ export const WeekGrid = ({ days, appointmentsByDay, today }: IWeekGridProps) => 
             }`}
           >
             <p>{DAY_LABELS[(day.getDay() + 6) % 7]}</p>
-            <p className="text-xs text-text-muted">{day.getDate()}</p>
+            <p className="flex items-center justify-center gap-1 text-xs text-text-muted">
+              {day.getDate()}
+              {(consultationCountByDay.get(dayKey(day)) ?? 0) > 0 && (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-accent-500"
+                  role="img"
+                  aria-label="Consultas registradas este día"
+                  title="Consultas registradas este día"
+                />
+              )}
+            </p>
           </div>
         ))}
 

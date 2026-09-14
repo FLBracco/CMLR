@@ -3,6 +3,7 @@ import type {
   IConsultation,
   IConsultationPayload,
   IConsultationStats,
+  IConsultationWithPatient,
 } from "../types/consultation";
 
 export const listConsultations = async (
@@ -25,6 +26,19 @@ export const createConsultation = (
 
 export const getConsultationStats = (): Promise<IConsultationStats> =>
   apiRequest<IConsultationStats>("/consultations/stats");
+
+// `from`/`to` son fechas calendario "YYYY-MM-DD" (ambas inclusivas) — nunca
+// pasar un ISO completo (`toISOString()`), el backend lo rechaza con 400
+// porque `consultation_date` no tiene hora. Ver `dayKey()` en calendarDates.ts.
+export const listConsultationsByRange = async (
+  from: string,
+  to: string
+): Promise<IConsultationWithPatient[]> => {
+  const { consultations } = await apiRequest<{
+    consultations: IConsultationWithPatient[];
+  }>(`/consultations?from=${from}&to=${to}`);
+  return consultations;
+};
 
 export const updateConsultation = (
   id: string,

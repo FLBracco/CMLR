@@ -14,6 +14,16 @@ export interface IConsultationStats {
   consultationsThisMonth: number;
 }
 
+export interface IConsultationPatientSummary {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface IConsultationWithPatient extends IConsultation {
+  patient: IConsultationPatientSummary;
+}
+
 export interface IConsultationPayload {
   consultationDate: string;
   observations: string;

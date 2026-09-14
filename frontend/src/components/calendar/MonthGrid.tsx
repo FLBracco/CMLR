@@ -10,6 +10,8 @@ interface IMonthGridProps {
   days: Date[];
   monthAnchor: Date;
   appointmentsByDay: Map<string, IAppointment[]>;
+  /** Cantidad de consultas registradas por día — solo para el puntito indicador, sin acciones */
+  consultationCountByDay: Map<string, number>;
   today: Date;
   onSelectDay: (day: Date) => void;
 }
@@ -18,6 +20,7 @@ export const MonthGrid = ({
   days,
   monthAnchor,
   appointmentsByDay,
+  consultationCountByDay,
   today,
   onSelectDay,
 }: IMonthGridProps) => (
@@ -40,6 +43,7 @@ export const MonthGrid = ({
         const visible = dayAppointments.slice(0, MAX_VISIBLE_PER_DAY);
         const hiddenCount = dayAppointments.length - visible.length;
         const inCurrentMonth = isSameMonth(day, monthAnchor);
+        const consultationCount = consultationCountByDay.get(key) ?? 0;
 
         return (
           <button
@@ -50,16 +54,26 @@ export const MonthGrid = ({
               inCurrentMonth ? "" : "bg-background"
             }`}
           >
-            <span
-              className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                isSameDay(day, today)
-                  ? "bg-primary font-semibold text-primary-foreground"
-                  : inCurrentMonth
-                    ? "text-text-secondary"
-                    : "text-text-muted"
-              }`}
-            >
-              {day.getDate()}
+            <span className="flex items-center gap-1">
+              <span
+                className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs ${
+                  isSameDay(day, today)
+                    ? "bg-primary font-semibold text-primary-foreground"
+                    : inCurrentMonth
+                      ? "text-text-secondary"
+                      : "text-text-muted"
+                }`}
+              >
+                {day.getDate()}
+              </span>
+              {consultationCount > 0 && (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-accent-500"
+                  role="img"
+                  aria-label={`${consultationCount} consulta${consultationCount === 1 ? "" : "s"} registrada${consultationCount === 1 ? "" : "s"}`}
+                  title={`${consultationCount} consulta${consultationCount === 1 ? "" : "s"} registrada${consultationCount === 1 ? "" : "s"}`}
+                />
+              )}
             </span>
 
             <div className="mt-1 space-y-1">

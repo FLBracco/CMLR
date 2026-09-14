@@ -12,6 +12,7 @@ router.use(authenticate);
 router.use(requireActiveSubscription());
 
 router.get("/stats", (req, res) => controller.getStats(req, res));
+router.get("/", (req, res) => controller.list(req, res));
 
 router.patch("/:id", validateDto(UpdateConsultationDto), (req, res) =>
   controller.update(req, res)

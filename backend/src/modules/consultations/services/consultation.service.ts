@@ -8,7 +8,11 @@ import type {
   IConsultationDto,
   IConsultationListDto,
   IConsultationStatsDto,
+  IConsultationRangeListDto,
+  IConsultationWithPatientDto,
 } from "../dto/consultation-response.dto.js";
+
+const MAX_RANGE_DAYS = 62;
 
 export class ConsultationService {
   constructor(
@@ -74,6 +78,30 @@ export class ConsultationService {
     return this.toDto(updated);
   }
 
+  // `from`/`to` son fechas calendario "YYYY-MM-DD" ya validadas en formato
+  // por el controller (ver `parseDateOnlyParam`) — acá solo se valida el
+  // orden y el largo del rango, igual que `AppointmentService.listByRange`.
+  async listByDateRange(
+    professionalId: string,
+    from: string,
+    to: string
+  ): Promise<IConsultationRangeListDto> {
+    this.assertValidRange(from, to);
+
+    const consultations =
+      await this.consultationRepository.findByProfessionalAndDateRange(
+        professionalId,
+        from,
+        to
+      );
+
+    return {
+      consultations: consultations.map((consultation) =>
+        this.toDtoWithPatient(consultation)
+      ),
+    };
+  }
+
   async getStats(professionalId: string): Promise<IConsultationStatsDto> {
     const now = new Date();
     const startOfWeek = this.getStartOfWeek(now);
@@ -124,21 +152,62 @@ export class ConsultationService {
     return consultation;
   }
 
-  private toDto(consultation: Consultation): IConsultationDto {
-    const consultationDate =
-      consultation.consultationDate instanceof Date
-        ? consultation.consultationDate.toISOString().slice(0, 10)
-        : consultation.consultationDate;
+  private assertValidRange(from: string, to: string): void {
+    if (to < from) {
+      throw AppError.badRequest(
+        "El parámetro 'to' no puede ser anterior a 'from'."
+      );
+    }
 
+    if (this.daysBetween(from, to) > MAX_RANGE_DAYS) {
+      throw AppError.badRequest(
+        `El rango de fechas no puede superar los ${MAX_RANGE_DAYS} días.`
+      );
+    }
+  }
+
+  // Comparación en UTC a partir de las partes YYYY-MM-DD (nunca `new
+  // Date("YYYY-MM-DD")` directo, que JS interpreta como medianoche UTC y
+  // puede desfasarse un día contra la zona local del server).
+  private daysBetween(from: string, to: string): number {
+    return (this.toUtcTimestamp(to) - this.toUtcTimestamp(from)) / (1000 * 60 * 60 * 24);
+  }
+
+  private toUtcTimestamp(dateOnly: string): number {
+    const year = Number(dateOnly.slice(0, 4));
+    const month = Number(dateOnly.slice(5, 7));
+    const day = Number(dateOnly.slice(8, 10));
+
+    return Date.UTC(year, month - 1, day);
+  }
+
+  private formatDateOnly(value: Date | string): string {
+    return value instanceof Date ? value.toISOString().slice(0, 10) : value;
+  }
+
+  private toDto(consultation: Consultation): IConsultationDto {
     return {
       id: consultation.id,
       patientId: consultation.patientId,
-      consultationDate,
+      consultationDate: this.formatDateOnly(consultation.consultationDate),
       observations: consultation.observations,
       diagnosis: consultation.diagnosis,
       followUpPlan: consultation.followUpPlan,
       createdAt: consultation.createdAt.toISOString(),
       updatedAt: consultation.updatedAt.toISOString(),
+    };
+  }
+
+  private toDtoWithPatient(
+    consultation: Consultation
+  ): IConsultationWithPatientDto {
+    return {
+      ...this.toDto(consultation),
+      patient: {
+        id: consultation.patient.id,
+        firstName: consultation.patient.firstName,
+        lastName: consultation.patient.lastName,
+      },
     };
   }
 }

@@ -5,14 +5,17 @@ import { WeekGrid } from "../components/calendar/WeekGrid";
 import { MonthGrid } from "../components/calendar/MonthGrid";
 import { DayAgenda } from "../components/calendar/DayAgenda";
 import { AppointmentForm } from "../components/calendar/AppointmentForm";
+import { DayConsultations } from "../components/calendar/DayConsultations";
 import {
   createAppointment,
   listAppointments,
   updateAppointment,
   updateAppointmentStatus,
 } from "../api/appointments";
+import { listConsultationsByRange } from "../api/consultations";
 import { ApiError } from "../api/client";
 import type { AppointmentStatus, IAppointment, IAppointmentPayload } from "../types/appointment";
+import type { IConsultationWithPatient } from "../types/consultation";
 import {
   addDays,
   dayKey,
@@ -29,8 +32,10 @@ export const CalendarPage = () => {
   const [view, setView] = useState<CalendarViewMode>("week");
   const [anchor, setAnchor] = useState(() => startOfDay(new Date()));
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
+  const [consultations, setConsultations] = useState<IConsultationWithPatient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [consultationsError, setConsultationsError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [editingAppointmentId, setEditingAppointmentId] = useState<string | null>(null);
 
@@ -57,32 +62,54 @@ export const CalendarPage = () => {
     return { rangeFrom: monthDays[0]!, rangeTo: addDays(monthDays[41]!, 1) };
   }, [view, anchor, weekDays, monthDays]);
 
-  const fetchAppointments = useCallback(async () => {
+  // Turnos y consultas se piden en paralelo con `allSettled`, no `all`: si el
+  // listado de consultas falla, la agenda de turnos (contenido primario) tiene
+  // que seguir renderizando igual — son dos recursos independientes con
+  // errores independientes (ver `error` vs. `consultationsError`).
+  const fetchCalendar = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    try {
-      const result = await listAppointments(
-        rangeFrom.toISOString(),
-        rangeTo.toISOString()
-      );
-      setAppointments(result);
-    } catch (err) {
+    setConsultationsError(null);
+
+    const from = dayKey(rangeFrom);
+    const to = dayKey(addDays(rangeTo, -1));
+
+    const [appointmentsResult, consultationsResult] = await Promise.allSettled([
+      listAppointments(rangeFrom.toISOString(), rangeTo.toISOString()),
+      listConsultationsByRange(from, to),
+    ]);
+
+    if (appointmentsResult.status === "fulfilled") {
+      setAppointments(appointmentsResult.value);
+    } else {
       setError(
-        err instanceof ApiError ? err.message : "No se pudo cargar la agenda."
+        appointmentsResult.reason instanceof ApiError
+          ? appointmentsResult.reason.message
+          : "No se pudo cargar la agenda."
       );
-    } finally {
-      setIsLoading(false);
     }
+
+    if (consultationsResult.status === "fulfilled") {
+      setConsultations(consultationsResult.value);
+    } else {
+      setConsultationsError(
+        consultationsResult.reason instanceof ApiError
+          ? consultationsResult.reason.message
+          : "No se pudieron cargar las consultas registradas."
+      );
+    }
+
+    setIsLoading(false);
   }, [rangeFrom, rangeTo]);
 
   useEffect(() => {
-    fetchAppointments();
-  }, [fetchAppointments]);
+    fetchCalendar();
+  }, [fetchCalendar]);
 
   const handleCreate = async (payload: IAppointmentPayload) => {
     await createAppointment(payload);
     setIsCreating(false);
-    await fetchAppointments();
+    await fetchCalendar();
   };
 
   const handleStartEdit = (appointment: IAppointment) => setEditingAppointmentId(appointment.id);
@@ -93,7 +120,7 @@ export const CalendarPage = () => {
     const { patientId: _patientId, ...updatePayload } = payload;
     await updateAppointment(id, updatePayload);
     setEditingAppointmentId(null);
-    await fetchAppointments();
+    await fetchCalendar();
   };
 
   const handleUpdateStatus = async (
@@ -102,7 +129,7 @@ export const CalendarPage = () => {
     cancellationReason?: string
   ) => {
     await updateAppointmentStatus(id, { status, ...(cancellationReason && { cancellationReason }) });
-    await fetchAppointments();
+    await fetchCalendar();
   };
 
   const appointmentsByDayMap = useMemo(() => {
@@ -133,6 +160,34 @@ export const CalendarPage = () => {
     () => [...appointments].sort((a, b) => a.startsAt.localeCompare(b.startsAt)),
     [appointments]
   );
+
+  // `consultation.consultationDate` ya llega como "YYYY-MM-DD" (fecha
+  // calendario del profesional, sin hora) — misma forma que produce
+  // `dayKey()`, así que se puede usar directo como clave sin reparsear.
+  const consultationsByDayMap = useMemo(() => {
+    const map = new Map<string, IConsultationWithPatient[]>();
+    for (const consultation of consultations) {
+      const list = map.get(consultation.consultationDate) ?? [];
+      list.push(consultation);
+      map.set(consultation.consultationDate, list);
+    }
+    return map;
+  }, [consultations]);
+
+  const dayConsultations = useMemo(
+    () => consultationsByDayMap.get(dayKey(anchor)) ?? [],
+    [consultationsByDayMap, anchor]
+  );
+
+  // Solo para el puntito indicador de las vistas semana/mes — ninguna acción
+  // depende de esto, así que un conteo simple alcanza.
+  const consultationCountByDay = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const [key, list] of consultationsByDayMap) {
+      map.set(key, list.length);
+    }
+    return map;
+  }, [consultationsByDayMap]);
 
   const label =
     view === "day"
@@ -198,22 +253,33 @@ export const CalendarPage = () => {
         ) : (
           <>
             {view === "day" && (
-              <DayAgenda
-                appointments={dayAppointments}
-                emptyMessage="No hay turnos para este día."
-                now={now}
-                editingAppointmentId={editingAppointmentId}
-                onStartEdit={handleStartEdit}
-                onSubmitEdit={handleSubmitEdit}
-                onCancelEdit={handleCancelEdit}
-                onUpdateStatus={handleUpdateStatus}
-              />
+              <>
+                <DayAgenda
+                  appointments={dayAppointments}
+                  emptyMessage="No hay turnos para este día."
+                  now={now}
+                  editingAppointmentId={editingAppointmentId}
+                  onStartEdit={handleStartEdit}
+                  onSubmitEdit={handleSubmitEdit}
+                  onCancelEdit={handleCancelEdit}
+                  onUpdateStatus={handleUpdateStatus}
+                />
+                <DayConsultations
+                  consultations={dayConsultations}
+                  error={consultationsError}
+                />
+              </>
             )}
 
             {view === "week" && (
               <>
                 <div className="hidden sm:block">
-                  <WeekGrid days={weekDays} appointmentsByDay={weekAppointmentsByDay} today={today} />
+                  <WeekGrid
+                    days={weekDays}
+                    appointmentsByDay={weekAppointmentsByDay}
+                    consultationCountByDay={consultationCountByDay}
+                    today={today}
+                  />
                 </div>
                 <div className="sm:hidden">
                   <DayAgenda
@@ -235,6 +301,7 @@ export const CalendarPage = () => {
                 days={monthDays}
                 monthAnchor={startOfMonth(anchor)}
                 appointmentsByDay={appointmentsByDayMap}
+                consultationCountByDay={consultationCountByDay}
                 today={today}
                 onSelectDay={(day) => {
                   setAnchor(day);

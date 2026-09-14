@@ -31,6 +31,29 @@ export class ConsultationRepository {
       .getCount();
   }
 
+  // `from`/`to` son fechas calendario "YYYY-MM-DD" (ambas inclusivas), no
+  // instantes: consultation_date es `date` en la DB, sin hora. `addSelect`
+  // acotado en vez de `innerJoinAndSelect` para no traer DNI/teléfono/fecha
+  // de nacimiento del paciente cuando solo hace falta el nombre.
+  async findByProfessionalAndDateRange(
+    professionalId: string,
+    from: string,
+    to: string
+  ): Promise<Consultation[]> {
+    return this.repository
+      .createQueryBuilder("consultation")
+      .innerJoin("consultation.patient", "patient")
+      .addSelect(["patient.id", "patient.firstName", "patient.lastName"])
+      .where("patient.professionalId = :professionalId", { professionalId })
+      .andWhere("consultation.consultationDate BETWEEN :from AND :to", {
+        from,
+        to,
+      })
+      .orderBy("consultation.consultationDate", "ASC")
+      .addOrderBy("consultation.createdAt", "ASC")
+      .getMany();
+  }
+
   async create(data: DeepPartial<Consultation>): Promise<Consultation> {
     const consultation = this.repository.create(data);
     return this.repository.save(consultation);
