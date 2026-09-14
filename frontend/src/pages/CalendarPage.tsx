@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AppShell } from "../components/AppShell";
 import { CalendarToolbar, type CalendarViewMode } from "../components/calendar/CalendarToolbar";
-import { WeekGrid } from "../components/calendar/WeekGrid";
 import { MonthGrid } from "../components/calendar/MonthGrid";
 import { DayAgenda } from "../components/calendar/DayAgenda";
 import { AppointmentForm } from "../components/calendar/AppointmentForm";
@@ -21,15 +20,13 @@ import {
   dayKey,
   formatDayHeader,
   formatMonthYear,
-  formatWeekRange,
   getMonthGridDays,
-  getWeekDays,
   startOfDay,
   startOfMonth,
 } from "../lib/calendarDates";
 
 export const CalendarPage = () => {
-  const [view, setView] = useState<CalendarViewMode>("week");
+  const [view, setView] = useState<CalendarViewMode>("month");
   const [anchor, setAnchor] = useState(() => startOfDay(new Date()));
   const [appointments, setAppointments] = useState<IAppointment[]>([]);
   const [consultations, setConsultations] = useState<IConsultationWithPatient[]>([]);
@@ -49,18 +46,14 @@ export const CalendarPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const weekDays = useMemo(() => getWeekDays(anchor), [anchor]);
   const monthDays = useMemo(() => getMonthGridDays(anchor), [anchor]);
 
   const { rangeFrom, rangeTo } = useMemo(() => {
     if (view === "day") {
       return { rangeFrom: startOfDay(anchor), rangeTo: addDays(anchor, 1) };
     }
-    if (view === "week") {
-      return { rangeFrom: weekDays[0]!, rangeTo: addDays(weekDays[6]!, 1) };
-    }
     return { rangeFrom: monthDays[0]!, rangeTo: addDays(monthDays[41]!, 1) };
-  }, [view, anchor, weekDays, monthDays]);
+  }, [view, anchor, monthDays]);
 
   // Turnos y consultas se piden en paralelo con `allSettled`, no `all`: si el
   // listado de consultas falla, la agenda de turnos (contenido primario) tiene
@@ -146,19 +139,9 @@ export const CalendarPage = () => {
     return map;
   }, [appointments]);
 
-  const weekAppointmentsByDay = useMemo(
-    () => weekDays.map((day) => appointmentsByDayMap.get(dayKey(day)) ?? []),
-    [weekDays, appointmentsByDayMap]
-  );
-
   const dayAppointments = useMemo(
     () => appointmentsByDayMap.get(dayKey(anchor)) ?? [],
     [appointmentsByDayMap, anchor]
-  );
-
-  const weekFlatAppointments = useMemo(
-    () => [...appointments].sort((a, b) => a.startsAt.localeCompare(b.startsAt)),
-    [appointments]
   );
 
   // `consultation.consultationDate` ya llega como "YYYY-MM-DD" (fecha
@@ -179,7 +162,7 @@ export const CalendarPage = () => {
     [consultationsByDayMap, anchor]
   );
 
-  // Solo para el puntito indicador de las vistas semana/mes — ninguna acción
+  // Solo para el puntito indicador de la vista mes — ninguna acción
   // depende de esto, así que un conteo simple alcanza.
   const consultationCountByDay = useMemo(() => {
     const map = new Map<string, number>();
@@ -189,24 +172,17 @@ export const CalendarPage = () => {
     return map;
   }, [consultationsByDayMap]);
 
-  const label =
-    view === "day"
-      ? formatDayHeader(anchor)
-      : view === "week"
-        ? formatWeekRange(weekDays)
-        : formatMonthYear(anchor);
+  const label = view === "day" ? formatDayHeader(anchor) : formatMonthYear(anchor);
 
   const handleToday = () => setAnchor(startOfDay(new Date()));
 
   const handlePrev = () => {
     if (view === "day") setAnchor((current) => addDays(current, -1));
-    else if (view === "week") setAnchor((current) => addDays(current, -7));
     else setAnchor((current) => new Date(current.getFullYear(), current.getMonth() - 1, 1));
   };
 
   const handleNext = () => {
     if (view === "day") setAnchor((current) => addDays(current, 1));
-    else if (view === "week") setAnchor((current) => addDays(current, 7));
     else setAnchor((current) => new Date(current.getFullYear(), current.getMonth() + 1, 1));
   };
 
@@ -268,31 +244,6 @@ export const CalendarPage = () => {
                   consultations={dayConsultations}
                   error={consultationsError}
                 />
-              </>
-            )}
-
-            {view === "week" && (
-              <>
-                <div className="hidden sm:block">
-                  <WeekGrid
-                    days={weekDays}
-                    appointmentsByDay={weekAppointmentsByDay}
-                    consultationCountByDay={consultationCountByDay}
-                    today={today}
-                  />
-                </div>
-                <div className="sm:hidden">
-                  <DayAgenda
-                    appointments={weekFlatAppointments}
-                    emptyMessage="No hay turnos esta semana."
-                    now={now}
-                    editingAppointmentId={editingAppointmentId}
-                    onStartEdit={handleStartEdit}
-                    onSubmitEdit={handleSubmitEdit}
-                    onCancelEdit={handleCancelEdit}
-                    onUpdateStatus={handleUpdateStatus}
-                  />
-                </div>
               </>
             )}
 

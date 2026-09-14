@@ -16,11 +16,6 @@ export const startOfWeek = (date: Date): Date => {
   return result;
 };
 
-export const getWeekDays = (date: Date): Date[] => {
-  const start = startOfWeek(date);
-  return Array.from({ length: 7 }, (_, i) => addDays(start, i));
-};
-
 export const startOfMonth = (date: Date): Date =>
   new Date(date.getFullYear(), date.getMonth(), 1);
 
@@ -63,17 +58,3 @@ export const formatMonthYear = (date: Date): string => {
   return label.charAt(0).toUpperCase() + label.slice(1);
 };
 
-export const formatWeekRange = (days: Date[]): string => {
-  const first = days[0];
-  const last = days[days.length - 1];
-  if (!first || !last) return "";
-
-  const dayFmt = new Intl.DateTimeFormat("es-AR", { day: "numeric" });
-  const monthFmt = new Intl.DateTimeFormat("es-AR", { month: "short", year: "numeric" });
-  const sameMonth = first.getMonth() === last.getMonth() && first.getFullYear() === last.getFullYear();
-
-  if (sameMonth) {
-    return `${dayFmt.format(first)} – ${dayFmt.format(last)} ${monthFmt.format(last)}`;
-  }
-  return `${dayFmt.format(first)} ${monthFmt.format(first)} – ${dayFmt.format(last)} ${monthFmt.format(last)}`;
-};

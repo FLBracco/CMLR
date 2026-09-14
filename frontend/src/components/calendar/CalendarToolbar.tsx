@@ -1,4 +1,4 @@
-export type CalendarViewMode = "day" | "week" | "month";
+export type CalendarViewMode = "day" | "month";
 
 interface ICalendarToolbarProps {
   view: CalendarViewMode;
@@ -11,7 +11,6 @@ interface ICalendarToolbarProps {
 
 const VIEW_OPTIONS: { value: CalendarViewMode; label: string }[] = [
   { value: "day", label: "Día" },
-  { value: "week", label: "Semana" },
   { value: "month", label: "Mes" },
 ];
 
