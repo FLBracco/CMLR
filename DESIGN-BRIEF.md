@@ -41,7 +41,7 @@ _Generado por /design-grill el 2026-08-31. Actualizar este archivo cuando cambie
 
 ## Component Style
 - **Corner radius:** Redondeado 8–12px
-- **Elevation:** Plano (sin sombras, solo bordes)
+- **Elevation:** Mayormente plano (bordes), con sombra sutil (`shadow-sm`) en tarjetas/contenedores de contenido que se benefician de destacarse sobre el fondo (StatCards, toolbar de búsqueda, contenedor de tabla) — no aplicada a elementos internos (filas de tabla, botones)
 - **Density:** Balanceada
 - **Borders:** Livianos, 1px sutil
 - **Overall:** Redondeado y con un acento cálido puntual, pero plano/neutro/tipografía geométrica en la base — mantiene el registro sobrio sin sentirse frío.
@@ -82,6 +82,7 @@ _Generado por /design-grill el 2026-08-31. Actualizar este archivo cuando cambie
 | Estilo de botón primario | Pastel en reposo (`#C7D2FE`/`#312E81`) → sólido al pasar el mouse (`#4F46E5`/blanco), con transición suave | El usuario quería mantener el pastel pero que se "rellene" sólido en hover, no un pastel más oscuro |
 | Layout de navegación | Header simple → sidebar (persistente en desktop, drawer en mobile) | El usuario quería más estructura de navegación (Perfil, Calendario, Suscripción) a medida que el producto crece |
 | Colores de estado de suscripción (Pendiente/Activa/Desactivada) | Verde/ámbar/rojo directos de Tailwind (`amber-*`, `green-*`, `red-*`), sin token semántico propio | Feature de SuperAdmin/suscripciones (backend) necesitaba un badge de estado ya; no había tiempo/alcance para formalizar un rol semántico "estado" en el sistema de tokens — queda como pendiente en Open Questions |
+| Elevation (superseded) | ~~Plano, sin sombras~~ → sombra sutil (`shadow-sm`) permitida puntualmente | El usuario sintió el dashboard "monótono y poco lindo a la vista"; se abrió la excepción para superficies puntuales (ej. toolbar de búsqueda) en vez de aplicarla a todo el sistema de golpe |
 
 ## Ruled Out
 _Direcciones explícitamente rechazadas durante esta sesión. No volver a proponerlas sin reabrir la decisión._
