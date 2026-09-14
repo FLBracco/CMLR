@@ -13,6 +13,7 @@ export const ProfilePage = () => {
   const [firstName, setFirstName] = useState(professional?.firstName ?? "");
   const [lastName, setLastName] = useState(professional?.lastName ?? "");
   const [specialityCode, setSpecialityCode] = useState(professional?.speciality ?? "");
+  const [licenseNumber, setLicenseNumber] = useState(professional?.licenseNumber ?? "");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +25,7 @@ export const ProfilePage = () => {
         setFirstName(profile.firstName);
         setLastName(profile.lastName);
         setSpecialityCode(profile.speciality);
+        setLicenseNumber(profile.licenseNumber);
         setSpecialities(specialityList);
       })
       .catch(() => setError("No se pudo cargar el perfil."))
@@ -37,7 +39,7 @@ export const ProfilePage = () => {
     setIsSubmitting(true);
 
     try {
-      const updated = await updateMyProfile({ firstName, lastName, specialityCode });
+      const updated = await updateMyProfile({ firstName, lastName, specialityCode, licenseNumber });
       updateProfessional(updated);
       setSuccess(true);
     } catch (err) {
@@ -117,6 +119,20 @@ export const ProfilePage = () => {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label htmlFor="licenseNumber" className="mb-1 block text-sm font-medium text-text-secondary">
+                Matrícula profesional
+              </label>
+              <input
+                id="licenseNumber"
+                required
+                minLength={3}
+                value={licenseNumber}
+                onChange={(e) => setLicenseNumber(e.target.value)}
+                className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
+              />
             </div>
 
             {error && <p className="text-sm text-destructive">{error}</p>}

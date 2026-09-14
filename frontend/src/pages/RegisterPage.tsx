@@ -17,6 +17,7 @@ export const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [specialityCode, setSpecialityCode] = useState("");
+  const [licenseNumber, setLicenseNumber] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,7 +36,7 @@ export const RegisterPage = () => {
     setIsSubmitting(true);
 
     try {
-      await register({ firstName, lastName, email, password, specialityCode });
+      await register({ firstName, lastName, email, password, specialityCode, licenseNumber });
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(
@@ -126,6 +127,20 @@ export const RegisterPage = () => {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label htmlFor="licenseNumber" className="mb-1 block text-sm font-medium text-text-secondary">
+              Matrícula profesional
+            </label>
+            <input
+              id="licenseNumber"
+              required
+              minLength={3}
+              value={licenseNumber}
+              onChange={(e) => setLicenseNumber(e.target.value)}
+              className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
+            />
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}

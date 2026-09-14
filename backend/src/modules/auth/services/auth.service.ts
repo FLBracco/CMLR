@@ -27,6 +27,14 @@ export class AuthService {
       throw AppError.conflict("Ya existe una cuenta con ese email.");
     }
 
+    const existingLicense = await this.professionalRepository.findByLicenseNumber(
+      dto.licenseNumber
+    );
+
+    if (existingLicense) {
+      throw AppError.conflict("Ya existe una cuenta con esa matrícula.");
+    }
+
     const speciality = await this.specialityRepository.findByCode(
       dto.specialityCode
     );
@@ -43,6 +51,7 @@ export class AuthService {
       email: normalizeEmail(dto.email),
       passwordHash,
       speciality,
+      licenseNumber: dto.licenseNumber,
     });
 
     return this.buildAuthResponse(professional);
@@ -85,6 +94,7 @@ export class AuthService {
         email: professional.email,
         speciality: professional.speciality?.code ?? "",
         subscriptionStatus: professional.subscriptionStatus,
+        licenseNumber: professional.licenseNumber,
       },
     };
   }

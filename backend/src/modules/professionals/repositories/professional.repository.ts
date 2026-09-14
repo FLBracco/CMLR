@@ -9,6 +9,7 @@ export interface ICreateProfessionalData {
   email: string;
   passwordHash: string;
   speciality: ProfessionalSpeciality;
+  licenseNumber: string;
 }
 
 export class ProfessionalRepository {
@@ -19,6 +20,10 @@ export class ProfessionalRepository {
       where: { email },
       relations: { speciality: true },
     });
+  }
+
+  async findByLicenseNumber(licenseNumber: string): Promise<Professional | null> {
+    return this.repository.findOne({ where: { licenseNumber } });
   }
 
   async findById(id: string): Promise<Professional | null> {
@@ -46,7 +51,9 @@ export class ProfessionalRepository {
 
   async update(
     professional: Professional,
-    data: Partial<Pick<Professional, "firstName" | "lastName" | "speciality">>
+    data: Partial<
+      Pick<Professional, "firstName" | "lastName" | "speciality" | "licenseNumber">
+    >
   ): Promise<Professional> {
     this.repository.merge(professional, data);
     return this.repository.save(professional);
@@ -59,6 +66,7 @@ export class ProfessionalRepository {
       email: data.email,
       passwordHash: data.passwordHash,
       speciality: data.speciality,
+      licenseNumber: data.licenseNumber,
       subscriptionStatus: "PENDING",
     });
 

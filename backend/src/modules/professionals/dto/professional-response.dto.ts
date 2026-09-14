@@ -7,4 +7,5 @@ export interface IProfessionalDto {
   email: string;
   speciality: string;
   subscriptionStatus: SubscriptionStatus;
+  licenseNumber: string;
 }

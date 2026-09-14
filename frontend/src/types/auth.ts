@@ -11,6 +11,7 @@ export interface IProfessional {
   email: string;
   speciality: string;
   subscriptionStatus: SubscriptionStatus;
+  licenseNumber: string;
 }
 
 export interface IAuthResponseDto {
@@ -29,6 +30,7 @@ export interface IRegisterPayload {
   email: string;
   password: string;
   specialityCode: string;
+  licenseNumber: string;
 }
 
 export interface ISpecialityDto {

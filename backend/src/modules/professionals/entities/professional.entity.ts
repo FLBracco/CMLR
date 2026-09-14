@@ -40,6 +40,14 @@ export class Professional {
   email!: string;
 
   @Column({
+    type: "varchar",
+    length: 50,
+    name: "license_number",
+    unique: true,
+  })
+  licenseNumber!: string;
+
+  @Column({
     type: "text",
     name: "password_hash",
   })

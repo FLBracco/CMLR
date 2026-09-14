@@ -1,4 +1,4 @@
-import { IsEmail, IsIn, IsString, Matches, MinLength } from "class-validator";
+import { IsEmail, IsIn, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class RegisterProfessionalDto {
   @IsString()
@@ -26,4 +26,9 @@ export class RegisterProfessionalDto {
     message: "La especialidad debe ser psychologist o psychiatrist.",
   })
   specialityCode!: string;
+
+  @IsString()
+  @MinLength(3, { message: "La matrícula debe tener al menos 3 caracteres." })
+  @MaxLength(50)
+  licenseNumber!: string;
 }

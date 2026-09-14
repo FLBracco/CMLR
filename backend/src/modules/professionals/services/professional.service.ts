@@ -30,10 +30,24 @@ export class ProfessionalService {
       throw AppError.badRequest("La especialidad indicada no existe.");
     }
 
+    if (
+      dto.licenseNumber !== undefined &&
+      dto.licenseNumber !== professional.licenseNumber
+    ) {
+      const existingLicense = await this.professionalRepository.findByLicenseNumber(
+        dto.licenseNumber
+      );
+
+      if (existingLicense) {
+        throw AppError.conflict("Ya existe una cuenta con esa matrícula.");
+      }
+    }
+
     const updated = await this.professionalRepository.update(professional, {
       ...(dto.firstName !== undefined && { firstName: dto.firstName }),
       ...(dto.lastName !== undefined && { lastName: dto.lastName }),
       ...(speciality && { speciality }),
+      ...(dto.licenseNumber !== undefined && { licenseNumber: dto.licenseNumber }),
     });
 
     return this.toDto(updated);
@@ -57,6 +71,7 @@ export class ProfessionalService {
       email: professional.email,
       speciality: professional.speciality?.code ?? "",
       subscriptionStatus: professional.subscriptionStatus,
+      licenseNumber: professional.licenseNumber,
     };
   }
 }

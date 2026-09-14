@@ -9,5 +9,6 @@ export interface IAuthResponseDto {
     email: string;
     speciality: string;
     subscriptionStatus: SubscriptionStatus;
+    licenseNumber: string;
   };
 }

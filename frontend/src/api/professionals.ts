@@ -5,6 +5,7 @@ export interface IUpdateProfilePayload {
   firstName?: string;
   lastName?: string;
   specialityCode?: string;
+  licenseNumber?: string;
 }
 
 export const getMyProfile = (): Promise<IProfessional> =>

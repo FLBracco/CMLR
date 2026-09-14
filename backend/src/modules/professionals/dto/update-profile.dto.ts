@@ -18,4 +18,10 @@ export class UpdateProfileDto {
     message: "La especialidad debe ser psychologist o psychiatrist.",
   })
   specialityCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(3, { message: "La matrícula debe tener al menos 3 caracteres." })
+  @MaxLength(50)
+  licenseNumber?: string;
 }

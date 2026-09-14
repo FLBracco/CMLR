@@ -11,6 +11,7 @@ import { EnableExtensions1786057121000 } from "../../migrations/1786057121000-En
 import { InitialSchema1786057121606 } from "../../migrations/1786057121606-InitialSchema.js";
 import { AddSubscriptionsAndAdmins1788274429176 } from "../../migrations/1788274429176-AddSubscriptionsAndAdmins.js";
 import { AddAppointments1788789521596 } from "../../migrations/1788789521596-AddAppointments.js";
+import { AddProfessionalLicenseNumber1789398381249 } from "../../migrations/1789398381249-AddProfessionalLicenseNumber.js";
 
 export const AppDataSource = new DataSource({
   // Motor de base de datos
@@ -39,6 +40,7 @@ export const AppDataSource = new DataSource({
     InitialSchema1786057121606,
     AddSubscriptionsAndAdmins1788274429176,
     AddAppointments1788789521596,
+    AddProfessionalLicenseNumber1789398381249,
   ],
 
   // false en Docker local; Neon (y la mayoría de los proveedores managed) exige TLS
