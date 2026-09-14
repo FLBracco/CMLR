@@ -14,6 +14,7 @@ import { CalendarPage } from "./pages/CalendarPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
 import { AdminProfessionalsPage } from "./pages/admin/AdminProfessionalsPage";
+import { AdminSubscriptionSettingsPage } from "./pages/admin/AdminSubscriptionSettingsPage";
 
 function App() {
   return (
@@ -75,6 +76,14 @@ function App() {
               element={
                 <ProtectedRoute role="superadmin">
                   <AdminProfessionalsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/configuracion"
+              element={
+                <ProtectedRoute role="superadmin">
+                  <AdminSubscriptionSettingsPage />
                 </ProtectedRoute>
               }
             />

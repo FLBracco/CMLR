@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AdminShell } from "../../components/admin/AdminShell";
 import { listProfessionals, updateSubscriptionStatus } from "../../api/admin";
 import { ApiError } from "../../api/client";
@@ -32,6 +32,7 @@ export const AdminProfessionalsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   const loadProfessionals = async () => {
     setIsLoading(true);
@@ -125,11 +126,39 @@ export const AdminProfessionalsPage = () => {
     );
   };
 
+  // Búsqueda 100% client-side: el listado ya viene completo de `listProfessionals()`,
+  // no hace falta un endpoint de búsqueda para esto. Prioriza matrícula porque es
+  // el dato que llega por WhatsApp junto con el comprobante — así se activa rápido
+  // sin tener que adivinar por nombre/email.
+  const filteredProfessionals = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    if (!term) return professionals;
+
+    return professionals.filter((professional) => {
+      const fullName = `${professional.firstName} ${professional.lastName}`.toLowerCase();
+      return (
+        professional.licenseNumber.toLowerCase().includes(term) ||
+        fullName.includes(term) ||
+        professional.email.toLowerCase().includes(term)
+      );
+    });
+  }, [professionals, search]);
+
   return (
     <AdminShell>
       <h1 className="mb-6 text-2xl font-semibold text-text">Profesionales</h1>
 
       {error && <p className="mb-4 text-sm text-destructive">{error}</p>}
+
+      <div className="mb-4 max-w-sm">
+        <input
+          type="search"
+          placeholder="Buscar por matrícula, nombre o email..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full rounded-lg border border-border px-3 py-2 text-sm focus:border-border-focus focus:outline-none"
+        />
+      </div>
 
       {isLoading ? (
         <p className="text-sm text-text-tertiary">Cargando...</p>
@@ -137,12 +166,17 @@ export const AdminProfessionalsPage = () => {
         <p className="text-sm text-text-tertiary">
           Todavía no hay profesionales registrados.
         </p>
+      ) : filteredProfessionals.length === 0 ? (
+        <p className="text-sm text-text-tertiary">
+          No se encontraron profesionales para "{search}".
+        </p>
       ) : (
         <div className="overflow-x-auto rounded-lg border border-border-subtle bg-surface">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-border-subtle text-text-secondary">
               <tr>
                 <th className="px-4 py-3 font-medium">Nombre</th>
+                <th className="px-4 py-3 font-medium">Matrícula</th>
                 <th className="px-4 py-3 font-medium">Email</th>
                 <th className="px-4 py-3 font-medium">Especialidad</th>
                 <th className="px-4 py-3 font-medium">Alta</th>
@@ -151,13 +185,16 @@ export const AdminProfessionalsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {professionals.map((professional) => (
+              {filteredProfessionals.map((professional) => (
                 <tr
                   key={professional.id}
                   className="border-b border-border-subtle last:border-0"
                 >
                   <td className="px-4 py-3 text-text">
                     {professional.firstName} {professional.lastName}
+                  </td>
+                  <td className="px-4 py-3 text-text-secondary">
+                    {professional.licenseNumber}
                   </td>
                   <td className="px-4 py-3 text-text-secondary">
                     {professional.email}

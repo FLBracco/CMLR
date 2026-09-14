@@ -7,11 +7,13 @@ import { Patient } from "../../modules/patients/entities/patient.entity.js";
 import { Consultation } from "../../modules/consultations/entities/consultation.entity.js";
 import { Admin } from "../../modules/admin/entities/admin.entity.js";
 import { Appointment } from "../../modules/appointments/entities/appointment.entity.js";
+import { SubscriptionSettings } from "../../modules/subscription-settings/entities/subscription-settings.entity.js";
 import { EnableExtensions1786057121000 } from "../../migrations/1786057121000-EnableExtensions.js";
 import { InitialSchema1786057121606 } from "../../migrations/1786057121606-InitialSchema.js";
 import { AddSubscriptionsAndAdmins1788274429176 } from "../../migrations/1788274429176-AddSubscriptionsAndAdmins.js";
 import { AddAppointments1788789521596 } from "../../migrations/1788789521596-AddAppointments.js";
 import { AddProfessionalLicenseNumber1789398381249 } from "../../migrations/1789398381249-AddProfessionalLicenseNumber.js";
+import { AddSubscriptionSettings1789400611858 } from "../../migrations/1789400611858-AddSubscriptionSettings.js";
 
 export const AppDataSource = new DataSource({
   // Motor de base de datos
@@ -31,7 +33,15 @@ export const AppDataSource = new DataSource({
   logging: Environment.app.isProduction ? ["error"] : true,
 
   // Entidades registradas explícitamente
-  entities: [ProfessionalSpeciality, Professional, Patient, Consultation, Admin, Appointment],
+  entities: [
+    ProfessionalSpeciality,
+    Professional,
+    Patient,
+    Consultation,
+    Admin,
+    Appointment,
+    SubscriptionSettings,
+  ],
 
   // Migraciones registradas explícitamente (EnableExtensions corre primero: las
   // entities dependen de uuid_generate_v4() como default de columna)
@@ -41,6 +51,7 @@ export const AppDataSource = new DataSource({
     AddSubscriptionsAndAdmins1788274429176,
     AddAppointments1788789521596,
     AddProfessionalLicenseNumber1789398381249,
+    AddSubscriptionSettings1789400611858,
   ],
 
   // false en Docker local; Neon (y la mayoría de los proveedores managed) exige TLS

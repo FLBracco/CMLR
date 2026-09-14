@@ -63,6 +63,7 @@ export class AdminProfessionalService {
       firstName: professional.firstName,
       lastName: professional.lastName,
       email: professional.email,
+      licenseNumber: professional.licenseNumber,
       speciality: professional.speciality?.code ?? "",
       subscriptionStatus: professional.subscriptionStatus,
       subscriptionUpdatedAt: professional.subscriptionUpdatedAt

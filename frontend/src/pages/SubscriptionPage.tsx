@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { AppShell } from "../components/AppShell";
+import { PaymentInstructionsModal } from "../components/PaymentInstructionsModal";
 import { useAuth } from "../auth/AuthContext";
+import { getSubscriptionSettings } from "../api/subscriptionSettings";
 import type { SubscriptionStatus } from "../types/auth";
+import type { ISubscriptionSettings } from "../types/subscriptionSettings";
 
 const STATUS_CONTENT: Record<
   SubscriptionStatus,
@@ -27,6 +31,24 @@ export const SubscriptionPage = () => {
   const { professional } = useAuth();
   const status = professional?.subscriptionStatus ?? "PENDING";
   const content = STATUS_CONTENT[status];
+  const needsActivation = status !== "ACTIVE";
+
+  const [settings, setSettings] = useState<ISubscriptionSettings | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!needsActivation) return;
+
+    getSubscriptionSettings()
+      .then((result) => {
+        setSettings(result);
+        setIsModalOpen(true);
+      })
+      .catch(() => {
+        // Sin datos de pago no hay modal que mostrar — el estado de la
+        // suscripción sigue visible en la página igual.
+      });
+  }, [needsActivation]);
 
   return (
     <AppShell>
@@ -40,8 +62,28 @@ export const SubscriptionPage = () => {
             {content.label}
           </span>
           <p className="mt-4 text-sm text-text-secondary">{content.body}</p>
+
+          {needsActivation && (
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover hover:text-primary-hover-foreground"
+            >
+              Ver cómo activar mi cuenta
+            </button>
+          )}
         </div>
       </div>
+
+      {professional && (
+        <PaymentInstructionsModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          settings={settings}
+          professionalName={`${professional.firstName} ${professional.lastName}`}
+          licenseNumber={professional.licenseNumber}
+        />
+      )}
     </AppShell>
   );
 };

@@ -12,6 +12,8 @@ import adminAuthRoutes from "./modules/admin/routes/admin-auth.routes.js";
 import adminRoutes from "./modules/admin/routes/admin.routes.js";
 import appointmentRoutes from "./modules/appointments/routes/appointment.routes.js";
 import patientAppointmentRoutes from "./modules/appointments/routes/patient-appointment.routes.js";
+import subscriptionSettingsRoutes from "./modules/subscription-settings/routes/subscription-settings.routes.js";
+import adminSubscriptionSettingsRoutes from "./modules/subscription-settings/routes/admin-subscription-settings.routes.js";
 
 export const app = express();
 
@@ -42,5 +44,7 @@ app.use("/api/consultations", consultationRoutes);
 app.use("/api/admin/auth", adminAuthRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api/subscription-settings", subscriptionSettingsRoutes);
+app.use("/api/admin/subscription-settings", adminSubscriptionSettingsRoutes);
 
 app.use(errorHandler);

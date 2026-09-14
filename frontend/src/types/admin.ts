@@ -20,6 +20,7 @@ export interface IAdminProfessional {
   firstName: string;
   lastName: string;
   email: string;
+  licenseNumber: string;
   speciality: string;
   subscriptionStatus: SubscriptionStatus;
   subscriptionUpdatedAt: string | null;
