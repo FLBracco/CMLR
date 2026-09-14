@@ -348,15 +348,15 @@ export const HomePage = () => {
       </section>
 
       {/* CTA final */}
-      <section className="bg-accent-600">
+      <section className="border-t border-border-subtle bg-surface">
         <div className="mx-auto max-w-3xl px-6 py-16 text-center">
-          <h2 className="text-3xl font-bold text-white">Empezá a ordenar tu consultorio hoy</h2>
-          <p className="mt-3 text-accent-200">
+          <h2 className="text-3xl font-bold text-text">Empezá a ordenar tu consultorio hoy</h2>
+          <p className="mt-3 text-text-secondary">
             Creá tu cuenta y cargá a tu primer paciente en minutos.
           </p>
           <Link
             to={professional ? "/dashboard" : "/registro"}
-            className="mt-8 inline-block rounded-lg bg-white px-6 py-3 text-sm font-semibold text-accent-700 transition-opacity hover:opacity-90"
+            className="mt-8 inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover hover:text-primary-hover-foreground"
           >
             {professional ? "Ir al panel" : "Crear cuenta"}
           </Link>
@@ -364,19 +364,19 @@ export const HomePage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border-subtle bg-surface">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-text-muted sm:flex-row">
-          <Wordmark className="font-semibold text-text" />
+      <footer className="bg-slate-900">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-slate-400 sm:flex-row">
+          <Wordmark className="font-semibold text-white" />
           <span>© {new Date().getFullYear()} ClinicAR. Todos los derechos reservados.</span>
           {professional ? (
-            <Link to="/dashboard" className="text-text-secondary hover:text-text">
+            <Link to="/dashboard" className="text-slate-300 hover:text-white">
               Ir al panel
             </Link>
           ) : (
             <button
               type="button"
               onClick={() => openLoginModal()}
-              className="cursor-pointer text-text-secondary hover:text-text"
+              className="cursor-pointer text-slate-300 hover:text-white"
             >
               Ingresar
             </button>
