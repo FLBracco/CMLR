@@ -1,6 +1,7 @@
 import { AppDataSource } from "./config/db/data-source.js";
 import { app } from "./app.js";
 import { Environment } from "./config/env/environment.js";
+import { startSubscriptionExpirationSweep } from "./modules/professionals/jobs/subscription-expiration.job.js";
 
 const startServer = async (): Promise<void> => {
   try {
@@ -13,6 +14,8 @@ const startServer = async (): Promise<void> => {
         `🚀 Server running at http://localhost:${Environment.app.port}`
       );
     });
+
+    startSubscriptionExpirationSweep();
   } catch (error) {
     console.error("❌ Error connecting to the database.");
     console.error(error);

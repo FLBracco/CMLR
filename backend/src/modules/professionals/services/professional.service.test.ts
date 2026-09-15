@@ -5,6 +5,9 @@ import type { SubscriptionStatus } from "../entities/subscription-status.js";
 
 const PROFESSIONAL_ID = "11111111-1111-4111-8111-111111111111";
 
+// subscriptionUpdatedAt: null por default a propósito — con ACTIVE y una
+// fecha vieja acá, getScopedProfessional dispara la autocancelación por
+// vencimiento (ver el describe de abajo).
 const buildProfessional = (
   overrides: Partial<Professional> = {}
 ): Professional =>
@@ -91,5 +94,63 @@ describe("ProfessionalService.reportSubscriptionPayment", () => {
     await expect(
       service.reportSubscriptionPayment(PROFESSIONAL_ID)
     ).rejects.toMatchObject({ statusCode: 404 });
+  });
+
+  it("ACTIVE vencido -> se autocancela antes de evaluar, rechaza con 403", async () => {
+    const professionalRepository = buildFakeProfessionalRepository();
+    const expired = buildProfessional({
+      subscriptionStatus: "ACTIVE",
+      subscriptionUpdatedAt: new Date(2020, 0, 1),
+    });
+    professionalRepository.findById.mockResolvedValue(expired);
+    professionalRepository.updateSubscriptionStatus.mockResolvedValue(
+      buildProfessional({ subscriptionStatus: "DISABLED" })
+    );
+
+    const service = buildService(professionalRepository);
+
+    await expect(
+      service.reportSubscriptionPayment(PROFESSIONAL_ID)
+    ).rejects.toMatchObject({ statusCode: 403 });
+    expect(professionalRepository.updateSubscriptionStatus).toHaveBeenCalledWith(
+      expired,
+      "DISABLED"
+    );
+  });
+});
+
+describe("ProfessionalService.getById — self-healing de vencimiento", () => {
+  it("ACTIVE vencido -> persiste DISABLED y lo devuelve así", async () => {
+    const professionalRepository = buildFakeProfessionalRepository();
+    const expired = buildProfessional({
+      subscriptionStatus: "ACTIVE",
+      subscriptionUpdatedAt: new Date(2020, 0, 1),
+    });
+    professionalRepository.findById.mockResolvedValue(expired);
+    professionalRepository.updateSubscriptionStatus.mockResolvedValue(
+      buildProfessional({ subscriptionStatus: "DISABLED" })
+    );
+
+    const service = buildService(professionalRepository);
+    const result = await service.getById(PROFESSIONAL_ID);
+
+    expect(professionalRepository.updateSubscriptionStatus).toHaveBeenCalledWith(
+      expired,
+      "DISABLED"
+    );
+    expect(result.subscriptionStatus).toBe("DISABLED");
+  });
+
+  it("ACTIVE no vencido -> no toca nada", async () => {
+    const professionalRepository = buildFakeProfessionalRepository();
+    professionalRepository.findById.mockResolvedValue(
+      buildProfessional({ subscriptionStatus: "ACTIVE", subscriptionUpdatedAt: new Date() })
+    );
+
+    const service = buildService(professionalRepository);
+    const result = await service.getById(PROFESSIONAL_ID);
+
+    expect(professionalRepository.updateSubscriptionStatus).not.toHaveBeenCalled();
+    expect(result.subscriptionStatus).toBe("ACTIVE");
   });
 });

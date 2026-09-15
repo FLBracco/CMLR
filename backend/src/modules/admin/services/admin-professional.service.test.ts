@@ -102,3 +102,48 @@ describe("AdminProfessionalService.updateSubscriptionStatus — transiciones", (
     ).rejects.toMatchObject({ statusCode: 404 });
   });
 });
+
+describe("AdminProfessionalService.list — self-healing de vencimiento", () => {
+  it("un ACTIVE vencido sale del listado como DISABLED y se persiste", async () => {
+    const professionalRepository = buildFakeProfessionalRepository();
+    const expired = buildProfessional({
+      id: "expired-id",
+      subscriptionStatus: "ACTIVE",
+      subscriptionUpdatedAt: new Date(2020, 0, 1),
+    });
+    const untouched = buildProfessional({
+      id: "untouched-id",
+      subscriptionStatus: "ACTIVE",
+      subscriptionUpdatedAt: new Date(),
+    });
+    professionalRepository.findAll.mockResolvedValue([expired, untouched]);
+    professionalRepository.updateSubscriptionStatus.mockResolvedValue(
+      buildProfessional({ id: "expired-id", subscriptionStatus: "DISABLED" })
+    );
+
+    const service = buildService(professionalRepository);
+    const result = await service.list();
+
+    expect(professionalRepository.updateSubscriptionStatus).toHaveBeenCalledTimes(1);
+    expect(professionalRepository.updateSubscriptionStatus).toHaveBeenCalledWith(
+      expired,
+      "DISABLED"
+    );
+
+    const byId = Object.fromEntries(result.professionals.map((p) => [p.id, p]));
+    expect(byId["expired-id"].subscriptionStatus).toBe("DISABLED");
+    expect(byId["untouched-id"].subscriptionStatus).toBe("ACTIVE");
+  });
+
+  it("sin vencidos -> no escribe nada", async () => {
+    const professionalRepository = buildFakeProfessionalRepository();
+    professionalRepository.findAll.mockResolvedValue([
+      buildProfessional({ subscriptionStatus: "PENDING" }),
+    ]);
+
+    const service = buildService(professionalRepository);
+    await service.list();
+
+    expect(professionalRepository.updateSubscriptionStatus).not.toHaveBeenCalled();
+  });
+});

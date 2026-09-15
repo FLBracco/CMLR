@@ -1,3 +1,4 @@
+import { LessThanOrEqual } from "typeorm";
 import { AppDataSource } from "../../../config/db/data-source.js";
 import { Professional } from "../../professionals/entities/professional.entity.js";
 import type { ProfessionalSpeciality } from "../../professionals/entities/professional-speciality.entity.js";
@@ -37,6 +38,19 @@ export class ProfessionalRepository {
     return this.repository.find({
       relations: { speciality: true },
       order: { createdAt: "DESC" },
+    });
+  }
+
+  // Pre-filtro para el barrido de vencimiento: candidatos ACTIVE activados
+  // hace más de `cutoff`. Los NULL quedan afuera solos (comparar con NULL en
+  // SQL da NULL, no true) — es justo la política de "sin fecha, no vence".
+  // La verdad final de si venció la decide isSubscriptionExpired, no esta query.
+  async findActiveUpdatedBefore(cutoff: Date): Promise<Professional[]> {
+    return this.repository.find({
+      where: {
+        subscriptionStatus: "ACTIVE",
+        subscriptionUpdatedAt: LessThanOrEqual(cutoff),
+      },
     });
   }
 

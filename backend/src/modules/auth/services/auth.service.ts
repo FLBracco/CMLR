@@ -4,6 +4,7 @@ import type { LoginDto } from "../dto/login.dto.js";
 import type { RegisterProfessionalDto } from "../dto/register.dto.js";
 import { ProfessionalRepository } from "../../professionals/repositories/professional.repository.js";
 import { ProfessionalSpecialityRepository } from "../../professionals/repositories/professional-speciality.repository.js";
+import { SubscriptionExpirationService } from "../../professionals/services/subscription-expiration.service.js";
 import { signToken } from "./token.service.js";
 import type { IAuthResponseDto } from "../dto/auth-response.dto.js";
 import type { Professional } from "../../professionals/entities/professional.entity.js";
@@ -15,7 +16,10 @@ const normalizeEmail = (email: string): string => email.trim().toLowerCase();
 export class AuthService {
   constructor(
     private readonly professionalRepository = new ProfessionalRepository(),
-    private readonly specialityRepository = new ProfessionalSpecialityRepository()
+    private readonly specialityRepository = new ProfessionalSpecialityRepository(),
+    private readonly subscriptionExpiration = new SubscriptionExpirationService(
+      professionalRepository
+    )
   ) {}
 
   async register(dto: RegisterProfessionalDto): Promise<IAuthResponseDto> {
@@ -75,7 +79,12 @@ export class AuthService {
       throw AppError.unauthorized("Credenciales inválidas.");
     }
 
-    return this.buildAuthResponse(professional);
+    // Self-healing: el login no pasa por ProfessionalService, así que sin
+    // esto un profesional vencido entraría con la UI habilitada y recién
+    // chocaría contra un 403 al pedir datos (requireActiveSubscription).
+    const current = await this.subscriptionExpiration.enforce(professional);
+
+    return this.buildAuthResponse(current);
   }
 
   private buildAuthResponse(professional: Professional): IAuthResponseDto {

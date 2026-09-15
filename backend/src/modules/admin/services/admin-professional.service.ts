@@ -1,5 +1,6 @@
 import { AppError } from "../../../shared/errors/AppError.js";
 import { ProfessionalRepository } from "../../professionals/repositories/professional.repository.js";
+import { SubscriptionExpirationService } from "../../professionals/services/subscription-expiration.service.js";
 import type { Professional } from "../../professionals/entities/professional.entity.js";
 import type { SubscriptionStatus } from "../../professionals/entities/subscription-status.js";
 import type {
@@ -24,11 +25,16 @@ const ALLOWED_TRANSITIONS: Record<SubscriptionStatus, SubscriptionStatus[]> = {
 
 export class AdminProfessionalService {
   constructor(
-    private readonly professionalRepository = new ProfessionalRepository()
+    private readonly professionalRepository = new ProfessionalRepository(),
+    private readonly subscriptionExpiration = new SubscriptionExpirationService(
+      professionalRepository
+    )
   ) {}
 
   async list(): Promise<IAdminProfessionalListDto> {
-    const professionals = await this.professionalRepository.findAll();
+    const professionals = await this.subscriptionExpiration.enforceMany(
+      await this.professionalRepository.findAll()
+    );
 
     return {
       professionals: professionals.map((professional) =>

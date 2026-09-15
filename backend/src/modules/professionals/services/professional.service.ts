@@ -1,6 +1,7 @@
 import { AppError } from "../../../shared/errors/AppError.js";
 import { ProfessionalRepository } from "../repositories/professional.repository.js";
 import { ProfessionalSpecialityRepository } from "../repositories/professional-speciality.repository.js";
+import { SubscriptionExpirationService } from "./subscription-expiration.service.js";
 import type { UpdateProfileDto } from "../dto/update-profile.dto.js";
 import type { Professional } from "../entities/professional.entity.js";
 import type { IProfessionalDto } from "../dto/professional-response.dto.js";
@@ -8,7 +9,10 @@ import type { IProfessionalDto } from "../dto/professional-response.dto.js";
 export class ProfessionalService {
   constructor(
     private readonly professionalRepository = new ProfessionalRepository(),
-    private readonly specialityRepository = new ProfessionalSpecialityRepository()
+    private readonly specialityRepository = new ProfessionalSpecialityRepository(),
+    private readonly subscriptionExpiration = new SubscriptionExpirationService(
+      professionalRepository
+    )
   ) {}
 
   async getById(id: string): Promise<IProfessionalDto> {
@@ -86,7 +90,9 @@ export class ProfessionalService {
       throw AppError.notFound("Profesional no encontrado.");
     }
 
-    return professional;
+    // Self-healing: único punto de entrada de getById/updateProfile/
+    // reportSubscriptionPayment, así que un solo enforce cubre los tres.
+    return this.subscriptionExpiration.enforce(professional);
   }
 
   private toDto(professional: Professional): IProfessionalDto {
