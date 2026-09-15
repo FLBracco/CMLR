@@ -79,8 +79,7 @@ export const DashboardPage = () => {
       setIsCreating(true);
       setSearchParams({}, { replace: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams, setSearchParams]);
 
   const handleCreate = async (payload: IPatientPayload) => {
     await createPatient(payload);
