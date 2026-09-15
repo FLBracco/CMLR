@@ -10,6 +10,7 @@ import {
 import * as authApi from "../api/auth";
 import * as adminApi from "../api/admin";
 import {
+  ApiError,
   clearStoredToken,
   getStoredToken,
   setStoredToken,
@@ -37,7 +38,7 @@ interface IAuthContext {
   admin: IAdmin | null;
   role: AuthRole | null;
   isAuthenticated: boolean;
-  login: (payload: ILoginPayload) => Promise<void>;
+  login: (payload: ILoginPayload) => Promise<AuthRole>;
   register: (payload: IRegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
   adminLogin: (payload: IAdminLoginPayload) => Promise<void>;
@@ -69,15 +70,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setSession(null);
   }, []);
 
-  const login = useCallback(
-    async (payload: ILoginPayload) => {
-      const result = await authApi.login(payload);
+  const adminLogin = useCallback(
+    async (payload: IAdminLoginPayload) => {
+      const result = await adminApi.adminLogin(payload);
       persistSession(result.token, {
-        role: "professional",
-        professional: result.professional,
+        role: "superadmin",
+        admin: result.admin,
       });
     },
     [persistSession]
+  );
+
+  // Un solo formulario de login para profesional y SuperAdmin: se prueba
+  // primero como profesional y, sólo si las credenciales no corresponden a
+  // ninguna cuenta profesional, se reintenta como SuperAdmin.
+  const login = useCallback(
+    async (payload: ILoginPayload): Promise<AuthRole> => {
+      try {
+        const result = await authApi.login(payload);
+        persistSession(result.token, {
+          role: "professional",
+          professional: result.professional,
+        });
+        return "professional";
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+          await adminLogin(payload);
+          return "superadmin";
+        }
+        throw err;
+      }
+    },
+    [persistSession, adminLogin]
   );
 
   const register = useCallback(
@@ -104,17 +128,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       clearSession();
     }
   }, [clearSession]);
-
-  const adminLogin = useCallback(
-    async (payload: IAdminLoginPayload) => {
-      const result = await adminApi.adminLogin(payload);
-      persistSession(result.token, {
-        role: "superadmin",
-        admin: result.admin,
-      });
-    },
-    [persistSession]
-  );
 
   const adminLogout = useCallback(async () => {
     try {

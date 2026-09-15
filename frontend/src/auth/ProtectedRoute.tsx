@@ -19,18 +19,16 @@ export const ProtectedRoute = ({
 
   const isAuthorized = Boolean(session && session.role === role);
 
-  // El login de profesional es un modal global (no una ruta): en vez de navegar
-  // a una URL de login, se abre acá y se recuerda a dónde volver al loguearse.
+  // El login (profesional y SuperAdmin) es un modal global (no una ruta): en
+  // vez de navegar a una URL de login, se abre acá y se recuerda a dónde
+  // volver al loguearse.
   useEffect(() => {
-    if (!isAuthorized && role === "professional") {
+    if (!isAuthorized) {
       openLoginModal(location.pathname);
     }
-  }, [isAuthorized, role, location.pathname, openLoginModal]);
+  }, [isAuthorized, location.pathname, openLoginModal]);
 
   if (!isAuthorized) {
-    if (role === "superadmin") {
-      return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
-    }
     return <Navigate to="/" replace />;
   }
 

@@ -15,7 +15,7 @@ export const AdminShell = ({ children }: { children: ReactNode }) => {
 
   const handleLogout = async () => {
     await adminLogout();
-    navigate("/admin/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (

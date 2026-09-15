@@ -12,7 +12,6 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { SubscriptionPage } from "./pages/SubscriptionPage";
 import { CalendarPage } from "./pages/CalendarPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
-import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
 import { AdminProfessionalsPage } from "./pages/admin/AdminProfessionalsPage";
 import { AdminSubscriptionSettingsPage } from "./pages/admin/AdminSubscriptionSettingsPage";
 
@@ -70,7 +69,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route
               path="/admin/profesionales"
               element={

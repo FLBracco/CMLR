@@ -44,9 +44,10 @@ export const LoginModal = () => {
     setIsSubmitting(true);
 
     try {
-      await login({ email, password });
+      const role = await login({ email, password });
       closeLoginModal();
-      navigate(redirectTo ?? "/dashboard", { replace: true });
+      const defaultPath = role === "superadmin" ? "/admin/profesionales" : "/dashboard";
+      navigate(redirectTo ?? defaultPath, { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo iniciar sesión.");
     } finally {
