@@ -11,6 +11,10 @@ const BLOCKED_MESSAGES: Partial<
     title: "Tu cuenta está pendiente de activación",
     body: "Tu registro fue recibido pero todavía no activamos tu suscripción. Te vamos a avisar apenas quede lista.",
   },
+  PAYMENT_REPORTED: {
+    title: "Estamos verificando tu comprobante",
+    body: "Recibimos tu aviso de pago. Vamos a activar tu cuenta en cuanto confirmemos la transferencia.",
+  },
   DISABLED: {
     title: "Tu suscripción está desactivada",
     body: "Perdiste el acceso a pacientes y consultas. Contactá al administrador para reactivarla.",

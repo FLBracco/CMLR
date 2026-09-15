@@ -1,4 +1,4 @@
-import { Route, BrowserRouter, Routes } from "react-router-dom";
+import { Navigate, Route, BrowserRouter, Routes } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
 import { LoginModalProvider } from "./auth/LoginModalContext";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
@@ -71,9 +71,29 @@ function App() {
             />
             <Route
               path="/admin/profesionales"
+              element={<Navigate to="/admin/profesionales/por-activar" replace />}
+            />
+            <Route
+              path="/admin/profesionales/nuevos"
               element={
                 <ProtectedRoute role="superadmin">
-                  <AdminProfessionalsPage />
+                  <AdminProfessionalsPage view="new" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/profesionales/por-activar"
+              element={
+                <ProtectedRoute role="superadmin">
+                  <AdminProfessionalsPage view="reported" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/profesionales/activos"
+              element={
+                <ProtectedRoute role="superadmin">
+                  <AdminProfessionalsPage view="active" />
                 </ProtectedRoute>
               }
             />

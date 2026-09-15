@@ -7,11 +7,17 @@ import type {
   IAdminProfessionalListDto,
 } from "../dto/admin-professional.dto.js";
 
-// Transiciones con sentido de negocio: activar (PENDING→ACTIVE), desactivar
-// (ACTIVE→DISABLED) y reactivar (DISABLED→ACTIVE). ACTIVE→PENDING queda
-// deliberadamente afuera: un profesional activo no "vuelve a pendiente".
+// Transiciones con sentido de negocio: activar (PENDING/PAYMENT_REPORTED→ACTIVE),
+// desactivar (ACTIVE→DISABLED) y reactivar (DISABLED→ACTIVE). PENDING→ACTIVE se
+// mantiene porque el comprobante puede llegar por WhatsApp sin que el profesional
+// haya pasado por PAYMENT_REPORTED. PAYMENT_REPORTED→PENDING es el rechazo (el
+// comprobante no era válido o nunca llegó, vuelve a la cola de nuevos).
+// PAYMENT_REPORTED→DISABLED queda afuera: DISABLED es "tenía acceso y lo perdió",
+// y quien recién avisó el pago nunca tuvo acceso. ACTIVE→PENDING/PAYMENT_REPORTED
+// queda deliberadamente afuera: un profesional activo no "vuelve atrás".
 const ALLOWED_TRANSITIONS: Record<SubscriptionStatus, SubscriptionStatus[]> = {
-  PENDING: ["ACTIVE"],
+  PENDING: ["PAYMENT_REPORTED", "ACTIVE"],
+  PAYMENT_REPORTED: ["ACTIVE", "PENDING"],
   ACTIVE: ["DISABLED"],
   DISABLED: ["ACTIVE"],
 };

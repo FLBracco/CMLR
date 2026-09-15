@@ -23,6 +23,17 @@ export class ProfessionalController {
     res.status(200).json(result);
   }
 
+  async reportSubscriptionPayment(
+    req: IAuthenticatedRequest,
+    res: Response
+  ): Promise<void> {
+    const professionalId = this.getProfessionalId(req);
+    const result = await this.professionalService.reportSubscriptionPayment(
+      professionalId
+    );
+    res.status(200).json(result);
+  }
+
   private getProfessionalId(req: IAuthenticatedRequest): string {
     if (!req.auth?.professionalId) {
       throw AppError.unauthorized("Token inválido.");

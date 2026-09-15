@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { SubscriptionStatus } from "../types/auth";
 import type { ISubscriptionSettings } from "../types/subscriptionSettings";
 
 interface IPaymentInstructionsModalProps {
@@ -7,6 +8,8 @@ interface IPaymentInstructionsModalProps {
   settings: ISubscriptionSettings | null;
   professionalName: string;
   licenseNumber: string;
+  subscriptionStatus: SubscriptionStatus;
+  onReportPayment: () => void;
 }
 
 const formatAmount = (amount: number): string =>
@@ -25,6 +28,8 @@ export const PaymentInstructionsModal = ({
   settings,
   professionalName,
   licenseNumber,
+  subscriptionStatus,
+  onReportPayment,
 }: IPaymentInstructionsModalProps) => {
   useEffect(() => {
     if (!isOpen) return;
@@ -98,6 +103,12 @@ export const PaymentInstructionsModal = ({
           </p>
         ) : (
           <>
+            {subscriptionStatus === "PAYMENT_REPORTED" && (
+              <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
+                Ya nos avisaste. Estamos verificando el comprobante.
+              </div>
+            )}
+
             <p className="mb-4 text-sm text-text-secondary">
               Hacé la transferencia y enviános el comprobante por WhatsApp junto con tu
               matrícula para activar tu cuenta.
@@ -118,9 +129,12 @@ export const PaymentInstructionsModal = ({
               href={whatsappUrl}
               target="_blank"
               rel="noreferrer"
+              onClick={onReportPayment}
               className="mt-4 block w-full rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover hover:text-primary-hover-foreground"
             >
-              Enviar comprobante por WhatsApp
+              {subscriptionStatus === "PAYMENT_REPORTED"
+                ? "Reenviar comprobante por WhatsApp"
+                : "Enviar comprobante por WhatsApp"}
             </a>
             <p className="mt-2 text-center text-xs text-text-muted">
               Adjuntá la foto o captura del comprobante en el chat de WhatsApp.

@@ -18,3 +18,8 @@ export const updateMyProfile = (
     method: "PATCH",
     body: JSON.stringify(payload),
   });
+
+export const reportSubscriptionPayment = (): Promise<IProfessional> =>
+  apiRequest<IProfessional>("/professionals/me/subscription/payment-report", {
+    method: "POST",
+  });

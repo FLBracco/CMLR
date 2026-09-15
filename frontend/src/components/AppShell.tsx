@@ -111,6 +111,7 @@ const SUBSCRIPTION_NAV_BADGES: Partial<
   Record<SubscriptionStatus, { label: string; className: string }>
 > = {
   PENDING: { label: "Pendiente", className: "bg-amber-50 text-amber-700" },
+  PAYMENT_REPORTED: { label: "En revisión", className: "bg-amber-50 text-amber-700" },
   DISABLED: { label: "Desactivada", className: "bg-red-50 text-destructive" },
 };
 

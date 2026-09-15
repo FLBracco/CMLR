@@ -3,6 +3,7 @@ import { AppShell } from "../components/AppShell";
 import { PaymentInstructionsModal } from "../components/PaymentInstructionsModal";
 import { useAuth } from "../auth/AuthContext";
 import { getSubscriptionSettings } from "../api/subscriptionSettings";
+import { reportSubscriptionPayment } from "../api/professionals";
 import type { SubscriptionStatus } from "../types/auth";
 import type { ISubscriptionSettings } from "../types/subscriptionSettings";
 
@@ -14,6 +15,11 @@ const STATUS_CONTENT: Record<
     label: "Pendiente de activación",
     badgeClassName: "border-amber-200 bg-amber-50 text-amber-700",
     body: "Tu registro fue recibido. Vamos a activar tu cuenta a la brevedad — vas a poder registrar pacientes y consultas apenas quede activa.",
+  },
+  PAYMENT_REPORTED: {
+    label: "Comprobante enviado",
+    badgeClassName: "border-amber-200 bg-amber-50 text-amber-700",
+    body: "Recibimos tu aviso de pago. Estamos verificando el comprobante para activar tu cuenta.",
   },
   ACTIVE: {
     label: "Activa",
@@ -28,7 +34,7 @@ const STATUS_CONTENT: Record<
 };
 
 export const SubscriptionPage = () => {
-  const { professional } = useAuth();
+  const { professional, updateProfessional } = useAuth();
   const status = professional?.subscriptionStatus ?? "PENDING";
   const content = STATUS_CONTENT[status];
   const needsActivation = status !== "ACTIVE";
@@ -42,13 +48,24 @@ export const SubscriptionPage = () => {
     getSubscriptionSettings()
       .then((result) => {
         setSettings(result);
-        setIsModalOpen(true);
+        // A quien ya avisó que mandó el comprobante no le vuelve a saltar el
+        // modal en la cara en cada visita — solo a quien todavía no hizo nada.
+        if (status === "PENDING") setIsModalOpen(true);
       })
       .catch(() => {
         // Sin datos de pago no hay modal que mostrar — el estado de la
         // suscripción sigue visible en la página igual.
       });
-  }, [needsActivation]);
+  }, [needsActivation, status]);
+
+  const handleReportPayment = () => {
+    reportSubscriptionPayment()
+      .then(updateProfessional)
+      .catch(() => {
+        // El link de WhatsApp ya se abrió igual, y el admin puede activar desde
+        // "Nuevos" sin depender de este aviso — un fallo acá no bloquea a nadie.
+      });
+  };
 
   return (
     <AppShell>
@@ -82,6 +99,8 @@ export const SubscriptionPage = () => {
           settings={settings}
           professionalName={`${professional.firstName} ${professional.lastName}`}
           licenseNumber={professional.licenseNumber}
+          subscriptionStatus={status}
+          onReportPayment={handleReportPayment}
         />
       )}
     </AppShell>

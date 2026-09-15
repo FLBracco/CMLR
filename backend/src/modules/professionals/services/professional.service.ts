@@ -53,6 +53,32 @@ export class ProfessionalService {
     return this.toDto(updated);
   }
 
+  async reportSubscriptionPayment(id: string): Promise<IProfessionalDto> {
+    const professional = await this.getScopedProfessional(id);
+
+    if (professional.subscriptionStatus === "ACTIVE") {
+      throw AppError.badRequest("Tu suscripción ya está activa.");
+    }
+
+    if (professional.subscriptionStatus === "DISABLED") {
+      throw AppError.forbidden(
+        "Tu suscripción está desactivada. Contactá al administrador."
+      );
+    }
+
+    // PAYMENT_REPORTED → no-op: se puede reenviar el comprobante sin que rompa nada.
+    if (professional.subscriptionStatus === "PAYMENT_REPORTED") {
+      return this.toDto(professional);
+    }
+
+    const updated = await this.professionalRepository.updateSubscriptionStatus(
+      professional,
+      "PAYMENT_REPORTED"
+    );
+
+    return this.toDto(updated);
+  }
+
   private async getScopedProfessional(id: string): Promise<Professional> {
     const professional = await this.professionalRepository.findById(id);
 

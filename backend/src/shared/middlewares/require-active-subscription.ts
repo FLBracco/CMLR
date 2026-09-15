@@ -6,6 +6,8 @@ import type { SubscriptionStatus } from "../../modules/professionals/entities/su
 
 const SUBSCRIPTION_BLOCKED_MESSAGES: Partial<Record<SubscriptionStatus, string>> = {
   PENDING: "Tu cuenta está pendiente de activación.",
+  PAYMENT_REPORTED:
+    "Recibimos tu aviso de pago. Estamos verificando el comprobante para activar tu cuenta.",
   DISABLED: "Tu suscripción está desactivada. Contactá al administrador.",
 };
 
